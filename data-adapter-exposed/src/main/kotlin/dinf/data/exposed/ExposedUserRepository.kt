@@ -23,9 +23,9 @@ class ExposedUserRepository : UserRepository {
         )
     }
 
-    override fun update(entity: UserEditEntity): Either<EntityNotFoundError, UserEntity> {
+    override fun update(entity: UserEditEntity): Either<EntityNotFoundError, UserEntity> = transaction {
         val user = User.findById(entity.id.toInt())
-        return if (user == null) {
+        if (user == null) {
             EntityNotFoundError.left()
         } else {
             user.name = entity.name.toString()
@@ -38,7 +38,7 @@ class ExposedUserRepository : UserRepository {
         }
     }
 
-    override fun deleteByUserID(userID: UserID) {
+    override fun deleteByUserID(userID: UserID): Unit = transaction {
         User.findById(userID.toInt())?.delete()
     }
 }
