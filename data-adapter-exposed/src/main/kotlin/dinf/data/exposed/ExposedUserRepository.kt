@@ -9,17 +9,31 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExposedUserRepository : UserRepository {
 
+    override fun findByUserID(userID: UserID): UserEntity? = transaction {
+        val user = User.findById(userID.toInt())
+        if (user != null) {
+            UserEntity(
+                id = UserID(user.id.value.toPositiveInt()!!),
+                name = user.name.toUserName(),
+                registrationTime = user.registrationTime,
+                permission = user.permission.toPermissionType()
+            )
+        } else {
+            null
+        }
+    }
+
     override fun save(entity: UserSaveEntity): UserEntity = transaction {
         val user = User.new {
             name = entity.name.toString()
             registrationTime = entity.registrationTime
+            permission = entity.permission.toSqlString()
         }
         UserEntity(
             id = UserID(user.id.value.toPositiveInt()!!),
-            name = UserName(
-                NotBlankString.orNull(user.name)!!
-            ),
-            registrationTime = user.registrationTime
+            name = user.name.toUserName(),
+            registrationTime = user.registrationTime,
+            permission = user.permission.toPermissionType()
         )
     }
 
@@ -29,11 +43,13 @@ class ExposedUserRepository : UserRepository {
             EntityNotFoundError.left()
         } else {
             user.name = entity.name.toString()
+            user.permission = entity.permission.toSqlString()
 
             UserEntity(
                 id = UserID.orNull(user.id.value)!!,
-                name = UserName(NotBlankString.orNull(user.name)!!),
-                registrationTime = user.registrationTime
+                name = user.name.toUserName(),
+                registrationTime = user.registrationTime,
+                permission = user.permission.toPermissionType()
             ).right()
         }
     }

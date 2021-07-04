@@ -1,5 +1,6 @@
 package dinf.usecase
 
+import arrow.core.Either
 import arrow.core.getOrHandle
 import dinf.data.*
 import dinf.types.*
@@ -7,26 +8,26 @@ import java.time.Instant
 
 class UserUseCasesImpl(
     private val userRepository: UserRepository,
-    private val permissionRepository: PermissionRepository,
     private val credentialRepository: CredentialRepository<Credential>,
     private val articleUseCases: ArticleUseCases
 ) : UserUseCases {
 
     override fun AnonymousUser.login(credential: Credential): RegisteredUser {
-        val user = credentialRepository.findUserByCredID(credential)
-        return if (user == null) {
-            register(credential)
-        } else {
-            val permissionEntity = permissionRepository.findByUserID(user.id)
-            user.toRegisteredUser(permissionEntity)
-        }
+        val user = credentialRepository
+            .findUserByCredID(credential)
+            ?.toRegisteredUser()
+        return user ?: register(credential)
     }
 
     private fun register(credential: Credential): SimpleUser {
         // TODO: тут нужна генерация имени
         val name = UserName(NotBlankString.orNull("test")!!)
         val saved = userRepository.save(
-            UserSaveEntity(name = name, registrationTime = Instant.now())
+            UserSaveEntity(
+                name = name,
+                registrationTime = Instant.now(),
+                permission = PermissionType.SIMPLE
+            )
         )
         credentialRepository.save(
             CredentialEntity(userID = saved.id, credID = credential)
@@ -37,18 +38,14 @@ class UserUseCasesImpl(
         )
     }
 
-    private fun UserEntity.toRegisteredUser(pEntity: PermissionEntity?): RegisteredUser = when (pEntity) {
-        null -> SimpleUser(id = id, name = name)
-        else -> when (pEntity.type) {
-            PermissionType.ADMIN -> AdminUser(id = id, name = name)
-        }
+    private fun UserEntity.toRegisteredUser(): RegisteredUser = when (permission) {
+        PermissionType.ADMIN -> AdminUser(id = id, name = name)
+        PermissionType.SIMPLE -> SimpleUser(id = id, name = name)
     }
 
-    override fun RegisteredUser.changeName(name: UserName): RegisteredUser =
-        userRepository
-            .update(
-                UserEditEntity(id = id, name = name)
-            )
+    override fun RegisteredUser.changeName(name: UserName): RegisteredUser {
+        return userRepository
+            .update(this.toUserEditEntity())
             .map {
                 when (this) {
                     is AdminUser -> AdminUser(id = it.id, name = it.name)
@@ -56,15 +53,14 @@ class UserUseCasesImpl(
                 }
             }
             .getOrHandle { throw IllegalStateException("Found no user for id=$id") }
+    }
 
-    override fun AdminUser.promoteToAdmin(user: SimpleUser): AdminUser {
-        permissionRepository.saveOrUpdate(
-            PermissionEntity(
-                userID = user.id,
-                type = PermissionType.ADMIN
-            )
-        )
-        return AdminUser(id = user.id, name = user.name)
+    override fun AdminUser.promoteToAdmin(user: SimpleUser): Either<UserNotFoundError, AdminUser> {
+        val entity = this.toUserEditEntity().copy(permission = PermissionType.ADMIN)
+        return userRepository
+            .update(entity)
+            .map { AdminUser(id = user.id, name = user.name) }
+            .mapLeft { UserNotFoundError }
     }
 
     override fun RegisteredUser.deleteAccount(): AnonymousUser {

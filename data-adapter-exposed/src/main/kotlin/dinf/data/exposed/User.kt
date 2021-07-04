@@ -8,6 +8,7 @@ class User(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<User>(Users)
     var name by Users.name
+    var permission by Users.permission
     var registrationTime by Users.registrationTime
 
 }

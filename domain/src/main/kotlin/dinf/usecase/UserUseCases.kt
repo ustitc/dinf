@@ -1,5 +1,6 @@
 package dinf.usecase
 
+import arrow.core.Either
 import dinf.types.*
 
 interface UserUseCases {
@@ -10,7 +11,7 @@ interface UserUseCases {
 
     fun RegisteredUser.deleteAccount(): AnonymousUser
 
-    fun AdminUser.promoteToAdmin(user: SimpleUser): AdminUser
+    fun AdminUser.promoteToAdmin(user: SimpleUser): Either<UserNotFoundError, AdminUser>
 
     fun AdminUser.deleteAccount(user: SimpleUser)
 

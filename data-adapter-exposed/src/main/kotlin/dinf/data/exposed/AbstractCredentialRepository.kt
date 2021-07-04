@@ -3,9 +3,7 @@ package dinf.data.exposed
 import dinf.data.CredentialRepository
 import dinf.data.UserEntity
 import dinf.types.Credential
-import dinf.types.NotBlankString
 import dinf.types.UserID
-import dinf.types.UserName
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
@@ -23,8 +21,9 @@ abstract class AbstractCredentialRepository<T : Credential>(
             .map {
                 UserEntity(
                     id = UserID.orNull(it[Users.id].value)!!,
-                    name = UserName(NotBlankString.orNull(it[Users.name])!!),
-                    registrationTime = it[Users.registrationTime]
+                    name = it[Users.name].toUserName(),
+                    registrationTime = it[Users.registrationTime],
+                    permission = it[Users.permission].toPermissionType()
                 )
             }
             .firstOrNull()
