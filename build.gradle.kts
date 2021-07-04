@@ -10,7 +10,7 @@ allprojects {
         plugin("org.jetbrains.kotlin.jvm")
     }
 
-    group = "me.ruslan"
+    group = "dinf"
     version = "1.0-SNAPSHOT"
 
     repositories {
