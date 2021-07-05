@@ -11,7 +11,7 @@ val kotestVersion: String = "4.6.0"
 val testContainersVersion: String = "1.15.3"
 
 dependencies {
-    implementation(project(":domain-data"))
+    implementation(project(":domain:data"))
 
     runtimeOnly("org.postgresql:postgresql:42.2.19")
     implementation("com.zaxxer:HikariCP:4.0.3")

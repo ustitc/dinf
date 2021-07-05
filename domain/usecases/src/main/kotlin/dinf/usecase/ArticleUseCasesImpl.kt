@@ -4,7 +4,6 @@ import arrow.core.*
 import dinf.data.ArticleEditEntity
 import dinf.data.ArticleRepository
 import dinf.data.ArticleSaveEntity
-import dinf.data.EntityNotFoundError
 import dinf.types.*
 import java.time.Instant
 

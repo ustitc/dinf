@@ -7,6 +7,6 @@ tasks.test {
 }
 
 dependencies {
-    api(project(":domain-types"))
+    api(project(":domain:types"))
     api("io.arrow-kt:arrow-core:0.13.2")
 }
