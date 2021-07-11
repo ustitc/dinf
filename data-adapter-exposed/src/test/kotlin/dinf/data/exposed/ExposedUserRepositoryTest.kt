@@ -12,6 +12,7 @@ import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.toKotlinInstant
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 
@@ -22,7 +23,7 @@ class ExposedUserRepositoryTest : StringSpec({
     val repository = ExposedUserRepository()
     val defaultSaveEntity = UserSaveEntity(
         name = UserName(NotBlankString.orNull("test")!!),
-        registrationTime = Instant.now(),
+        registrationTime = Instant.now().toKotlinInstant(),
         permission = PermissionType.SIMPLE
     )
 

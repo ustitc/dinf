@@ -1,26 +1,11 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-plugins {
-    kotlin("jvm") version "1.5.20" apply false
-}
+group = "dinf"
+version = "1.0-SNAPSHOT"
 
 allprojects {
-
-    apply {
-        plugin("org.jetbrains.kotlin.jvm")
-    }
-
-    group = "dinf"
-    version = "1.0-SNAPSHOT"
-
     repositories {
         jcenter()
         mavenCentral()
-        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
-
-    tasks.withType<KotlinCompile>() {
-        kotlinOptions.jvmTarget = "11"
-    }
-
 }

@@ -2,7 +2,7 @@ package dinf.data
 
 import arrow.core.Either
 import dinf.types.*
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 interface ArticleRepository {
 

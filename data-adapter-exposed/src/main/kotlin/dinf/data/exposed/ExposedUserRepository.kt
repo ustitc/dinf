@@ -4,7 +4,10 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import dinf.data.*
-import dinf.types.*
+import dinf.types.UserID
+import dinf.types.toPositiveInt
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toKotlinInstant
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExposedUserRepository : UserRepository {
@@ -15,7 +18,7 @@ class ExposedUserRepository : UserRepository {
             UserEntity(
                 id = UserID(user.id.value.toPositiveInt()!!),
                 name = user.name.toUserName(),
-                registrationTime = user.registrationTime,
+                registrationTime = user.registrationTime.toKotlinInstant(),
                 permission = user.permission.toPermissionType()
             )
         } else {
@@ -26,13 +29,13 @@ class ExposedUserRepository : UserRepository {
     override fun save(entity: UserSaveEntity): UserEntity = transaction {
         val user = User.new {
             name = entity.name.toString()
-            registrationTime = entity.registrationTime
+            registrationTime = entity.registrationTime.toJavaInstant()
             permission = entity.permission.toSqlString()
         }
         UserEntity(
             id = UserID(user.id.value.toPositiveInt()!!),
             name = user.name.toUserName(),
-            registrationTime = user.registrationTime,
+            registrationTime = user.registrationTime.toKotlinInstant(),
             permission = user.permission.toPermissionType()
         )
     }
@@ -48,7 +51,7 @@ class ExposedUserRepository : UserRepository {
             UserEntity(
                 id = UserID.orNull(user.id.value)!!,
                 name = user.name.toUserName(),
-                registrationTime = user.registrationTime,
+                registrationTime = user.registrationTime.toKotlinInstant(),
                 permission = user.permission.toPermissionType()
             ).right()
         }

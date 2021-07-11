@@ -1,6 +1,6 @@
 package dinf.types
 
-import arrow.refinement.numbers.PositiveInt
+import kotlin.jvm.JvmInline
 
 sealed interface Credential
 

@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.getOrHandle
 import dinf.data.*
 import dinf.types.*
-import java.time.Instant
+import kotlinx.datetime.Clock
 
 class UserUseCasesImpl(
     private val userRepository: UserRepository,
@@ -25,7 +25,7 @@ class UserUseCasesImpl(
         val saved = userRepository.save(
             UserSaveEntity(
                 name = name,
-                registrationTime = Instant.now(),
+                registrationTime = Clock.System.now(),
                 permission = PermissionType.SIMPLE
             )
         )

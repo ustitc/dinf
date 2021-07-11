@@ -1,6 +1,6 @@
 package dinf.types
 
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 data class Article(
     val id: ArticleID,

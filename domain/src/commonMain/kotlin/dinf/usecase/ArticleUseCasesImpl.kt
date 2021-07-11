@@ -5,7 +5,7 @@ import dinf.data.ArticleEditEntity
 import dinf.data.ArticleRepository
 import dinf.data.ArticleSaveEntity
 import dinf.types.*
-import java.time.Instant
+import kotlinx.datetime.Clock
 
 class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUseCases {
 
@@ -18,7 +18,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
         ).mapLeft { ArticleNotFoundError }
 
     override fun RegisteredUser.saveArticle(article: NewArticle): Article {
-        val now = Instant.now()
+        val now = Clock.System.now()
         return repository.save(
             entity = ArticleSaveEntity(
                 userID = id,
@@ -71,7 +71,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
                     name = article.name,
                     description = article.description,
                     generator = article.generator,
-                    lastUpdateTime = Instant.now()
+                    lastUpdateTime = Clock.System.now()
                 )
             )
             .getOrHandle { throw IllegalStateException("Found no article for id=${article.id}") }

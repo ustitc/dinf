@@ -1,6 +1,10 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+}
+
 rootProject.name = "dinf"
 include("domain")
-include("domain:data")
-include("domain:types")
-include("domain:usecases")
 include("data-adapter-exposed")

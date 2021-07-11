@@ -1,9 +1,16 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `java-library`
+    kotlin("jvm") version "1.5.10"
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.withType<KotlinCompile>() {
+    kotlinOptions.jvmTarget = "11"
 }
 
 val exposedVersion: String = "0.32.1"
@@ -11,7 +18,8 @@ val kotestVersion: String = "4.6.0"
 val testContainersVersion: String = "1.15.3"
 
 dependencies {
-    implementation(project(":domain:data"))
+    implementation(project(":domain"))
+    implementation(kotlin("stdlib-jdk8"))
 
     runtimeOnly("org.postgresql:postgresql:42.2.19")
     implementation("com.zaxxer:HikariCP:4.0.3")

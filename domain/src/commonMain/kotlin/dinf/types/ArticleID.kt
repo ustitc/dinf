@@ -1,6 +1,6 @@
 package dinf.types
 
-import arrow.refinement.numbers.PositiveInt
+import kotlin.jvm.JvmInline
 
 @JvmInline
 value class ArticleID(private val value: PositiveInt) {
