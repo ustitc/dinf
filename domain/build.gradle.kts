@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.5.10"
+    id("org.jetbrains.compose") version "0.5.0-build228"
 }
 
 kotlin {
@@ -11,6 +12,15 @@ kotlin {
             useJUnitPlatform()
         }
         withJava()
+    }
+
+    js("compose", IR) {
+        browser {
+            commonWebpackConfig {
+                cssSupport.enabled = true
+            }
+        }
+        binaries.executable()
     }
 
     sourceSets {
@@ -26,6 +36,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+            }
+        }
+        val composeMain by getting {
+            dependencies {
+                api(compose.web.core)
+                api(compose.runtime)
             }
         }
     }
