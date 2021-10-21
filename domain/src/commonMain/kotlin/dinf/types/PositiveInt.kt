@@ -13,3 +13,5 @@ value class PositiveInt private constructor(val value: Int) {
     }
 
 }
+
+typealias PInt = PositiveInt

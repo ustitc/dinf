@@ -24,7 +24,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
                 userID = id,
                 name = article.name,
                 description = article.description,
-                generator = article.generator,
+                values = article.values,
                 creationTime = now,
                 lastUpdateTime = now
             )
@@ -70,7 +70,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
                     id = article.id,
                     name = article.name,
                     description = article.description,
-                    generator = article.generator,
+                    values = article.values,
                     lastUpdateTime = Clock.System.now()
                 )
             )

@@ -25,7 +25,7 @@ interface ArticleRepository {
 data class ArticleSaveEntity(
     val name: NotBlankString,
     val description: String,
-    val generator: Generator,
+    val values: Values,
     val userID: UserID,
     val creationTime: Instant,
     val lastUpdateTime: Instant,
@@ -35,6 +35,6 @@ data class ArticleEditEntity(
     val id: ArticleID,
     val name: NotBlankString,
     val description: String,
-    val generator: Generator,
+    val values: Values,
     val lastUpdateTime: Instant,
 )

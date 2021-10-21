@@ -28,12 +28,12 @@ interface ArticleUseCases {
 data class NewArticle(
     val name: NotBlankString,
     val description: String,
-    val generator: Generator
+    val values: Values
 )
 
 data class EditedArticle(
     val id: ArticleID,
     val name: NotBlankString,
     val description: String,
-    val generator: Generator
+    val values: Values
 )

@@ -16,3 +16,5 @@ value class NotBlankString private constructor(private val value: String) {
     }
 
 }
+
+typealias NBString = NotBlankString
