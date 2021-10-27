@@ -1,8 +1,6 @@
 package dinf.data.exposed
 
-import dinf.data.PermissionType
 import dinf.data.UserEditEntity
-import dinf.data.UserEntity
 import dinf.data.UserSaveEntity
 import dinf.types.NotBlankString
 import dinf.types.UserID
@@ -23,38 +21,34 @@ class ExposedUserRepositoryTest : StringSpec({
     val repository = ExposedUserRepository()
     val defaultSaveEntity = UserSaveEntity(
         name = UserName(NotBlankString.orNull("test")!!),
-        registrationTime = Instant.now().toKotlinInstant(),
-        permission = PermissionType.SIMPLE
+        registrationTime = Instant.now().toKotlinInstant()
     )
 
     "entity has been saved" {
         repository.save(defaultSaveEntity)
-        transaction { User.count() } shouldBe 1L
+        transaction { UserEntity.count() } shouldBe 1L
     }
 
     "entity has been updated" {
         val oldSaved = repository.save(defaultSaveEntity)
         val new = UserEditEntity(
             id = oldSaved.id,
-            name = UserName(NotBlankString.orNull("new")!!),
-            permission = PermissionType.ADMIN
+            name = UserName(NotBlankString.orNull("new")!!)
         )
 
         val result = repository.update(new)
 
-        result shouldBeRight UserEntity(
+        result shouldBeRight dinf.data.UserEntity(
             id = oldSaved.id,
             name = new.name,
-            registrationTime = oldSaved.registrationTime,
-            permission = PermissionType.ADMIN
+            registrationTime = oldSaved.registrationTime
         )
     }
 
     "error on update if entity doesn't exist" {
         val entity = UserEditEntity(
             id = UserID.orNull(10)!!,
-            name = UserName(NotBlankString.orNull("name")!!),
-            permission = PermissionType.ADMIN
+            name = UserName(NotBlankString.orNull("name")!!)
         )
 
         val result = repository.update(entity)
@@ -67,13 +61,13 @@ class ExposedUserRepositoryTest : StringSpec({
 
         repository.deleteByUserID(id)
 
-        transaction { User.count() } shouldBe 0L
+        transaction { UserEntity.count() } shouldBe 0L
     }
 
     "safe delete if entity doesn't exist" {
         repository.deleteByUserID(UserID.orNull(10)!!)
 
-        transaction { User.count() } shouldBe 0L
+        transaction { UserEntity.count() } shouldBe 0L
     }
 
     "entity has been found" {
@@ -81,11 +75,10 @@ class ExposedUserRepositoryTest : StringSpec({
 
         val found = repository.findByUserID(id)
 
-        found shouldBe UserEntity(
+        found shouldBe dinf.data.UserEntity(
             id = id,
             name = defaultSaveEntity.name,
-            registrationTime = defaultSaveEntity.registrationTime,
-            permission = defaultSaveEntity.permission
+            registrationTime = defaultSaveEntity.registrationTime
         )
     }
 

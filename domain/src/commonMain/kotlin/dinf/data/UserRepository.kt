@@ -16,33 +16,22 @@ interface UserRepository {
 
 }
 
-enum class PermissionType {
-    SIMPLE, ADMIN
-}
-
 data class UserEntity(
     val id: UserID,
     val name: UserName,
-    val registrationTime: Instant,
-    val permission: PermissionType
+    val registrationTime: Instant
 )
 
 data class UserSaveEntity(
     val name: UserName,
-    val registrationTime: Instant,
-    val permission: PermissionType
+    val registrationTime: Instant
 )
 
 data class UserEditEntity(
     val id: UserID,
-    val name: UserName,
-    val permission: PermissionType
+    val name: UserName
 )
 
 fun RegisteredUser.toUserEditEntity(): UserEditEntity {
-    val permission = when (this) {
-        is AdminUser -> PermissionType.ADMIN
-        is SimpleUser -> PermissionType.SIMPLE
-    }
-    return UserEditEntity(id = id, name = name, permission = permission)
+    return UserEditEntity(id = id, name = name)
 }

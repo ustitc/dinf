@@ -17,14 +17,13 @@ abstract class AbstractCredentialRepository<T : Credential>(
     abstract val findUserByCredIDCondition: (T) -> Op<Boolean>
 
     override fun findUserByCredID(credID: T): UserEntity? = transaction {
-        (table innerJoin Users)
+        (table innerJoin UserTable)
             .select { findUserByCredIDCondition(credID) }
             .map {
                 UserEntity(
-                    id = UserID.orNull(it[Users.id].value)!!,
-                    name = it[Users.name].toUserName(),
-                    registrationTime =  it[Users.registrationTime].toKotlinInstant(),
-                    permission = it[Users.permission].toPermissionType()
+                    id = UserID.orNull(it[UserTable.id].value)!!,
+                    name = it[UserTable.name].toUserName(),
+                    registrationTime =  it[UserTable.registrationTime].toKotlinInstant()
                 )
             }
             .firstOrNull()

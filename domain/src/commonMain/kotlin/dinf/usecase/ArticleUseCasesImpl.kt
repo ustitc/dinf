@@ -57,12 +57,6 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
         repository.deleteAllByIDIn(articleIDs)
     }
 
-    override fun AdminUser.editArticle(article: EditedArticle): Either<ArticleNotFoundError, Article> =
-        showArticle(article.id).map { edit(article) }
-
-    override fun AdminUser.deleteArticle(id: ArticleID): Either<ArticleNotFoundError, Unit> =
-        showArticle(id).map { delete(id) }
-
     private fun edit(article: EditedArticle): Article =
         repository
             .update(

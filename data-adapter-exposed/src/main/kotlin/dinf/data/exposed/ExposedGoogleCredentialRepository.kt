@@ -6,13 +6,13 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insert
 
-class ExposedGoogleCredentialRepository : AbstractCredentialRepository<GoogleCredential>(GoogleCredentials) {
+class ExposedGoogleCredentialRepository : AbstractCredentialRepository<GoogleCredential>(GoogleCredentialTable) {
 
     override val findUserByCredIDCondition: (GoogleCredential) -> Op<Boolean>
-        get() = { GoogleCredentials.googleID eq it.toString() }
+        get() = { GoogleCredentialTable.googleID eq it.toString() }
 
     override fun save(entity: CredentialEntity<GoogleCredential>) {
-        GoogleCredentials.insert {
+        GoogleCredentialTable.insert {
             it[userID] = entity.userID.toInt()
             it[googleID] = entity.credID.toString()
         }

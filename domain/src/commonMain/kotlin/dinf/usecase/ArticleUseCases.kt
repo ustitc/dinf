@@ -19,10 +19,6 @@ interface ArticleUseCases {
 
     fun RegisteredUser.deleteAllOwnArticles()
 
-    fun AdminUser.editArticle(article: EditedArticle): Either<ArticleNotFoundError, Article>
-
-    fun AdminUser.deleteArticle(id: ArticleID): Either<ArticleNotFoundError, Unit>
-
 }
 
 data class NewArticle(

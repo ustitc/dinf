@@ -12,52 +12,47 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExposedUserRepository : UserRepository {
 
-    override fun findByUserID(userID: UserID): UserEntity? = transaction {
-        val user = User.findById(userID.toInt())
+    override fun findByUserID(userID: UserID): dinf.data.UserEntity? = transaction {
+        val user = UserEntity.findById(userID.toInt())
         if (user != null) {
             UserEntity(
                 id = UserID(user.id.value.toPositiveInt()!!),
                 name = user.name.toUserName(),
-                registrationTime = user.registrationTime.toKotlinInstant(),
-                permission = user.permission.toPermissionType()
+                registrationTime = user.registrationTime.toKotlinInstant()
             )
         } else {
             null
         }
     }
 
-    override fun save(entity: UserSaveEntity): UserEntity = transaction {
-        val user = User.new {
+    override fun save(entity: UserSaveEntity): dinf.data.UserEntity = transaction {
+        val user = UserEntity.new {
             name = entity.name.toString()
             registrationTime = entity.registrationTime.toJavaInstant()
-            permission = entity.permission.toSqlString()
         }
         UserEntity(
             id = UserID(user.id.value.toPositiveInt()!!),
             name = user.name.toUserName(),
-            registrationTime = user.registrationTime.toKotlinInstant(),
-            permission = user.permission.toPermissionType()
+            registrationTime = user.registrationTime.toKotlinInstant()
         )
     }
 
-    override fun update(entity: UserEditEntity): Either<EntityNotFoundError, UserEntity> = transaction {
-        val user = User.findById(entity.id.toInt())
+    override fun update(entity: UserEditEntity): Either<EntityNotFoundError, dinf.data.UserEntity> = transaction {
+        val user = UserEntity.findById(entity.id.toInt())
         if (user == null) {
             EntityNotFoundError.left()
         } else {
             user.name = entity.name.toString()
-            user.permission = entity.permission.toSqlString()
 
             UserEntity(
                 id = UserID.orNull(user.id.value)!!,
                 name = user.name.toUserName(),
-                registrationTime = user.registrationTime.toKotlinInstant(),
-                permission = user.permission.toPermissionType()
+                registrationTime = user.registrationTime.toKotlinInstant()
             ).right()
         }
     }
 
     override fun deleteByUserID(userID: UserID): Unit = transaction {
-        User.findById(userID.toInt())?.delete()
+        UserEntity.findById(userID.toInt())?.delete()
     }
 }
