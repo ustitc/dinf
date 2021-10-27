@@ -20,6 +20,8 @@ interface ArticleRepository {
 
     fun deleteAllByIDIn(ids: List<ArticleID>)
 
+    fun deleteAllByUserID(id: UserID)
+
 }
 
 data class ArticleSaveEntity(

@@ -4,20 +4,21 @@ import arrow.core.*
 import dinf.data.ArticleEditEntity
 import dinf.data.ArticleRepository
 import dinf.data.ArticleSaveEntity
+import dinf.domain.User
 import dinf.types.*
 import kotlinx.datetime.Clock
 
 class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUseCases {
 
-    override fun User.showManyArticles(limit: UInt): List<Article> =
+    override fun showManyArticles(limit: UInt): List<Article> =
         repository.findAll(limit)
 
-    override fun User.showArticle(id: ArticleID): Either<ArticleNotFoundError, Article> =
+    override fun showArticle(id: ArticleID): Either<ArticleNotFoundError, Article> =
         Either.fromNullable(
             repository.findByID(id)
         ).mapLeft { ArticleNotFoundError }
 
-    override fun RegisteredUser.saveArticle(article: NewArticle): Article {
+    override fun User.saveArticle(article: NewArticle): Article {
         val now = Clock.System.now()
         return repository.save(
             entity = ArticleSaveEntity(
@@ -31,10 +32,10 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
         )
     }
 
-    override fun RegisteredUser.showOwnArticles(): List<Article> =
+    override fun User.showOwnArticles(): List<Article> =
         repository.findAllByUserID(id)
 
-    override fun RegisteredUser.editOwnArticle(article: EditedArticle): Either<ArticleError, Article> =
+    override fun User.editOwnArticle(article: EditedArticle): Either<ArticleError, Article> =
         hasEditPermission(article.id).flatMap { hasPermission ->
             if (hasPermission) {
                 edit(article).right()
@@ -43,7 +44,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
             }
         }
 
-    override fun RegisteredUser.deleteOwnArticle(id: ArticleID): Either<ArticleError, Unit> =
+    override fun User.deleteOwnArticle(id: ArticleID): Either<ArticleError, Unit> =
         hasEditPermission(id).flatMap { hasPermission ->
             if (hasPermission) {
                 delete(id).right()
@@ -52,7 +53,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
             }
         }
 
-    override fun RegisteredUser.deleteAllOwnArticles() {
+    override fun User.deleteAllOwnArticles() {
         val articleIDs = repository.findAllByUserID(id).map { it.id }
         repository.deleteAllByIDIn(articleIDs)
     }
@@ -73,7 +74,7 @@ class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUs
 
     private fun delete(id: ArticleID) = repository.deleteByID(id)
 
-    private fun RegisteredUser.hasEditPermission(articleID: ArticleID): Either<ArticleNotFoundError, Boolean> =
+    private fun User.hasEditPermission(articleID: ArticleID): Either<ArticleNotFoundError, Boolean> =
         showArticle(articleID).map { it.author.id == this.id }
 
 }

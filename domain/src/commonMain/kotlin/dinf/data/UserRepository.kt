@@ -31,7 +31,3 @@ data class UserEditEntity(
     val id: UserID,
     val name: UserName
 )
-
-fun RegisteredUser.toUserEditEntity(): UserEditEntity {
-    return UserEditEntity(id = id, name = name)
-}

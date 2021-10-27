@@ -1,3 +1,5 @@
 package dinf.types
 
-typealias Author = RegisteredUser
+import dinf.domain.User
+
+typealias Author = User
