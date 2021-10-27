@@ -9,8 +9,10 @@ class DBUser(
     private val id: UserID,
     private val userRepository: UserRepository,
     private val credentialRepository: CredentialRepository<Credential>,
-    private val articleRepository: ArticleRepository
+    articleRepository: ArticleRepository
 ) : User {
+
+    private val author: Author = DBAuthor(id, articleRepository)
 
     override fun login(credential: Credential) {
         val user = credentialRepository.findUserByCredID(credential)
@@ -32,14 +34,14 @@ class DBUser(
         )
     }
 
-    override fun changeName(name: UserName) {
+    override fun change(name: UserName) {
         userRepository
             .update(UserEditEntity(id = id, name = name))
             .getOrHandle { throw IllegalStateException("Found no user for id=$id") }
     }
 
     override fun deleteAccount() {
-        articleRepository.deleteAllByUserID(id)
+        author.deleteArticles()
         userRepository.deleteByUserID(id)
     }
 

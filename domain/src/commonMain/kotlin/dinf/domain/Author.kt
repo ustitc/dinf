@@ -7,15 +7,15 @@ interface Author {
 
     val id: UserID
 
-    fun showOwnArticles(): List<Article>
+    fun articles(): List<Article>
 
-    fun saveArticle(article: NewArticle): Article
+    fun create(article: NewArticle): Article
 
-    fun editOwnArticle(article: EditedArticle): Either<ArticleError, Article>
+    fun edit(article: EditedArticle): Either<ArticleError, Article>
 
-    fun deleteOwnArticle(id: ArticleID): Either<ArticleError, Unit>
+    fun delete(id: ArticleID): Either<ArticleError, Unit>
 
-    fun deleteAllOwnArticles()
+    fun deleteArticles()
 
 }
 

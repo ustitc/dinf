@@ -7,7 +7,7 @@ interface User {
 
     fun login(credential: Credential)
 
-    fun changeName(name: UserName)
+    fun change(name: UserName)
 
     fun deleteAccount()
 

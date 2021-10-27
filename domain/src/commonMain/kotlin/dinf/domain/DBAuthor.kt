@@ -12,7 +12,7 @@ class DBAuthor(
     private val repository: ArticleRepository
 ) : Author {
 
-    override fun saveArticle(article: NewArticle): Article {
+    override fun create(article: NewArticle): Article {
         val now = Clock.System.now()
         return repository.save(
             entity = ArticleSaveEntity(
@@ -26,33 +26,33 @@ class DBAuthor(
         )
     }
 
-    override fun showOwnArticles(): List<Article> =
+    override fun articles(): List<Article> =
         repository.findAllByUserID(id)
 
-    override fun editOwnArticle(article: EditedArticle): Either<ArticleError, Article> =
+    override fun edit(article: EditedArticle): Either<ArticleError, Article> =
         hasEditPermission(article.id).flatMap { hasPermission ->
             if (hasPermission) {
-                edit(article).right()
+                editArticle(article).right()
             } else {
                 ArticleNoPermissionError.left()
             }
         }
 
-    override fun deleteOwnArticle(id: ArticleID): Either<ArticleError, Unit> =
+    override fun delete(id: ArticleID): Either<ArticleError, Unit> =
         hasEditPermission(id).flatMap { hasPermission ->
             if (hasPermission) {
-                delete(id).right()
+                repository.deleteByID(id).right()
             } else {
                 ArticleNoPermissionError.left()
             }
         }
 
-    override fun deleteAllOwnArticles() {
+    override fun deleteArticles() {
         val articleIDs = repository.findAllByUserID(id).map { it.id }
         repository.deleteAllByIDIn(articleIDs)
     }
 
-    private fun edit(article: EditedArticle): Article =
+    private fun editArticle(article: EditedArticle): Article =
         repository
             .update(
                 ArticleEditEntity(
@@ -64,8 +64,6 @@ class DBAuthor(
                 )
             )
             .getOrHandle { throw IllegalStateException("Found no article for id=${article.id}") }
-
-    private fun delete(id: ArticleID) = repository.deleteByID(id)
 
     private fun hasEditPermission(articleID: ArticleID): Either<ArticleNotFoundError, Boolean> {
         val exists = repository.findByID(articleID)?.let { it.author.id == this.id }
