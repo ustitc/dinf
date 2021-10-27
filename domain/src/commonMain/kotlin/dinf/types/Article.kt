@@ -1,5 +1,6 @@
 package dinf.types
 
+import dinf.domain.Author
 import kotlinx.datetime.Instant
 
 data class Article(

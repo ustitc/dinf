@@ -6,7 +6,7 @@ import dinf.types.*
 import kotlinx.datetime.Clock
 
 class DBUser(
-    override val id: UserID,
+    private val id: UserID,
     private val userRepository: UserRepository,
     private val credentialRepository: CredentialRepository<Credential>,
     private val articleRepository: ArticleRepository
@@ -20,7 +20,6 @@ class DBUser(
     }
 
     private fun register(credential: Credential) {
-        // TODO: тут нужна генерация имени
         val name = UserName(NotBlankString.orNull("test")!!)
         val saved = userRepository.save(
             UserSaveEntity(
@@ -39,7 +38,6 @@ class DBUser(
             .getOrHandle { throw IllegalStateException("Found no user for id=$id") }
     }
 
-    // TODO: сделать в транзакции
     override fun deleteAccount() {
         articleRepository.deleteAllByUserID(id)
         userRepository.deleteByUserID(id)
