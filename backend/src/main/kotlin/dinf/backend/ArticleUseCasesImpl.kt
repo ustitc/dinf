@@ -1,9 +1,8 @@
-package dinf.usecase
+package dinf.backend
 
-import dinf.data.ArticleRepository
-import dinf.domain.ArticleNotFoundException
 import dinf.types.Article
 import dinf.types.ArticleID
+import dinf.usecase.ArticleUseCases
 
 class ArticleUseCasesImpl(private val repository: ArticleRepository) : ArticleUseCases {
 

@@ -1,7 +1,7 @@
 package dinf.data.exposed
 
-import dinf.data.CredentialRepository
-import dinf.data.UserEntity
+import dinf.backend.CredentialRepository
+import dinf.backend.UserEntity
 import dinf.types.Credential
 import dinf.types.UserID
 import kotlinx.datetime.toKotlinInstant

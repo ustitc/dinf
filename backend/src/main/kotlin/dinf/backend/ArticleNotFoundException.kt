@@ -1,4 +1,4 @@
-package dinf.domain
+package dinf.backend
 
 import dinf.types.ArticleID
 import dinf.types.UserID

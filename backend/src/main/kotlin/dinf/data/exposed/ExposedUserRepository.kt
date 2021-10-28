@@ -1,6 +1,6 @@
 package dinf.data.exposed
 
-import dinf.data.*
+import dinf.backend.*
 import dinf.types.UserID
 import dinf.types.toPositiveInt
 import kotlinx.datetime.toJavaInstant
@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ExposedUserRepository : UserRepository {
 
-    override fun findByUserID(userID: UserID): dinf.data.UserEntity? = transaction {
+    override fun findByUserID(userID: UserID): dinf.backend.UserEntity? = transaction {
         val user = UserEntity.findById(userID.toInt())
         if (user != null) {
             UserEntity(
@@ -22,7 +22,7 @@ class ExposedUserRepository : UserRepository {
         }
     }
 
-    override fun save(entity: UserSaveEntity): dinf.data.UserEntity = transaction {
+    override fun save(entity: UserSaveEntity): dinf.backend.UserEntity = transaction {
         val user = UserEntity.new {
             name = entity.name.toString()
             registrationTime = entity.registrationTime.toJavaInstant()
@@ -34,7 +34,7 @@ class ExposedUserRepository : UserRepository {
         )
     }
 
-    override fun update(entity: UserEditEntity): Result<dinf.data.UserEntity> = transaction {
+    override fun update(entity: UserEditEntity): Result<dinf.backend.UserEntity> = transaction {
         val id = entity.id.toInt()
         val user = UserEntity.findById(id)
         if (user == null) {

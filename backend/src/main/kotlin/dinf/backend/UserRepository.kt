@@ -1,6 +1,7 @@
-package dinf.data
+package dinf.backend
 
-import dinf.types.*
+import dinf.types.UserID
+import dinf.types.UserName
 import kotlinx.datetime.Instant
 
 interface UserRepository {

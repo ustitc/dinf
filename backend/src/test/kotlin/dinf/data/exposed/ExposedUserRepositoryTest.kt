@@ -1,7 +1,7 @@
 package dinf.data.exposed
 
-import dinf.data.UserEditEntity
-import dinf.data.UserSaveEntity
+import dinf.backend.UserEditEntity
+import dinf.backend.UserSaveEntity
 import dinf.types.NotBlankString
 import dinf.types.UserID
 import dinf.types.UserName
@@ -36,7 +36,7 @@ class ExposedUserRepositoryTest : StringSpec({
 
         val result = repository.update(new)
 
-        result shouldBeSuccess dinf.data.UserEntity(
+        result shouldBeSuccess dinf.backend.UserEntity(
             id = oldSaved.id,
             name = new.name,
             registrationTime = oldSaved.registrationTime
@@ -73,7 +73,7 @@ class ExposedUserRepositoryTest : StringSpec({
 
         val found = repository.findByUserID(id)
 
-        found shouldBe dinf.data.UserEntity(
+        found shouldBe dinf.backend.UserEntity(
             id = id,
             name = defaultSaveEntity.name,
             registrationTime = defaultSaveEntity.registrationTime

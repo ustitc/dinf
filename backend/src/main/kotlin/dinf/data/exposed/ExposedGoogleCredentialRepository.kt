@@ -1,6 +1,6 @@
 package dinf.data.exposed
 
-import dinf.data.CredentialEntity
+import dinf.backend.CredentialEntity
 import dinf.types.GoogleCredential
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

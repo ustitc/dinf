@@ -1,6 +1,7 @@
-package dinf.domain
+package dinf.backend
 
-import dinf.data.*
+import dinf.domain.AnonymousUser
+import dinf.domain.LoginedUser
 import dinf.types.Credential
 import dinf.types.NotBlankString
 import dinf.types.UserName

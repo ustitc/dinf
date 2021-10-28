@@ -1,8 +1,7 @@
-package dinf.domain
+package dinf.backend
 
-import dinf.data.ArticleRepository
-import dinf.data.UserEditEntity
-import dinf.data.UserRepository
+import dinf.domain.Author
+import dinf.domain.LoginedUser
 import dinf.types.UserID
 import dinf.types.UserName
 
