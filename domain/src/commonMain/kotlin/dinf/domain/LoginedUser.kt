@@ -1,14 +1,13 @@
 package dinf.domain
 
-import dinf.types.Credential
 import dinf.types.UserName
 
-interface User {
-
-    fun login(credential: Credential)
+interface LoginedUser {
 
     fun change(name: UserName)
 
     fun deleteAccount()
+
+    fun toAuthor(): Author
 
 }

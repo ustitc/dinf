@@ -1,38 +1,19 @@
 package dinf.domain
 
 import arrow.core.getOrHandle
-import dinf.data.*
-import dinf.types.*
-import kotlinx.datetime.Clock
+import dinf.data.ArticleRepository
+import dinf.data.UserEditEntity
+import dinf.data.UserRepository
+import dinf.types.UserID
+import dinf.types.UserName
 
 class DBUser(
     private val id: UserID,
     private val userRepository: UserRepository,
-    private val credentialRepository: CredentialRepository<Credential>,
     articleRepository: ArticleRepository
-) : User {
+) : LoginedUser {
 
     private val author: Author = DBAuthor(id, articleRepository)
-
-    override fun login(credential: Credential) {
-        val user = credentialRepository.findUserByCredID(credential)
-        if (user == null) {
-            register(credential)
-        }
-    }
-
-    private fun register(credential: Credential) {
-        val name = UserName(NotBlankString.orNull("test")!!)
-        val saved = userRepository.save(
-            UserSaveEntity(
-                name = name,
-                registrationTime = Clock.System.now()
-            )
-        )
-        credentialRepository.save(
-            CredentialEntity(userID = saved.id, credID = credential)
-        )
-    }
 
     override fun change(name: UserName) {
         userRepository
@@ -45,4 +26,7 @@ class DBUser(
         userRepository.deleteByUserID(id)
     }
 
+    override fun toAuthor(): Author {
+        return author
+    }
 }
