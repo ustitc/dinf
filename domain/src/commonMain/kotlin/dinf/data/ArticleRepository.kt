@@ -1,7 +1,6 @@
 package dinf.data
 
 import dinf.types.*
-import kotlinx.datetime.Instant
 
 interface ArticleRepository {
 
@@ -27,15 +26,12 @@ data class ArticleSaveEntity(
     val name: NotBlankString,
     val description: String,
     val values: Values,
-    val userID: UserID,
-    val creationTime: Instant,
-    val lastUpdateTime: Instant,
+    val userID: UserID
 )
 
 data class ArticleEditEntity(
     val id: ArticleID,
     val name: NotBlankString,
     val description: String,
-    val values: Values,
-    val lastUpdateTime: Instant,
+    val values: Values
 )

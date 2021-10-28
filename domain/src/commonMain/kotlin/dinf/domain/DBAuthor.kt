@@ -6,7 +6,6 @@ import dinf.data.ArticleSaveEntity
 import dinf.types.Article
 import dinf.types.ArticleID
 import dinf.types.UserID
-import kotlinx.datetime.Clock
 
 class DBAuthor(
     override val id: UserID,
@@ -14,15 +13,12 @@ class DBAuthor(
 ) : Author {
 
     override fun createArticle(content: Content): Article {
-        val now = Clock.System.now()
         return repository.save(
             entity = ArticleSaveEntity(
                 userID = id,
                 name = content.title,
                 description = content.description,
-                values = content.values,
-                creationTime = now,
-                lastUpdateTime = now
+                values = content.values
             )
         )
     }
@@ -60,8 +56,7 @@ class DBAuthor(
     }
 
     override fun deleteArticles() {
-        val articleIDs = repository.findAllByUserID(id).map { it.id }
-        repository.deleteAllByIDIn(articleIDs)
+        repository.deleteAllByUserID(id)
     }
 
     private fun editArticle(articleID: ArticleID, content: Content): Result<Unit> {
@@ -70,8 +65,7 @@ class DBAuthor(
                 id = articleID,
                 name = content.title,
                 description = content.description,
-                values = content.values,
-                lastUpdateTime = Clock.System.now()
+                values = content.values
             )
         ).map {  }
     }
