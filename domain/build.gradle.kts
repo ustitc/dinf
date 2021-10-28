@@ -13,7 +13,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api("io.arrow-kt:arrow-core:1.0.0-SNAPSHOT")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
             }
         }

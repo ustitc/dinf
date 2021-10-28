@@ -1,10 +1,11 @@
 package dinf.domain
 
-import arrow.core.*
 import dinf.data.ArticleEditEntity
 import dinf.data.ArticleRepository
 import dinf.data.ArticleSaveEntity
-import dinf.types.*
+import dinf.types.Article
+import dinf.types.ArticleID
+import dinf.types.UserID
 import kotlinx.datetime.Clock
 
 class DBAuthor(
@@ -12,62 +13,77 @@ class DBAuthor(
     private val repository: ArticleRepository
 ) : Author {
 
-    override fun create(article: NewArticle): Article {
+    override fun createArticle(content: Content): Article {
         val now = Clock.System.now()
         return repository.save(
             entity = ArticleSaveEntity(
                 userID = id,
-                name = article.name,
-                description = article.description,
-                values = article.values,
+                name = content.title,
+                description = content.description,
+                values = content.values,
                 creationTime = now,
                 lastUpdateTime = now
             )
         )
     }
 
-    override fun articles(): List<Article> =
-        repository.findAllByUserID(id)
+    override fun articles(): List<Article> {
+        return repository.findAllByUserID(id)
+    }
 
-    override fun edit(article: EditedArticle): Either<ArticleError, Article> =
-        hasEditPermission(article.id).flatMap { hasPermission ->
-            if (hasPermission) {
-                editArticle(article).right()
-            } else {
-                ArticleNoPermissionError.left()
-            }
+    override fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> {
+        val article = findAuthorArticle(articleID)
+        return if (article != null) {
+            val content = Content(
+                title = article.name,
+                description = article.description,
+                values = article.values
+            )
+            block.invoke(content)
+            editArticle(articleID, content)
+        } else {
+            Result.failure(
+                ArticleNotFoundException(authorID = id, articleID = articleID)
+            )
         }
+    }
 
-    override fun delete(id: ArticleID): Either<ArticleError, Unit> =
-        hasEditPermission(id).flatMap { hasPermission ->
-            if (hasPermission) {
-                repository.deleteByID(id).right()
-            } else {
-                ArticleNoPermissionError.left()
-            }
+    override fun deleteArticle(articleID: ArticleID): Result<Unit> {
+        return if (hasEditPermission(articleID)) {
+            repository.deleteByID(articleID)
+            Result.success(Unit)
+        } else {
+            Result.failure(
+                ArticleNotFoundException(authorID = id, articleID = articleID)
+            )
         }
+    }
 
     override fun deleteArticles() {
         val articleIDs = repository.findAllByUserID(id).map { it.id }
         repository.deleteAllByIDIn(articleIDs)
     }
 
-    private fun editArticle(article: EditedArticle): Article =
-        repository
-            .update(
-                ArticleEditEntity(
-                    id = article.id,
-                    name = article.name,
-                    description = article.description,
-                    values = article.values,
-                    lastUpdateTime = Clock.System.now()
-                )
+    private fun editArticle(articleID: ArticleID, content: Content): Result<Unit> {
+        return repository.update(
+            ArticleEditEntity(
+                id = articleID,
+                name = content.title,
+                description = content.description,
+                values = content.values,
+                lastUpdateTime = Clock.System.now()
             )
-            .getOrHandle { throw IllegalStateException("Found no article for id=${article.id}") }
+        ).map {  }
+    }
 
-    private fun hasEditPermission(articleID: ArticleID): Either<ArticleNotFoundError, Boolean> {
-        val exists = repository.findByID(articleID)?.let { it.author.id == this.id }
-        return exists?.right() ?: ArticleNotFoundError.left()
+    private fun findAuthorArticle(articleID: ArticleID): Article? {
+        return repository
+            .findByID(articleID)
+            ?.takeIf { it.author.id == id }
+    }
+
+    private fun hasEditPermission(articleID: ArticleID): Boolean {
+        return findAuthorArticle(articleID) != null
     }
 
 }

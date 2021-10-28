@@ -1,8 +1,5 @@
 package dinf.data.exposed
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
 import dinf.data.*
 import dinf.types.UserID
 import dinf.types.toPositiveInt
@@ -37,18 +34,23 @@ class ExposedUserRepository : UserRepository {
         )
     }
 
-    override fun update(entity: UserEditEntity): Either<EntityNotFoundError, dinf.data.UserEntity> = transaction {
-        val user = UserEntity.findById(entity.id.toInt())
+    override fun update(entity: UserEditEntity): Result<dinf.data.UserEntity> = transaction {
+        val id = entity.id.toInt()
+        val user = UserEntity.findById(id)
         if (user == null) {
-            EntityNotFoundError.left()
+            Result.failure(
+                IllegalStateException("Can't update user with id=$id. Entry doesn't exist")
+            )
         } else {
             user.name = entity.name.toString()
 
-            UserEntity(
-                id = UserID.orNull(user.id.value)!!,
-                name = user.name.toUserName(),
-                registrationTime = user.registrationTime.toKotlinInstant()
-            ).right()
+            Result.success(
+                UserEntity(
+                    id = UserID.orNull(user.id.value)!!,
+                    name = user.name.toUserName(),
+                    registrationTime = user.registrationTime.toKotlinInstant()
+                )
+            )
         }
     }
 

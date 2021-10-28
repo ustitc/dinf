@@ -1,7 +1,8 @@
 package dinf.domain
 
-import arrow.core.Either
-import dinf.types.*
+import dinf.types.Article
+import dinf.types.ArticleID
+import dinf.types.UserID
 
 interface Author {
 
@@ -9,25 +10,12 @@ interface Author {
 
     fun articles(): List<Article>
 
-    fun create(article: NewArticle): Article
+    fun createArticle(content: Content): Article
 
-    fun edit(article: EditedArticle): Either<ArticleError, Article>
+    fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit>
 
-    fun delete(id: ArticleID): Either<ArticleError, Unit>
+    fun deleteArticle(articleID: ArticleID): Result<Unit>
 
     fun deleteArticles()
 
 }
-
-data class NewArticle(
-    val name: NotBlankString,
-    val description: String,
-    val values: Values
-)
-
-data class EditedArticle(
-    val id: ArticleID,
-    val name: NotBlankString,
-    val description: String,
-    val values: Values
-)

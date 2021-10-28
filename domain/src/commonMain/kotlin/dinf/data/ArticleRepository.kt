@@ -1,6 +1,5 @@
 package dinf.data
 
-import arrow.core.Either
 import dinf.types.*
 import kotlinx.datetime.Instant
 
@@ -14,7 +13,7 @@ interface ArticleRepository {
 
     fun save(entity: ArticleSaveEntity): Article
 
-    fun update(entity: ArticleEditEntity): Either<EntityNotFoundError, Article>
+    fun update(entity: ArticleEditEntity): Result<Article>
 
     fun deleteByID(articleID: ArticleID)
 

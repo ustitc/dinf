@@ -5,10 +5,8 @@ import dinf.data.UserSaveEntity
 import dinf.types.NotBlankString
 import dinf.types.UserID
 import dinf.types.UserName
-import io.kotest.assertions.arrow.either.beLeft
-import io.kotest.assertions.arrow.either.shouldBeRight
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.should
+import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.toKotlinInstant
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -38,7 +36,7 @@ class ExposedUserRepositoryTest : StringSpec({
 
         val result = repository.update(new)
 
-        result shouldBeRight dinf.data.UserEntity(
+        result shouldBeSuccess dinf.data.UserEntity(
             id = oldSaved.id,
             name = new.name,
             registrationTime = oldSaved.registrationTime
@@ -53,7 +51,7 @@ class ExposedUserRepositoryTest : StringSpec({
 
         val result = repository.update(entity)
 
-        result should beLeft()
+        result.isFailure shouldBe true
     }
 
     "entity has been deleted" {

@@ -1,6 +1,5 @@
 package dinf.domain
 
-import arrow.core.getOrHandle
 import dinf.data.ArticleRepository
 import dinf.data.UserEditEntity
 import dinf.data.UserRepository
@@ -18,7 +17,7 @@ class DBUser(
     override fun change(name: UserName) {
         userRepository
             .update(UserEditEntity(id = id, name = name))
-            .getOrHandle { throw IllegalStateException("Found no user for id=$id") }
+            .getOrThrow()
     }
 
     override fun deleteAccount() {
