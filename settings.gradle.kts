@@ -7,5 +7,5 @@ pluginManagement {
 
 rootProject.name = "dinf"
 include("domain")
-include("data-adapter-exposed")
+include("backend")
 include("web")
