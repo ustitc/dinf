@@ -1,4 +1,4 @@
-package dinf.data.exposed
+package dinf.exposed
 
 import io.kotest.extensions.testcontainers.perTest
 import org.testcontainers.containers.PostgreSQLContainer

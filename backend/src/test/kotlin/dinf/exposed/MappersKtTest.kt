@@ -1,5 +1,6 @@
-package dinf.data.exposed
+package dinf.exposed
 
+import dinf.data.exposed.toUserName
 import dinf.types.NotBlankString
 import dinf.types.UserName
 import io.kotest.core.spec.style.StringSpec
