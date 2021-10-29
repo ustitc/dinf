@@ -2,11 +2,8 @@ package dinf.domain
 
 import dinf.types.Article
 import dinf.types.ArticleID
-import dinf.types.UserID
 
 interface Author {
-
-    val id: UserID
 
     fun articles(): List<Article>
 

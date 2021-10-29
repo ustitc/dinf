@@ -17,12 +17,12 @@ class ArrayColumnType(private val type: ColumnType) : ColumnType() {
     }
 
     override fun valueToDB(value: Any?): Any? {
-        if (value is Array<*>) {
+        return if (value is Array<*>) {
             val columnType = type.sqlType().split("(")[0]
             val jdbcConnection = (TransactionManager.current().connection as JdbcConnectionImpl).connection
-            return jdbcConnection.createArrayOf(columnType, value)
+            jdbcConnection.createArrayOf(columnType, value)
         } else {
-            return super.valueToDB(value)
+            super.valueToDB(value)
         }
     }
 

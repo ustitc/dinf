@@ -2,11 +2,12 @@ package dinf.usecase
 
 import dinf.types.Article
 import dinf.types.ArticleID
+import dinf.types.PInt
 
 interface ArticleUseCases {
 
-    fun showManyArticles(limit: UInt): List<Article>
+    fun articles(limit: PInt): List<Article>
 
-    fun showArticle(id: ArticleID): Result<Article>
+    fun article(id: ArticleID): Result<Article>
 
 }

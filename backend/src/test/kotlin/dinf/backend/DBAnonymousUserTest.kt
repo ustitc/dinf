@@ -12,7 +12,7 @@ class DBAnonymousUserTest : StringSpec({
 
     listeners(postgresTestListeners)
 
-    val anonymous = DBAnonymousUser(ArticleRepository.Stub())
+    val anonymous = DBAnonymousUser()
 
     "creates new user in DB if it hasn't been created yet" {
         anonymous.toLogined(GithubCredential(PInt.orNull(123)!!))

@@ -1,82 +1,78 @@
 package dinf.backend
 
+import dinf.data.exposed.ArticleEntity
+import dinf.data.exposed.ArticleTable
+import dinf.data.exposed.UserEntity
 import dinf.domain.Author
 import dinf.domain.Content
 import dinf.types.Article
 import dinf.types.ArticleID
-import dinf.types.UserID
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.Instant
 
 class DBAuthor(
-    override val id: UserID,
-    private val repository: ArticleRepository
+    private val userEntity: UserEntity
 ) : Author {
 
-    override fun createArticle(content: Content): Article {
-        return repository.save(
-            entity = ArticleSaveEntity(
-                userID = id,
-                name = content.title,
-                description = content.description,
-                values = content.values
-            )
-        )
+    private val authorID = userEntity.id.value
+
+    override fun createArticle(content: Content): Article = transaction {
+        val entity = ArticleEntity.new {
+            name = content.title.toString()
+            description = content.description
+            values = content.values.list.map { it.toString() }.toTypedArray()
+            author = userEntity
+            creation = Instant.now()
+            lastUpdate = Instant.now()
+        }
+        entity.toArticle()
     }
 
-    override fun articles(): List<Article> {
-        return repository.findAllByUserID(id)
+    override fun articles(): List<Article> = transaction {
+        ArticleEntity
+            .find { ArticleTable.authorID eq authorID }
+            .map { it.toArticle() }
     }
 
     override fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> {
-        val article = findAuthorArticle(articleID)
-        return if (article != null) {
-            val content = Content(
-                title = article.name,
-                description = article.description,
-                values = article.values
-            )
+        val entity = findAuthorArticle(articleID)
+        return if (entity != null) {
+            val content = entity.toContent()
             block.invoke(content)
-            editArticle(articleID, content)
-        } else {
-            Result.failure(
-                ArticleNotFoundException(authorID = id, articleID = articleID)
-            )
-        }
-    }
-
-    override fun deleteArticle(articleID: ArticleID): Result<Unit> {
-        return if (hasEditPermission(articleID)) {
-            repository.deleteByID(articleID)
+            entity.name = content.title.toString()
+            entity.description = content.description
+            entity.values = content.values.list.map { it.toString() }.toTypedArray()
             Result.success(Unit)
         } else {
             Result.failure(
-                ArticleNotFoundException(authorID = id, articleID = articleID)
+                ArticleNotFoundException(
+                    userEntity = userEntity,
+                    articleID = articleID
+                )
             )
         }
     }
 
-    override fun deleteArticles() {
-        repository.deleteAllByUserID(id)
-    }
-
-    private fun editArticle(articleID: ArticleID, content: Content): Result<Unit> {
-        return repository.update(
-            ArticleEditEntity(
-                id = articleID,
-                name = content.title,
-                description = content.description,
-                values = content.values
+    override fun deleteArticle(articleID: ArticleID): Result<Unit> = transaction {
+        val entity = findAuthorArticle(articleID)
+        if (entity != null) {
+            entity.delete()
+            Result.success(Unit)
+        } else {
+            Result.failure(
+                ArticleNotFoundException(userEntity = userEntity, articleID = articleID)
             )
-        ).map {  }
+        }
     }
 
-    private fun findAuthorArticle(articleID: ArticleID): Article? {
-        return repository
-            .findByID(articleID)
-            ?.takeIf { it.author.id == id }
+    override fun deleteArticles() = transaction<Unit> {
+        ArticleTable.deleteWhere { ArticleTable.authorID eq authorID }
     }
 
-    private fun hasEditPermission(articleID: ArticleID): Boolean {
-        return findAuthorArticle(articleID) != null
+    private fun findAuthorArticle(articleID: ArticleID): ArticleEntity? {
+        return ArticleEntity
+            .findById(articleID.toInt())
+            ?.takeIf { it.author.id.value == authorID }
     }
-
 }

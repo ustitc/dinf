@@ -1,10 +1,11 @@
 package dinf.backend
 
+import dinf.data.exposed.ArticleEntity
 import dinf.data.exposed.UserEntity
 import dinf.data.exposed.UserTable
+import dinf.domain.Content
 import dinf.exposed.postgresTestListeners
 import dinf.types.*
-import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,34 +14,35 @@ class DBLoginedUserTest : StringSpec({
 
     listeners(postgresTestListeners)
 
-    val anonymous = DBAnonymousUser(ArticleRepository.Stub())
-
     "name has been changed" {
-        val user = anonymous.toLogined(GithubCredential(PInt.orNull(123)!!))
+        val entity = createUser()
+        val user = DBLoginedUser(entity)
 
-        user.change(UserName(NotBlankString.orNull("new")!!))
+        user.change(UserName.orThrow("new"))
 
         transaction {
             UserEntity.find { UserTable.name eq "new" }.count()
         } shouldBe 1L
     }
 
-    "error on name change if entity doesn't exist" {
-        val user = DBLoginedUser(userID = UserID.orNull(123)!!, articleRepository = ArticleRepository.Stub())
+    "user and his articles has been deleted" {
+        val entity = createUser()
+        val user = DBLoginedUser(entity)
+        val author = DBAuthor(entity)
+        author.createArticle(
+            Content(
+                title = NBString.orNull("test")!!,
+                description = "",
+                values = Values.orThrow("test 1", "test 2")
+            )
+        )
+        transaction { UserEntity.count() } shouldBe 1L
+        transaction { ArticleEntity.count() } shouldBe 1L
 
-        shouldThrowAny {
-            user.change(UserName(NotBlankString.orNull("new")!!))
-        }
+        user.deleteAccount()
+
+        transaction { UserEntity.count() } shouldBe 0L
+        transaction { ArticleEntity.count() } shouldBe 0L
     }
-
-    // TODO: needs article delete implementation
-//    "user has been deleted" {
-//        val user = anonymous.toLogined(GithubCredential(PInt.orNull(123)!!))
-//        transaction { UserEntity.count() } shouldBe 1L
-//
-//        user.deleteAccount()
-//
-//        transaction { UserEntity.count() } shouldBe 0L
-//    }
 
 })

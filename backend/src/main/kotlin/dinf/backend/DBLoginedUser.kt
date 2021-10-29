@@ -3,30 +3,22 @@ package dinf.backend
 import dinf.data.exposed.UserEntity
 import dinf.domain.Author
 import dinf.domain.LoginedUser
-import dinf.types.UserID
 import dinf.types.UserName
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DBLoginedUser(
-    private val userID: UserID,
-    articleRepository: ArticleRepository
+    private val userEntity: UserEntity
 ) : LoginedUser {
 
-    private val author: Author = DBAuthor(userID, articleRepository)
+    private val author: Author = DBAuthor(userEntity)
 
     override fun change(name: UserName) = transaction {
-        val intID = userID.toInt()
-        val user = UserEntity.findById(intID)
-        if (user == null) {
-            throw IllegalStateException("Can't update user with id=$intID. Entry doesn't exist")
-        } else {
-            user.name = name.toString()
-        }
+        userEntity.name = name.toString()
     }
 
-    override fun deleteAccount() = transaction<Unit> {
+    override fun deleteAccount() = transaction {
         author.deleteArticles()
-        UserEntity.findById(userID.toInt())?.delete()
+        userEntity.delete()
     }
 
     override fun toAuthor(): Author {

@@ -2,8 +2,7 @@ package dinf.exposed
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import dinf.data.exposed.GithubCredentialTable
-import dinf.data.exposed.GoogleCredentialTable
+import dinf.data.exposed.ArticleTable
 import dinf.data.exposed.UserTable
 import io.kotest.core.listeners.TestListener
 import io.kotest.core.test.TestCase
@@ -24,7 +23,7 @@ class HikariTestListener(private val container: PostgreSQLContainer<Nothing>) : 
 
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
-                UserTable, GithubCredentialTable, GoogleCredentialTable
+                UserTable, ArticleTable
             )
         }
     }
