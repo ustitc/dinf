@@ -1,6 +1,6 @@
 package dinf.usecase
 
-import dinf.types.Article
+import dinf.domain.Article
 import dinf.types.ArticleID
 import dinf.types.PInt
 

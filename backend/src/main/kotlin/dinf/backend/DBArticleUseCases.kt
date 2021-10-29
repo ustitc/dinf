@@ -1,5 +1,6 @@
 package dinf.backend
 
+import dinf.domain.Article
 import dinf.exposed.ArticleEntity
 import dinf.types.*
 import dinf.usecase.ArticleUseCases

@@ -1,6 +1,5 @@
 package dinf.domain
 
-import dinf.types.Article
 import dinf.types.ArticleID
 
 interface Author {

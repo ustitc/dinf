@@ -1,6 +1,7 @@
 package dinf.exposed
 
 import dinf.backend.DBAuthor
+import dinf.domain.Article
 import dinf.domain.Content
 import dinf.types.*
 import org.jetbrains.exposed.dao.IntEntity
@@ -21,9 +22,7 @@ class ArticleEntity(id: EntityID<Int>) : IntEntity(id) {
     fun toArticle(): Article {
         return Article(
             id = ArticleID(id.value.toPositiveInt()!!),
-            name = NBString.orNull(name)!!,
-            description = description,
-            values = Values(values.map { str -> NBString.orNull(str)!! }.toList()),
+            content = toContent(),
             author = DBAuthor(author)
         )
     }

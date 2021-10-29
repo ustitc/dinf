@@ -5,7 +5,7 @@ import dinf.exposed.ArticleTable
 import dinf.exposed.UserEntity
 import dinf.domain.Author
 import dinf.domain.Content
-import dinf.types.Article
+import dinf.domain.Article
 import dinf.types.ArticleID
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
