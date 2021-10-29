@@ -1,7 +1,7 @@
 package dinf.backend
 
-import dinf.data.exposed.UserEntity
-import dinf.data.exposed.UserTable
+import dinf.exposed.UserEntity
+import dinf.exposed.UserTable
 import dinf.domain.AnonymousUser
 import dinf.domain.LoginedUser
 import dinf.types.Credential

@@ -1,6 +1,6 @@
 package dinf.backend
 
-import dinf.data.exposed.UserEntity
+import dinf.exposed.UserEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun createUser(): UserEntity = transaction {

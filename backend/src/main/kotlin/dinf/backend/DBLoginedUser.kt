@@ -1,6 +1,6 @@
 package dinf.backend
 
-import dinf.data.exposed.UserEntity
+import dinf.exposed.UserEntity
 import dinf.domain.Author
 import dinf.domain.LoginedUser
 import dinf.types.UserName

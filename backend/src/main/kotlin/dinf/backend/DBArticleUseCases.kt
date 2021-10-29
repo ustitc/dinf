@@ -1,6 +1,6 @@
 package dinf.backend
 
-import dinf.data.exposed.ArticleEntity
+import dinf.exposed.ArticleEntity
 import dinf.types.*
 import dinf.usecase.ArticleUseCases
 import org.jetbrains.exposed.sql.transactions.transaction

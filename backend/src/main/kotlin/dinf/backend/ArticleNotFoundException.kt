@@ -1,6 +1,6 @@
 package dinf.backend
 
-import dinf.data.exposed.UserEntity
+import dinf.exposed.UserEntity
 import dinf.types.ArticleID
 
 class ArticleNotFoundException(message: String) : RuntimeException(message) {

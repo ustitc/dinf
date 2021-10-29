@@ -1,4 +1,4 @@
-package dinf.data.exposed
+package dinf.exposed
 
 import dinf.backend.DBAuthor
 import dinf.domain.Content

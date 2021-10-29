@@ -1,6 +1,6 @@
 package dinf.backend
 
-import dinf.data.exposed.UserEntity
+import dinf.exposed.UserEntity
 import dinf.exposed.postgresTestListeners
 import dinf.types.GithubCredential
 import dinf.types.PInt

@@ -1,4 +1,4 @@
-package dinf.data.exposed
+package dinf.exposed
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

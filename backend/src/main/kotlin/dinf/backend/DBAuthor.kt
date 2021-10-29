@@ -1,8 +1,8 @@
 package dinf.backend
 
-import dinf.data.exposed.ArticleEntity
-import dinf.data.exposed.ArticleTable
-import dinf.data.exposed.UserEntity
+import dinf.exposed.ArticleEntity
+import dinf.exposed.ArticleTable
+import dinf.exposed.UserEntity
 import dinf.domain.Author
 import dinf.domain.Content
 import dinf.types.Article

@@ -2,8 +2,6 @@ package dinf.exposed
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import dinf.data.exposed.ArticleTable
-import dinf.data.exposed.UserTable
 import io.kotest.core.listeners.TestListener
 import io.kotest.core.test.TestCase
 import org.jetbrains.exposed.sql.Database

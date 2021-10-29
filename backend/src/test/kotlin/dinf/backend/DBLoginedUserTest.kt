@@ -1,8 +1,8 @@
 package dinf.backend
 
-import dinf.data.exposed.ArticleEntity
-import dinf.data.exposed.UserEntity
-import dinf.data.exposed.UserTable
+import dinf.exposed.ArticleEntity
+import dinf.exposed.UserEntity
+import dinf.exposed.UserTable
 import dinf.domain.Content
 import dinf.exposed.postgresTestListeners
 import dinf.types.*

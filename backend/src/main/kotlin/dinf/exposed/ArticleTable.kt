@@ -1,6 +1,5 @@
-package dinf.data.exposed
+package dinf.exposed
 
-import dinf.exposed.textArray
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 
