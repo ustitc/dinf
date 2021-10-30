@@ -4,25 +4,25 @@ import dinf.types.ArticleID
 
 interface Author {
 
-    fun articles(): List<Article>
+    suspend fun articles(): List<Article>
 
-    fun createArticle(content: Content): Article
+    suspend fun createArticle(content: Content): Article
 
-    fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit>
+    suspend fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit>
 
-    fun deleteArticle(articleID: ArticleID): Result<Unit>
+    suspend fun deleteArticle(articleID: ArticleID): Result<Unit>
 
-    fun deleteArticles()
+    suspend fun deleteArticles()
 
     class Stub(private val articles: MutableList<Article> = mutableListOf()) : Author {
 
         private var counter = 0
 
-        override fun articles(): List<Article> {
+        override suspend fun articles(): List<Article> {
             return articles
         }
 
-        override fun createArticle(content: Content): Article {
+        override suspend fun createArticle(content: Content): Article {
             val article = Article(
                 id = ArticleID.orThrow(counter),
                 content = content,
@@ -33,7 +33,7 @@ interface Author {
             return article
         }
 
-        override fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> {
+        override suspend fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> {
             val article = findByID(articleID)
             return if (article != null) {
                 block(article.content)
@@ -43,7 +43,7 @@ interface Author {
             }
         }
 
-        override fun deleteArticle(articleID: ArticleID): Result<Unit> {
+        override suspend fun deleteArticle(articleID: ArticleID): Result<Unit> {
             val article = findByID(articleID)
             return if (article != null) {
                 articles.remove(article)
@@ -53,7 +53,7 @@ interface Author {
             }
         }
 
-        override fun deleteArticles() {
+        override suspend fun deleteArticles() {
             articles.clear()
         }
 

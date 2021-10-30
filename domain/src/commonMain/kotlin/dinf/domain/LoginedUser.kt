@@ -4,10 +4,10 @@ import dinf.types.UserName
 
 interface LoginedUser {
 
-    fun change(name: UserName)
+    suspend fun change(name: UserName)
 
-    fun deleteAccount()
+    suspend fun deleteAccount()
 
-    fun toAuthor(): Author
+    suspend fun toAuthor(): Author
 
 }

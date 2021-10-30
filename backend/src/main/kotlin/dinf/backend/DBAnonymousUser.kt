@@ -1,18 +1,18 @@
 package dinf.backend
 
-import dinf.exposed.UserEntity
-import dinf.exposed.UserTable
 import dinf.domain.AnonymousUser
 import dinf.domain.LoginedUser
+import dinf.exposed.UserEntity
+import dinf.exposed.UserTable
 import dinf.types.Credential
 import dinf.types.GithubCredential
 import dinf.types.GoogleCredential
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.time.Instant
 
 class DBAnonymousUser : AnonymousUser {
 
-    override fun toLogined(credential: Credential): LoginedUser = transaction {
+    override suspend fun toLogined(credential: Credential): LoginedUser = newSuspendedTransaction {
         findByCredential(credential) ?: register(credential)
     }
 
