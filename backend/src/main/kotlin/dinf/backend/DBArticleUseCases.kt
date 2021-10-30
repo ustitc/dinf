@@ -15,15 +15,10 @@ class DBArticleUseCases : ArticleUseCases {
             .map { it.toArticle() }
     }
 
-    override fun article(id: ArticleID): Result<Article> {
-        val entity = ArticleEntity.findById(id.toInt())
-        return if (entity != null) {
-            Result.success(entity.toArticle())
-        } else {
-            Result.failure(
-                ArticleNotFoundException(id)
-            )
-        }
+    override fun article(id: ArticleID): Article? = transaction {
+        ArticleEntity
+            .findById(id.toInt())
+            ?.toArticle()
     }
 
 }

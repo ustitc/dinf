@@ -8,6 +8,6 @@ interface ArticleUseCases {
 
     fun articles(limit: PInt): List<Article>
 
-    fun article(id: ArticleID): Result<Article>
+    fun article(id: ArticleID): Article?
 
 }

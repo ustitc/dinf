@@ -35,9 +35,9 @@ class DBAuthor(
             .map { it.toArticle() }
     }
 
-    override fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> {
+    override fun editArticle(articleID: ArticleID, block: Content.() -> Unit): Result<Unit> = transaction {
         val entity = findAuthorArticle(articleID)
-        return if (entity != null) {
+        if (entity != null) {
             val content = entity.toContent()
             block.invoke(content)
             entity.name = content.title.toString()
