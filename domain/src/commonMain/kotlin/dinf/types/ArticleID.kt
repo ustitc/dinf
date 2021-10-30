@@ -11,4 +11,15 @@ value class ArticleID(private val value: PositiveInt) {
         return "ArticleID(value=${toInt()})"
     }
 
+    companion object {
+
+        fun orNull(int: Int): ArticleID? {
+            return PInt.orNull(int)?.let { ArticleID(it) }
+        }
+
+        fun orThrow(int: Int): ArticleID {
+            return orNull(int)!!
+        }
+    }
+
 }

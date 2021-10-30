@@ -9,10 +9,15 @@ value class NotBlankString private constructor(private val value: String) {
 
     companion object {
 
-        fun orNull(str: String): NotBlankString? =
-            str
+        fun orNull(str: String): NotBlankString? {
+            return str
                 .takeIf { it.isNotBlank() }
                 ?.let { NotBlankString(it) }
+        }
+
+        fun orThrow(str: String): NBString {
+            return orNull(str)!!
+        }
     }
 
 }
