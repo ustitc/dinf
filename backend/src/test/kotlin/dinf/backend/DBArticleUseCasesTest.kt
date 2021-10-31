@@ -1,7 +1,5 @@
 package dinf.backend
 
-import dev.ustits.krefty.dsl.refined
-import dev.ustits.krefty.predicate.ints.Positive
 import dinf.exposed.postgresTestListeners
 import dinf.types.ArticleID
 import dinf.types.PInt
@@ -49,7 +47,7 @@ class DBArticleUseCasesTest : StringSpec({
     "doesn't find article if it doesn't exist" {
         val uc = DBArticleUseCases()
 
-        val foundArticle = uc.article(ArticleID(PInt(1)))
+        val foundArticle = uc.article(ArticleID(1))
 
         foundArticle shouldBe null
     }
