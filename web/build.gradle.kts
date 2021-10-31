@@ -1,3 +1,5 @@
+import org.jetbrains.compose.*
+
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose") version "1.0.0-beta5"
@@ -6,6 +8,10 @@ plugins {
 rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin::class.java) {
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().versions.webpackCli.version =
         "4.9.0"
+}
+
+repositories {
+    jetbrainsCompose()
 }
 
 kotlin {
