@@ -21,7 +21,7 @@ class ArticleEntity(id: EntityID<Int>) : IntEntity(id) {
 
     fun toArticle(): Article {
         return Article(
-            id = ArticleID(id.value.toPositiveInt()!!),
+            id = ArticleID(id.value),
             content = toContent(),
             author = DBAuthor(author)
         )
@@ -29,9 +29,9 @@ class ArticleEntity(id: EntityID<Int>) : IntEntity(id) {
 
     fun toContent(): Content {
         return Content(
-            title = NBString.orNull(name)!!,
+            title = NBString(name),
             description = description,
-            values = Values(values.map { str -> NBString.orNull(str)!! }.toList())
+            values = Values(values.map { str -> NBString(str) }.toList())
         )
     }
 

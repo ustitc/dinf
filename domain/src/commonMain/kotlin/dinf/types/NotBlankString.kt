@@ -1,24 +1,16 @@
 package dinf.types
 
+import dev.ustits.krefty.core.Refined
+import dev.ustits.krefty.dsl.refined
+import dev.ustits.krefty.predicate.string.NotBlank
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class NotBlankString private constructor(private val value: String) {
+value class NotBlankString(private val refined: Refined<NotBlank, String>) {
 
-    override fun toString(): String = value
+    constructor(str: String) : this(str refined NotBlank())
 
-    companion object {
-
-        fun orNull(str: String): NotBlankString? {
-            return str
-                .takeIf { it.isNotBlank() }
-                ?.let { NotBlankString(it) }
-        }
-
-        fun orThrow(str: String): NBString {
-            return orNull(str)!!
-        }
-    }
+    override fun toString(): String = refined.unrefined
 
 }
 

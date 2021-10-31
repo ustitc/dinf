@@ -45,15 +45,15 @@ class DBAuthorTest : StringSpec({
         val author = DBAuthor(createUser())
         val article = author.createArticle(content())
         author.editArticle(article.id) {
-            title = NBString.orNull("new title")!!
+            title = NBString("new title")
             description = "new description"
-            values = Values.orThrow("new value 1", "new value 2")
+            values = Values("new value 1", "new value 2")
         }
 
         author.articles().first().content shouldBe Content(
-            title = NBString.orNull("new title")!!,
+            title = NBString("new title"),
             description = "new description",
-            values = Values.orThrow("new value 1", "new value 2")
+            values = Values("new value 1", "new value 2")
         )
     }
 
@@ -63,9 +63,9 @@ class DBAuthorTest : StringSpec({
         val article = anotherAuthor.createArticle(content())
 
         val result = author.editArticle(article.id) {
-            title = NBString.orNull("new title")!!
+            title = NBString("new title")
             description = "new description"
-            values = Values.orThrow("new value 1", "new value 2")
+            values = Values("new value 1", "new value 2")
         }
 
         result.isFailure shouldBe true

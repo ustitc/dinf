@@ -18,7 +18,7 @@ class DBLoginedUserTest : StringSpec({
         val entity = createUser()
         val user = DBLoginedUser(entity)
 
-        user.change(UserName.orThrow("new"))
+        user.change(UserName("new"))
 
         transaction {
             UserEntity.find { UserTable.name eq "new" }.count()
@@ -31,9 +31,9 @@ class DBLoginedUserTest : StringSpec({
         val author = DBAuthor(entity)
         author.createArticle(
             Content(
-                title = NBString.orNull("test")!!,
+                title = NBString("test"),
                 description = "",
-                values = Values.orThrow("test 1", "test 2")
+                values = Values("test 1", "test 2")
             )
         )
         transaction { UserEntity.count() } shouldBe 1L

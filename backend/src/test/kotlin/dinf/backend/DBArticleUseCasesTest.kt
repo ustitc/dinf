@@ -1,5 +1,7 @@
 package dinf.backend
 
+import dev.ustits.krefty.dsl.refined
+import dev.ustits.krefty.predicate.ints.Positive
 import dinf.exposed.postgresTestListeners
 import dinf.types.ArticleID
 import dinf.types.PInt
@@ -19,7 +21,7 @@ class DBArticleUseCasesTest : StringSpec({
 
         val uc = DBArticleUseCases()
 
-        uc.articles(PInt.orNull(100)!!).size shouldBe 40
+        uc.articles(PInt(100)).size shouldBe 40
     }
 
     "limits articles" {
@@ -29,7 +31,7 @@ class DBArticleUseCasesTest : StringSpec({
         author2.createArticles(30)
         val uc = DBArticleUseCases()
 
-        val articles = uc.articles(PInt.orNull(5)!!)
+        val articles = uc.articles(PInt(5))
 
         articles.size shouldBe 5
     }
@@ -47,7 +49,7 @@ class DBArticleUseCasesTest : StringSpec({
     "doesn't find article if it doesn't exist" {
         val uc = DBArticleUseCases()
 
-        val foundArticle = uc.article(ArticleID(PInt.orNull(1)!!))
+        val foundArticle = uc.article(ArticleID(PInt(1)))
 
         foundArticle shouldBe null
     }

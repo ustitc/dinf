@@ -12,7 +12,7 @@ class DBArticleUseCases : ArticleUseCases {
     override suspend fun articles(limit: PInt): List<Article> = newSuspendedTransaction {
         ArticleEntity
             .all()
-            .limit(limit.value)
+            .limit(limit.toInt())
             .map { it.toArticle() }
     }
 

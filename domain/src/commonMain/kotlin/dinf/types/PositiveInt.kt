@@ -1,19 +1,17 @@
 package dinf.types
 
+import dev.ustits.krefty.core.Refined
+import dev.ustits.krefty.dsl.refined
+import dev.ustits.krefty.predicate.ints.Positive
 import kotlin.jvm.JvmInline
 
 @JvmInline
-value class PositiveInt private constructor(val value: Int) {
+value class PositiveInt(private val refined: Refined<Positive, Int>) {
 
-    companion object {
+    constructor(int: Int) : this(int refined Positive())
 
-        fun orNull(int: Int): PositiveInt? {
-            return int.takeIf { int > 0 }?.let { PositiveInt(it) }
-        }
-
-        fun orThrow(int: Int): PInt {
-            return orNull(int)!!
-        }
+    fun toInt(): Int {
+        return refined.unrefined
     }
 
 }

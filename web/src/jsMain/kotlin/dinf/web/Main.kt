@@ -20,27 +20,27 @@ suspend fun main(): Unit = coroutineScope {
     val articleUC: ArticleUseCases = ArticleUseCases.Stub(
         listOf(
             Article(
-                id = ArticleID.orThrow(1),
+                id = ArticleID(1),
                 content = Content(
-                    title = NBString.orThrow("Dices"),
+                    title = NBString("Dices"),
                     description = "Dices to roll",
-                    values = Values.orThrow("d4", "d6", "d8", "d10", "d12", "d20", "d100")
+                    values = Values("d4", "d6", "d8", "d10", "d12", "d20", "d100")
                 ),
                 author = Author.Stub()
             ),
             Article(
-                id = ArticleID.orThrow(2),
+                id = ArticleID(2),
                 content = Content(
-                    title = NBString.orThrow("Colors"),
+                    title = NBString("Colors"),
                     description = "",
-                    values = Values.orThrow("red", "green", "blue", "purple", "cyan", "yellow")
+                    values = Values("red", "green", "blue", "purple", "cyan", "yellow")
                 ),
                 author = Author.Stub()
             )
         )
     )
     val articles = withTimeoutOrNull(2000) {
-        articleUC.articles(PInt.orThrow(10))
+        articleUC.articles(PInt(10))
     }
 
     renderComposable(rootElementId = "root") {

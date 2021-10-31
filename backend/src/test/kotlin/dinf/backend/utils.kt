@@ -21,8 +21,8 @@ suspend fun DBAuthor.createArticles(count: Int) = newSuspendedTransaction {
 
 fun content(): Content {
     return Content(
-        title = NBString.orNull("test")!!,
+        title = NBString("test"),
         description = "",
-        values = Values.orThrow("test 1", "test 2")
+        values = Values("test 1", "test 2")
     )
 }

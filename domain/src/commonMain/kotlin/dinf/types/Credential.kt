@@ -12,8 +12,8 @@ value class GoogleCredential(val id: JWTSubClaim) : Credential {
 }
 
 @JvmInline
-value class GithubCredential(val id: PositiveInt) : Credential {
+value class GithubCredential(val id: PInt) : Credential {
 
-    fun toInt(): Int = id.value
+    fun toInt(): Int = id.toInt()
 
 }

@@ -14,6 +14,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
+                api("dev.ustits.krefty:krefty-core:0.1.0-LOCAL")
             }
         }
         val commonTest by getting {

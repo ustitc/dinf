@@ -24,7 +24,7 @@ interface Author {
 
         override suspend fun createArticle(content: Content): Article {
             val article = Article(
-                id = ArticleID.orThrow(counter),
+                id = ArticleID(counter),
                 content = content,
                 author = this
             )
