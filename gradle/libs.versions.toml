@@ -1,0 +1,21 @@
+[versions]
+exposed = "0.36.1"
+kotest = "5.0.0.M3"
+kotestGradle = "5.0.0.5"
+testContainers = "1.16.2"
+
+[libraries]
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-javatime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+testContainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testContainers" }
+testContainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
+testContainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testContainers" }
+
+[plugins]
+kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotestGradle" }

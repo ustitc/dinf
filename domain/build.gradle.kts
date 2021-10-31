@@ -8,8 +8,6 @@ kotlin {
         nodejs()
     }
 
-    val kotestVersion = "5.0.0.M3"
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -20,9 +18,9 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
-                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-                implementation("io.kotest:kotest-property:$kotestVersion")
+                implementation(libs.kotest.frameworkEngine)
+                implementation(libs.kotest.assertionsCore)
+                implementation(libs.kotest.property)
             }
         }
         val jvmMain by getting

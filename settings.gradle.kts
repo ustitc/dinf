@@ -5,6 +5,8 @@ pluginManagement {
     }
 }
 
+enableFeaturePreview("VERSION_CATALOGS")
+
 rootProject.name = "dinf"
 include("domain")
 include("backend")
