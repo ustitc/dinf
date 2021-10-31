@@ -31,7 +31,7 @@ class ArticleEntity(id: EntityID<Int>) : IntEntity(id) {
         return Content(
             title = NBString(name),
             description = description,
-            values = Values(values.map { str -> NBString(str) }.toList())
+            values = Values(values.toList())
         )
     }
 
