@@ -5,9 +5,10 @@ plugins {
 kotlin {
     jvm()
     js(IR) {
-        useCommonJs()
-        browser()
+        nodejs()
     }
+
+    val kotestVersion = "5.0.0.M3"
 
     sourceSets {
         val commonMain by getting {
@@ -19,8 +20,9 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
+                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+                implementation("io.kotest:kotest-property:$kotestVersion")
             }
         }
         val jvmMain by getting

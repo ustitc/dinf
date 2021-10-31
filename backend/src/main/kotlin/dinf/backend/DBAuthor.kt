@@ -21,7 +21,7 @@ class DBAuthor(
         val entity = ArticleEntity.new {
             name = content.title.toString()
             description = content.description
-            values = content.values.list.map { it.toString() }.toTypedArray()
+            values = content.values.stringArray()
             author = userEntity
             creation = Instant.now()
             lastUpdate = Instant.now()
@@ -43,7 +43,7 @@ class DBAuthor(
                 block.invoke(content)
                 entity.name = content.title.toString()
                 entity.description = content.description
-                entity.values = content.values.list.map { it.toString() }.toTypedArray()
+                entity.values = content.values.stringArray()
                 Result.success(Unit)
             } else {
                 Result.failure(
