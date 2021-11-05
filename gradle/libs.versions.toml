@@ -1,7 +1,12 @@
 [versions]
 exposed = "0.36.1"
+ktor = "1.6.5"
 kotest = "5.0.0.M3"
+kotestKtor = "1.0.3"
+kotestTestcontainers = "1.0.1"
 kotestGradle = "5.0.0.5"
+kotlin = "1.5.31"
+logback = "1.2.6"
 testContainers = "1.16.2"
 
 [libraries]
@@ -9,13 +14,28 @@ exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "e
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
 exposed-javatime = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
 exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+ktor-clientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-clientCoreJVM = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
+ktor-clientApache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor" }
+ktor-serverCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-serverHostCommon = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
+ktor-serverSessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
+ktor-serverNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-serverTests = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
+ktor-auth = { module = "io.ktor:ktor-auth", version.ref = "ktor" }
+ktor-locations = { module = "io.ktor:ktor-locations", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization", version.ref = "ktor" }
 kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-extensionsAssertionsKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
+kotest-extensionsTestcontainers = { module = "io.kotest.extensions:kotest-extensions-testcontainers", version.ref = "kotestTestcontainers" }
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 testContainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testContainers" }
 testContainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
 testContainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testContainers" }
 
 [plugins]
 kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotestGradle" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
