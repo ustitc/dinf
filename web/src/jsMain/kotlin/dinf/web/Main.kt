@@ -1,25 +1,15 @@
 package dinf.web
 
 import androidx.compose.runtime.*
-import dinf.api.ArticleDTO
 import dinf.domain.Article
-import dinf.domain.Author
-import dinf.domain.Content
-import dinf.types.ArticleID
-import dinf.types.NBString
-import dinf.types.Values
-import io.ktor.client.*
-import io.ktor.client.features.json.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.*
+import dinf.types.PInt
+import dinf.usecase.ArticleUseCases
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
-private val client = HttpClient {
-    install(JsonFeature)
-}
+private val articleUC: ArticleUseCases = HTTPArticleUC("http://localhost:8080")
 
 fun main() {
     renderComposable(rootElementId = "root") {
@@ -66,20 +56,7 @@ fun ArticlesFeed() {
     var articles by remember { mutableStateOf(emptyList<Article>()) }
 
     LaunchedEffect(key1 = Unit, block = {
-        articles =
-            withTimeoutOrNull(2000) {
-                client.get<List<ArticleDTO>>(urlString = "http://localhost:8080/article/list")
-            }?.map {
-                Article(
-                    id = ArticleID(it.id),
-                    content = Content(
-                        title = NBString(it.title),
-                        description = it.description,
-                        values = Values("red", "green", "blue", "purple", "cyan", "yellow")
-                    ),
-                    author = Author.Stub()
-                )
-            }!!
+        articles = articleUC.articles(PInt(100))
     })
     articles.map {
         ArticleCard(it)
