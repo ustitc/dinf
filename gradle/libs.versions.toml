@@ -17,6 +17,8 @@ exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exp
 ktor-clientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-clientCoreJVM = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
 ktor-clientApache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor" }
+ktor-clientJS = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+ktor-clientSerialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-serverHostCommon = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
 ktor-serverSessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }

@@ -9,5 +9,6 @@ enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "dinf"
 include("domain")
+include("api")
 include("backend")
 include("web")

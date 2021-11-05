@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    `java-library`
     kotlin("jvm")
     alias(libs.plugins.kotlin.serialization)
 }
@@ -15,7 +14,9 @@ tasks.withType<KotlinCompile>() {
 }
 
 dependencies {
+    implementation(project(":api"))
     implementation(project(":domain"))
+
     implementation(kotlin("stdlib-jdk8"))
 
     runtimeOnly("org.postgresql:postgresql:42.3.1")
