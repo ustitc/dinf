@@ -10,6 +10,10 @@ interface Edge {
 
     class Stub(override var value: NBString) : Edge {
 
+        constructor(str: String) : this(NBString(str))
+
+        constructor(int: Int) : this(int.toString())
+
         override suspend fun edit(new: NBString) {
             value = new
         }

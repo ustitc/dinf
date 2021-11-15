@@ -3,14 +3,27 @@ package dinf.web
 import androidx.compose.runtime.*
 import dinf.domain.Article
 import dinf.domain.Articles
+import dinf.domain.Dice
+import dinf.domain.Edge
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
 private val articles: Articles = HTTPArticles("http://localhost:8080")
+private val dice: Dice = Dice.Stub(
+    listOf(
+        Edge.Stub(1),
+        Edge.Stub(2),
+        Edge.Stub(3),
+        Edge.Stub(4),
+        Edge.Stub(5),
+        Edge.Stub(6),
+    )
+)
 
 fun main() {
     renderComposable(rootElementId = "root") {
@@ -39,6 +52,7 @@ fun main() {
             }
             Main {
                 ArticlesFeed()
+                Dice()
             }
             Footer(attrs = { classes("footer") }) {
                 Div(attrs = { classes("container", "has-text-centered") }) {
@@ -84,5 +98,30 @@ fun ArticleCard(article: Article) {
             }
         }
         Div(attrs = { classes("media-right") }) { }
+    }
+}
+
+@Composable
+fun Dice() {
+    var diceRoll by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+
+    Div(attrs = { classes("block") }) {
+        Button(attrs = {
+            classes("button", "is-primary")
+            onClick {
+                scope.launch {
+                    dice.roll()
+                    diceRoll = dice.top.value.toString()
+                }
+            }
+        }) {
+            Text("Generate")
+        }
+    }
+    Div(attrs = { classes("block") }) {
+        Label {
+            Text(diceRoll)
+        }
     }
 }
