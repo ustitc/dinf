@@ -4,12 +4,12 @@ import dinf.domain.Article
 import dinf.exposed.ArticleEntity
 import dinf.types.ArticleID
 import dinf.types.PInt
-import dinf.usecase.ArticleUseCases
+import dinf.domain.Articles
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class DBArticleUseCases : ArticleUseCases {
+class DBArticles : Articles {
 
-    override suspend fun articles(limit: PInt): List<Article> = newSuspendedTransaction {
+    override suspend fun list(limit: PInt): List<Article> = newSuspendedTransaction {
         ArticleEntity
             .all()
             .limit(limit.toInt())

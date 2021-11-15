@@ -9,7 +9,7 @@ import dinf.types.ArticleID
 import dinf.types.NBString
 import dinf.types.PInt
 import dinf.types.Values
-import dinf.usecase.ArticleUseCases
+import dinf.domain.Articles
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.response.*
@@ -23,7 +23,7 @@ class ArticleLocation {
 
 }
 
-private val articleUC = ArticleUseCases.Stub(
+private val articles = Articles.Stub(
     listOf(
         Article(
             id = ArticleID(1),
@@ -60,7 +60,7 @@ fun Article.toDTO(): ArticleDTO {
 
 fun Route.articles() {
     get<ArticleLocation.List> {
-        val articles = articleUC.articles(PInt(100))
+        val articles = articles.list(PInt(100))
         val response = articles.map { it.toDTO() }
         call.respond(
             response

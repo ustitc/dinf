@@ -3,13 +3,13 @@ package dinf.web
 import androidx.compose.runtime.*
 import dinf.domain.Article
 import dinf.types.PInt
-import dinf.usecase.ArticleUseCases
+import dinf.domain.Articles
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
-private val articleUC: ArticleUseCases = HTTPArticleUC("http://localhost:8080")
+private val articles: Articles = HTTPArticles("http://localhost:8080")
 
 fun main() {
     renderComposable(rootElementId = "root") {
@@ -56,7 +56,7 @@ fun ArticlesFeed() {
     var articles by remember { mutableStateOf(emptyList<Article>()) }
 
     LaunchedEffect(key1 = Unit, block = {
-        articles = articleUC.articles(PInt(100))
+        articles = dinf.web.articles.list(PInt(100))
     })
     articles.map {
         ArticleCard(it)

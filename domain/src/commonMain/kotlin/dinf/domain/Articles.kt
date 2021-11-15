@@ -1,18 +1,17 @@
-package dinf.usecase
+package dinf.domain
 
-import dinf.domain.Article
 import dinf.types.ArticleID
 import dinf.types.PInt
 
-interface ArticleUseCases {
+interface Articles {
 
-    suspend fun articles(limit: PInt): List<Article>
+    suspend fun list(limit: PInt): List<Article>
 
     suspend fun article(id: ArticleID): Article?
 
-    class Stub(private val articles: List<Article>) : ArticleUseCases {
+    class Stub(private val articles: List<Article>) : Articles {
 
-        override suspend fun articles(limit: PInt): List<Article> {
+        override suspend fun list(limit: PInt): List<Article> {
             return articles
         }
 

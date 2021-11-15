@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
-class DBArticleUseCasesTest : StringSpec({
+class DBArticlesTest : StringSpec({
 
     listeners(postgresTestListeners)
 
@@ -17,9 +17,9 @@ class DBArticleUseCasesTest : StringSpec({
         author1.createArticles(10)
         author2.createArticles(30)
 
-        val uc = DBArticleUseCases()
+        val uc = DBArticles()
 
-        uc.articles(PInt(100)).size shouldBe 40
+        uc.list(PInt(100)).size shouldBe 40
     }
 
     "limits articles" {
@@ -27,9 +27,9 @@ class DBArticleUseCasesTest : StringSpec({
         val author2 = DBAuthor(createUser())
         author1.createArticles(10)
         author2.createArticles(30)
-        val uc = DBArticleUseCases()
+        val uc = DBArticles()
 
-        val articles = uc.articles(PInt(5))
+        val articles = uc.list(PInt(5))
 
         articles.size shouldBe 5
     }
@@ -37,7 +37,7 @@ class DBArticleUseCasesTest : StringSpec({
     "finds article" {
         val author = DBAuthor(createUser())
         val article = author.createArticle(content())
-        val uc = DBArticleUseCases()
+        val uc = DBArticles()
 
         val foundArticle = uc.article(article.id)
 
@@ -45,7 +45,7 @@ class DBArticleUseCasesTest : StringSpec({
     }
 
     "doesn't find article if it doesn't exist" {
-        val uc = DBArticleUseCases()
+        val uc = DBArticles()
 
         val foundArticle = uc.article(ArticleID(1))
 

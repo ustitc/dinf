@@ -8,22 +8,22 @@ import dinf.types.ArticleID
 import dinf.types.NBString
 import dinf.types.PInt
 import dinf.types.Values
-import dinf.usecase.ArticleUseCases
+import dinf.domain.Articles
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.withTimeoutOrNull
 
-class HTTPArticleUC(
+class HTTPArticles(
     private val baseURL: String,
     private val timeout: Long = 2000
-) : ArticleUseCases {
+) : Articles {
 
     private val client = HttpClient {
         install(JsonFeature)
     }
 
-    override suspend fun articles(limit: PInt): List<Article> {
+    override suspend fun list(limit: PInt): List<Article> {
         return withTimeoutOrNull(timeout) {
             client.get<List<ArticleDTO>>(urlString = "$baseURL/article/list")
         }?.map {
