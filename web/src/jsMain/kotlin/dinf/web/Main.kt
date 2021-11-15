@@ -10,7 +10,8 @@ import org.jetbrains.compose.web.renderComposable
 
 private val articles: Articles = HTTPArticles("http://localhost:8080")
 private val dice: Dice = Dice.Stub(
-    listOf(
+    name = "D6",
+    edges = listOf(
         Edge.Stub(1),
         Edge.Stub(2),
         Edge.Stub(3),

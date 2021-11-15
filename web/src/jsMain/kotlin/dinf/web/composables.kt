@@ -49,6 +49,9 @@ fun Dice.toComposable() {
     var diceRoll by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
+    H1(attrs = { classes("title") }) {
+        Text(this@toComposable.name.toString())
+    }
     Div(attrs = { classes("block") }) {
         Button(attrs = {
             classes("button", "is-primary")
