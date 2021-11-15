@@ -6,6 +6,7 @@ kotestKtor = "1.0.3"
 kotestTestcontainers = "1.0.1"
 kotestGradle = "5.0.0.5"
 kotlin = "1.5.31"
+kotlinx = "1.5.2"
 logback = "1.2.6"
 testContainers = "1.16.2"
 
@@ -33,6 +34,7 @@ kotest-extensionsTestcontainers = { module = "io.kotest.extensions:kotest-extens
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 testContainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testContainers" }
 testContainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
