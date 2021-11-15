@@ -1,18 +1,19 @@
 package dinf.domain
 
 import dinf.types.ArticleID
-import dinf.types.PInt
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
 interface Articles {
 
-    suspend fun list(limit: PInt): List<Article>
+    suspend fun flow(): Flow<Article>
 
     suspend fun article(id: ArticleID): Article?
 
     class Stub(private val articles: List<Article>) : Articles {
 
-        override suspend fun list(limit: PInt): List<Article> {
-            return articles
+        override suspend fun flow(): Flow<Article> {
+            return articles.asFlow()
         }
 
         override suspend fun article(id: ArticleID): Article? {

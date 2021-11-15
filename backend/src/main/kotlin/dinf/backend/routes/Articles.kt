@@ -3,17 +3,17 @@ package dinf.backend.routes
 import dinf.api.ArticleDTO
 import dinf.api.AuthorDTO
 import dinf.domain.Article
+import dinf.domain.Articles
 import dinf.domain.Author
 import dinf.domain.Content
 import dinf.types.ArticleID
 import dinf.types.NBString
-import dinf.types.PInt
 import dinf.types.Values
-import dinf.domain.Articles
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kotlinx.coroutines.flow.toList
 
 @Location("/article")
 class ArticleLocation {
@@ -60,7 +60,7 @@ fun Article.toDTO(): ArticleDTO {
 
 fun Route.articles() {
     get<ArticleLocation.List> {
-        val articles = articles.list(PInt(100))
+        val articles = articles.flow().toList()
         val response = articles.map { it.toDTO() }
         call.respond(
             response

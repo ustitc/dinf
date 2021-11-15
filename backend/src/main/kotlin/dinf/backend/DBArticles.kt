@@ -1,19 +1,20 @@
 package dinf.backend
 
 import dinf.domain.Article
+import dinf.domain.Articles
 import dinf.exposed.ArticleEntity
 import dinf.types.ArticleID
-import dinf.types.PInt
-import dinf.domain.Articles
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class DBArticles : Articles {
 
-    override suspend fun list(limit: PInt): List<Article> = newSuspendedTransaction {
+    override suspend fun flow(): Flow<Article> = newSuspendedTransaction {
         ArticleEntity
             .all()
-            .limit(limit.toInt())
             .map { it.toArticle() }
+            .asFlow()
     }
 
     override suspend fun article(id: ArticleID): Article? = newSuspendedTransaction {

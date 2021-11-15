@@ -2,16 +2,17 @@ package dinf.web
 
 import dinf.api.ArticleDTO
 import dinf.domain.Article
+import dinf.domain.Articles
 import dinf.domain.Author
 import dinf.domain.Content
 import dinf.types.ArticleID
 import dinf.types.NBString
-import dinf.types.PInt
 import dinf.types.Values
-import dinf.domain.Articles
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.withTimeoutOrNull
 
 class HTTPArticles(
@@ -23,7 +24,7 @@ class HTTPArticles(
         install(JsonFeature)
     }
 
-    override suspend fun list(limit: PInt): List<Article> {
+    override suspend fun flow(): Flow<Article> {
         return withTimeoutOrNull(timeout) {
             client.get<List<ArticleDTO>>(urlString = "$baseURL/article/list")
         }?.map {
@@ -36,7 +37,7 @@ class HTTPArticles(
                 ),
                 author = Author.Stub()
             )
-        }!!
+        }!!.asFlow()
     }
 
     override suspend fun article(id: ArticleID): Article? {

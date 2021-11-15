@@ -2,10 +2,10 @@ package dinf.backend
 
 import dinf.exposed.postgresTestListeners
 import dinf.types.ArticleID
-import dinf.types.PInt
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import kotlinx.coroutines.flow.toList
 
 class DBArticlesTest : StringSpec({
 
@@ -19,19 +19,7 @@ class DBArticlesTest : StringSpec({
 
         val uc = DBArticles()
 
-        uc.list(PInt(100)).size shouldBe 40
-    }
-
-    "limits articles" {
-        val author1 = DBAuthor(createUser())
-        val author2 = DBAuthor(createUser())
-        author1.createArticles(10)
-        author2.createArticles(30)
-        val uc = DBArticles()
-
-        val articles = uc.list(PInt(5))
-
-        articles.size shouldBe 5
+        uc.flow().toList().size shouldBe 40
     }
 
     "finds article" {

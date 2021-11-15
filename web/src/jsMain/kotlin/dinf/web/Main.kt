@@ -2,8 +2,9 @@ package dinf.web
 
 import androidx.compose.runtime.*
 import dinf.domain.Article
-import dinf.types.PInt
 import dinf.domain.Articles
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
@@ -56,7 +57,7 @@ fun ArticlesFeed() {
     var articles by remember { mutableStateOf(emptyList<Article>()) }
 
     LaunchedEffect(key1 = Unit, block = {
-        articles = dinf.web.articles.list(PInt(100))
+        articles = dinf.web.articles.flow().take(100).toList()
     })
     articles.map {
         ArticleCard(it)
