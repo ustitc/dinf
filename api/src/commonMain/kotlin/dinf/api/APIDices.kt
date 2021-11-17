@@ -1,6 +1,5 @@
-package dinf.web
+package dinf.api
 
-import dinf.api.APIDice
 import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.Edges
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.withTimeoutOrNull
 
-class HTTPDices(
+class APIDices(
     private val baseURL: String,
     private val timeout: Long = 2000
 ) : Dices {

@@ -1,5 +1,6 @@
 package dinf.web
 
+import dinf.api.APIDices
 import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.Edges
@@ -8,7 +9,7 @@ import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
-private val dices: Dices = HTTPDices("http://localhost:8080")
+private val dices: Dices = APIDices("http://localhost:8080")
 private val dice: Dice = Dice.Simple(
     name = "D6",
     edges = Edges.Simple(1, 2, 3, 4, 5, 6)

@@ -15,6 +15,8 @@ kotlin {
                 implementation(project(":domain"))
 
                 implementation(kotlin("stdlib-common"))
+                implementation(libs.ktor.clientCore)
+                implementation(libs.ktor.clientSerialization)
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
             }
@@ -22,7 +24,11 @@ kotlin {
         val commonTest by getting
         val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.ktor.clientJS)
+            }
+        }
         val jsTest by getting
     }
 }

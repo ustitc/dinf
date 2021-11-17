@@ -32,10 +32,6 @@ kotlin {
 
                 implementation(project(":api"))
                 implementation(project(":domain"))
-
-                implementation(libs.ktor.clientCore)
-                implementation(libs.ktor.clientJS)
-                implementation(libs.ktor.clientSerialization)
             }
         }
     }
