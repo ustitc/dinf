@@ -21,7 +21,7 @@ class HikariTestListener(private val container: PostgreSQLContainer<Nothing>) : 
 
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
-                UserTable, ArticleTable
+                UserTable, DiceTable
             )
         }
     }

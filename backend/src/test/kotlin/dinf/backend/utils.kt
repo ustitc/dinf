@@ -1,28 +1,21 @@
 package dinf.backend
 
-import dinf.domain.Content
+import dinf.exposed.DiceEntity
 import dinf.exposed.UserEntity
-import dinf.types.NBString
-import dinf.types.Values
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.Instant
+
+fun createDiceEntity(): DiceEntity = transaction {
+    DiceEntity.new {
+        name = "test"
+        creation = Instant.now()
+        lastUpdate = Instant.now()
+        edges = arrayOf("1", "2", "3")
+    }
+}
 
 fun createUser(): UserEntity = transaction {
     UserEntity.new {
         name = "name"
     }
-}
-
-suspend fun DBAuthor.createArticles(count: Int) = newSuspendedTransaction {
-    for (i in 1..count) {
-        createArticle(content())
-    }
-}
-
-fun content(): Content {
-    return Content(
-        title = NBString("test"),
-        description = "",
-        values = Values("test 1", "test 2")
-    )
 }

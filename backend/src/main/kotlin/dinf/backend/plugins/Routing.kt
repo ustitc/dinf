@@ -1,12 +1,12 @@
 package dinf.backend.plugins
 
-import dinf.backend.routes.articles
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.features.*
-import io.ktor.locations.*
+import dinf.backend.routes.dices
 import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.locations.*
 import io.ktor.response.*
+import io.ktor.routing.*
 
 fun Application.configureRouting() {
 
@@ -14,7 +14,7 @@ fun Application.configureRouting() {
     }
 
     routing {
-        articles()
+        dices()
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
                 call.respond(HttpStatusCode.Unauthorized)

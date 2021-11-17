@@ -1,16 +1,14 @@
 package dinf.domain
 
-import dinf.types.NBString
-
 interface Roll {
 
-    val value: NBString
+    val result: String
 
-    class Lazy(values: List<NBString>) : Roll {
+    class Lazy(edges: Edges) : Roll {
 
-        constructor(dice: Dice) : this(dice.edges.map { it.value })
+        constructor(dice: Dice) : this(dice.edges)
 
-        override val value: NBString by lazy { values.random() }
+        override val result: String by lazy { edges.stringList.random() }
 
     }
 

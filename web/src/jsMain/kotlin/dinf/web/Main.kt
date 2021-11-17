@@ -1,24 +1,17 @@
 package dinf.web
 
-import dinf.domain.Articles
 import dinf.domain.Dice
-import dinf.domain.Edge
+import dinf.domain.Dices
+import dinf.domain.Edges
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
-private val articles: Articles = HTTPArticles("http://localhost:8080")
-private val dice: Dice = Dice.Stub(
+private val dices: Dices = HTTPDices("http://localhost:8080")
+private val dice: Dice = Dice.Simple(
     name = "D6",
-    edges = listOf(
-        Edge.Stub(1),
-        Edge.Stub(2),
-        Edge.Stub(3),
-        Edge.Stub(4),
-        Edge.Stub(5),
-        Edge.Stub(6),
-    )
+    edges = Edges.Simple(1, 2, 3, 4, 5, 6)
 )
 
 fun main() {
@@ -47,7 +40,7 @@ fun main() {
                 }
             }
             Main {
-                articles.toComposable()
+                dices.toComposable()
                 dice.toComposable()
             }
             Footer(attrs = { classes("footer") }) {

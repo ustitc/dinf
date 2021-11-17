@@ -10,15 +10,19 @@ interface Dice {
 
     val name: Name<Dice>
 
-    val edges: List<Edge>
+    val edges: Edges
 
-    class Stub(
+    class Simple(
         override val id: Int,
         override val name: Name<Dice>,
-        override val edges: List<Edge>
+        override val edges: Edges
     ) : Dice {
 
-        constructor(name: String, edges: List<Edge>) : this(Random.Default.nextInt(1000), Name.Stub(name), edges)
+        constructor(name: String, edges: Edges) : this(
+            id = Random.Default.nextInt(1000),
+            name = Name.Stub(name),
+            edges = edges
+        )
 
         override suspend fun roll(): Roll {
             return Roll.Lazy(this)
