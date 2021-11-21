@@ -15,52 +15,51 @@ fun Dices.toComposable() {
         dices = this@toComposable.flow().toList()
     })
     dices.map {
-        it.card()
-    }
-}
-
-@Composable
-fun Dice.card() {
-    Article(attrs = { classes("media") }) {
-        Div(attrs = { classes("media-left") }) { }
-        Div(attrs = { classes("media-content") }) {
-            H1(attrs = { classes("title", "has-text-link") }) {
-                A(href = "") {
-                    Text(this@card.name.nbString.toString())
-                }
-            }
-            H2(attrs = { classes("subtitle") }) {
-                Text("by <unknown>")
-            }
-        }
-        Div(attrs = { classes("media-right") }) { }
+        it.toComposable()
     }
 }
 
 @Composable
 fun Dice.toComposable() {
+    var expanded by remember { mutableStateOf(false) }
     var diceRoll by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
 
-    H1(attrs = { classes("title") }) {
-        Text(this@toComposable.name.nbString.toString())
-    }
-    Div(attrs = { classes("block") }) {
-        Button(attrs = {
-            classes("button", "is-primary")
-            onClick {
-                scope.launch {
-                    val roll = this@toComposable.roll()
-                    diceRoll = roll.result
+    Div(attrs = {
+        classes("box")
+        onClick { expanded = true }
+    }) {
+        Article(attrs = { classes("media") }) {
+            Div(attrs = { classes("media-left") }) { }
+            Div(attrs = { classes("media-content") }) {
+                H1(attrs = { classes("title") }) {
+                    Text(this@toComposable.name.nbString.toString())
+                }
+                H2(attrs = { classes("subtitle") }) {
+                    Text("by <unknown>")
+                }
+                if (expanded) {
+                    Div(attrs = { classes("block") }) {
+                        Button(attrs = {
+                            classes("button", "is-primary")
+                            onClick {
+                                scope.launch {
+                                    val roll = this@toComposable.roll()
+                                    diceRoll = roll.result
+                                }
+                            }
+                        }) {
+                            Text("Roll")
+                        }
+                    }
+                    Div(attrs = { classes("block") }) {
+                        Label {
+                            Text(diceRoll)
+                        }
+                    }
                 }
             }
-        }) {
-            Text("Generate")
-        }
-    }
-    Div(attrs = { classes("block") }) {
-        Label {
-            Text(diceRoll)
+            Div(attrs = { classes("media-right") }) { }
         }
     }
 }

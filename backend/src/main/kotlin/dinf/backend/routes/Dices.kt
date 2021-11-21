@@ -30,6 +30,10 @@ private val dices = Dices.Stub(
             id = 2,
             name = Name.Stub("Colors"),
             edges = Edges.Simple("red", "green", "blue", "purple", "cyan", "yellow")
+        ),
+        Dice.Simple(
+            name = "D6",
+            edges = Edges.Simple(1, 2, 3, 4, 5, 6)
         )
     )
 )
