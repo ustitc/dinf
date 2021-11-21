@@ -2,6 +2,10 @@ package dinf.web
 
 import dinf.api.APIDices
 import dinf.domain.Dices
+import org.jetbrains.compose.web.css.CSSNumeric
+import org.jetbrains.compose.web.css.height
+import org.jetbrains.compose.web.css.maxHeight
+import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
 
@@ -11,10 +15,12 @@ fun main() {
     renderComposable(rootElementId = "root") {
         Nav(attrs = { classes("level") }) {
             Div(attrs = { classes("level-left") }) {
-                Div(attrs = { classes("level-item") }) {
-                    A {
-                        Text("dInf")
-                    }
+                Div(attrs = { classes("level-item", "has-text-centered") }) {
+                    Img(src = "dinf.png", attrs = {
+                        style {
+                            height(50.px)
+                        }
+                    })
                 }
             }
         }

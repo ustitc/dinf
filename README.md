@@ -1,4 +1,4 @@
-# dInf
+![dInf](web/src/jsMain/resources/dInf.png)
 
 **dInf** (infinity dice) - project for creating random generators and sharing them with others.
 
