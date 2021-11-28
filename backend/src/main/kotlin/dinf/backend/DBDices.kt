@@ -2,11 +2,11 @@ package dinf.backend
 
 import dinf.domain.Dice
 import dinf.domain.Dices
-import dinf.domain.Edges
 import dinf.exposed.DiceEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import java.time.Instant
 
 class DBDices : Dices {
 
@@ -17,7 +17,15 @@ class DBDices : Dices {
             .asFlow()
     }
 
-    override suspend fun create(edges: Edges) {
-        TODO("Not yet implemented")
+    override suspend fun create(dice: Dice) {
+        newSuspendedTransaction {
+            val now = Instant.now()
+            DiceEntity.new {
+                name = dice.name.nbString.toString()
+                edges = dice.edges.stringList.toTypedArray()
+                creation = now
+                lastUpdate = now
+            }
+        }
     }
 }

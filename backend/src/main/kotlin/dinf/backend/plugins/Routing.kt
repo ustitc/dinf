@@ -1,5 +1,6 @@
 package dinf.backend.plugins
 
+import dinf.backend.routes.createDice
 import dinf.backend.routes.dices
 import io.ktor.application.*
 import io.ktor.features.*
@@ -15,6 +16,7 @@ fun Application.configureRouting() {
 
     routing {
         dices()
+        createDice()
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
                 call.respond(HttpStatusCode.Unauthorized)

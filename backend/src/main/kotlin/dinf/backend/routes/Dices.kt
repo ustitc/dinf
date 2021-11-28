@@ -6,16 +6,19 @@ import dinf.domain.Dices
 import dinf.domain.Edges
 import dinf.domain.Name
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.locations.*
+import io.ktor.locations.post
+import io.ktor.request.*
 import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.routing.Route
 import kotlinx.coroutines.flow.toList
 
 @Location("/dices")
 class DiceLocation
 
 private val dices = Dices.Stub(
-    listOf(
+    mutableListOf(
         Dice.Simple(
             name = Name.Stub("Dices"),
             edges = Edges.Simple("d4", "d6", "d8", "d10", "d12", "d20", "d100")
@@ -38,5 +41,13 @@ fun Route.dices() {
         call.respond(
             response
         )
+    }
+}
+
+fun Route.createDice() {
+    post<DiceLocation> {
+        val dice = call.receive<APIDice>()
+        dices.create(dice)
+        call.response.status(HttpStatusCode.OK)
     }
 }

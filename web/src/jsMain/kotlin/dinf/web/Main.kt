@@ -8,7 +8,15 @@ import dinf.api.APIDices
 import dinf.domain.Dices
 import org.jetbrains.compose.web.css.height
 import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.dom.*
+import org.jetbrains.compose.web.dom.A
+import org.jetbrains.compose.web.dom.Button
+import org.jetbrains.compose.web.dom.Div
+import org.jetbrains.compose.web.dom.Footer
+import org.jetbrains.compose.web.dom.Img
+import org.jetbrains.compose.web.dom.Nav
+import org.jetbrains.compose.web.dom.P
+import org.jetbrains.compose.web.dom.Section
+import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 
 private val dices: Dices = APIDices("http://localhost:8080")
@@ -44,11 +52,9 @@ fun main() {
                                 createForm = false
                             }
                         }) { }
-                        Div(attrs = { classes("modal-content") }) {
-                            P { Text("test") }
-                        }
+                        CreateDiceModalCard(dices)
                         Button(attrs = {
-                            classes("modal-close")
+                            classes("modal-close", "is-large")
                             onClick {
                                 createForm = false
                             }

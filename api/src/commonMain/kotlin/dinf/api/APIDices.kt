@@ -2,10 +2,10 @@ package dinf.api
 
 import dinf.domain.Dice
 import dinf.domain.Dices
-import dinf.domain.Edges
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.withTimeoutOrNull
@@ -25,7 +25,12 @@ class APIDices(
         }!!.asFlow()
     }
 
-    override suspend fun create(edges: Edges) {
-        TODO("Not yet implemented")
+    override suspend fun create(dice: Dice) {
+        withTimeoutOrNull(timeout) {
+            client.post<Any>("$baseURL/dices") {
+                contentType(ContentType.Application.Json)
+                body = APIDice(dice)
+            }
+        }
     }
 }

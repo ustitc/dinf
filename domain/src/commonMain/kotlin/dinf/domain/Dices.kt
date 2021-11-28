@@ -5,14 +5,14 @@ import kotlinx.coroutines.flow.asFlow
 
 interface Dices {
 
-    suspend fun create(edges: Edges)
+    suspend fun create(dice: Dice)
 
     suspend fun flow(): Flow<Dice>
 
-    class Stub(private val list: List<Dice>) : Dices {
+    class Stub(private val list: MutableList<Dice> = mutableListOf()) : Dices {
 
-        override suspend fun create(edges: Edges) {
-            TODO("Not yet implemented")
+        override suspend fun create(dice: Dice) {
+            list.add(dice)
         }
 
         override suspend fun flow(): Flow<Dice> {
