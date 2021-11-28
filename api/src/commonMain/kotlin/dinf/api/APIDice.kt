@@ -11,19 +11,17 @@ import kotlinx.serialization.Transient
 
 @Serializable
 data class APIDice(
-    override val id: Int,
     @SerialName("name") val nameField: String,
     @SerialName("edges") val edgesField: List<String>,
 ) : Dice {
 
     constructor(dice: Dice) : this(
-        id = dice.id,
         nameField = dice.name.nbString.toString(),
         edgesField = dice.edges.stringList
     )
 
     override suspend fun roll(): Roll {
-        return Dice.Simple(id, name, edges).roll()
+        return Dice.Simple(name, edges).roll()
     }
 
     @Transient

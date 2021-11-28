@@ -17,12 +17,10 @@ class DiceLocation
 private val dices = Dices.Stub(
     listOf(
         Dice.Simple(
-            id = 1,
             name = Name.Stub("Dices"),
             edges = Edges.Simple("d4", "d6", "d8", "d10", "d12", "d20", "d100")
         ),
         Dice.Simple(
-            id = 2,
             name = Name.Stub("Colors"),
             edges = Edges.Simple("red", "green", "blue", "purple", "cyan", "yellow")
         ),
