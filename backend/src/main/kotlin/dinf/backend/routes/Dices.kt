@@ -11,13 +11,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.flow.toList
 
-@Location("/dice")
-class ArticleLocation {
-
-    @Location("/list")
-    data class List(val page: Int = 0)
-
-}
+@Location("/dices")
+class DiceLocation
 
 private val dices = Dices.Stub(
     listOf(
@@ -39,7 +34,7 @@ private val dices = Dices.Stub(
 )
 
 fun Route.dices() {
-    get<ArticleLocation.List> {
+    get<DiceLocation> {
         val diceList = dices.flow().toList()
         val response: List<APIDice> = diceList.map { APIDice(it) }
         call.respond(

@@ -21,7 +21,7 @@ class APIDices(
 
     override suspend fun flow(): Flow<Dice> {
         return withTimeoutOrNull(timeout) {
-            client.get<List<APIDice>>(urlString = "$baseURL/dice/list")
+            client.get<List<APIDice>>(urlString = "$baseURL/dices")
         }!!.asFlow()
     }
 
