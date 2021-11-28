@@ -13,13 +13,7 @@ import io.ktor.client.features.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.dom.Button
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Footer
-import org.jetbrains.compose.web.dom.Header
 import org.jetbrains.compose.web.dom.Input
-import org.jetbrains.compose.web.dom.Label
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Section
 import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.TextArea
 
@@ -32,65 +26,32 @@ fun CreateDiceModalCard(dices: Dices) {
 
     val scope = rememberCoroutineScope()
 
-    Div(attrs = { classes("modal-card") }) {
-        Header(attrs = { classes("modal-card-head") }) {
-            P(attrs = { classes("modal-card-title") }) {
-                Text("Create dice")
-            }
-        }
-        Section(attrs = { classes("modal-card-body") }) {
+    BulmaModalCard(
+        title = "Create dice",
+        body = {
             if (isError) {
-                Div(attrs = { classes("message", "is-danger") }) {
-                    Div(attrs = { classes("message-header") }) {
-                        P { Text("Error") }
-                        Button(attrs = {
-                            classes("delete")
-                            onClick {
-                                isError = false
-                                errorMessage = ""
-                            }
-                        }) { }
+                BulmaMessage(color = BulmaColor.IS_DANGER) {
+                    Text("Error happened. Try again later. $errorMessage")
+                }
+            }
+            FormField(name = "Name") {
+                Input(InputType.Text, attrs = {
+                    classes("input")
+                    onInput {
+                        name = it.value
                     }
-                    Div(attrs = { classes("message-body") }) {
-                        Text("Error happened. Try again later. $errorMessage")
+                })
+            }
+            FormField(name = "Edges", help = "Each value must be on new line") {
+                TextArea(attrs = {
+                    classes("input")
+                    onInput {
+                        edges = it.value
                     }
-                }
+                })
             }
-            Div(attrs = { classes("field") }) {
-                Label(attrs = { classes("label") }) {
-                    Text("Name")
-                }
-                Div(attrs = { classes("control") }) {
-                    Input(InputType.Text, attrs = {
-                        classes("input")
-                        onInput {
-                            name = it.value
-                        }
-                    })
-                }
-                Div(attrs = { classes("help") }) {
-                    Text("Required field")
-                }
-            }
-            Div(attrs = { classes("field") }) {
-                Label(attrs = { classes("label") }) {
-                    Text("Edges")
-                }
-                Div(attrs = { classes("control") }) {
-                    TextArea(attrs = {
-                        classes("input")
-                        onInput {
-                            edges = it.value
-                        }
-                    })
-                }
-                Div(attrs = { classes("help") }) {
-                    Text("Required field")
-                }
-            }
-        }
-
-        Footer(attrs = { classes("modal-card-foot") }) {
+        },
+        footer = {
             Button(
                 attrs = {
                     classes("button")
@@ -117,5 +78,5 @@ fun CreateDiceModalCard(dices: Dices) {
                 Text("Save")
             }
         }
-    }
+    )
 }
