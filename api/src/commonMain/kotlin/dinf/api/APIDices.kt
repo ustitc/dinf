@@ -25,10 +25,6 @@ class APIDices(
         }!!.asFlow()
     }
 
-    override suspend fun dice(id: Int): Dice? {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun create(edges: Edges) {
         TODO("Not yet implemented")
     }

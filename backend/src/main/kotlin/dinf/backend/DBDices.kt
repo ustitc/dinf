@@ -17,12 +17,6 @@ class DBDices : Dices {
             .asFlow()
     }
 
-    override suspend fun dice(id: Int): Dice? = newSuspendedTransaction {
-        DiceEntity
-            .findById(id)
-            ?.let { DBDice(it) }
-    }
-
     override suspend fun create(edges: Edges) {
         TODO("Not yet implemented")
     }
