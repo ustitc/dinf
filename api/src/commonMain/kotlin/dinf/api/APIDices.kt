@@ -2,6 +2,7 @@ package dinf.api
 
 import dinf.domain.Dice
 import dinf.domain.Dices
+import dinf.domain.ID
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
@@ -23,6 +24,10 @@ class APIDices(
         return withTimeoutOrNull(timeout) {
             client.get<List<APIDice>>(urlString = "$baseURL/dices")
         }!!.asFlow()
+    }
+
+    override suspend fun dice(id: ID): Dice? {
+        TODO("Not yet implemented")
     }
 
     override suspend fun create(dice: Dice) {

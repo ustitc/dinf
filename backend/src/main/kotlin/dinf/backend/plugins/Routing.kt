@@ -6,6 +6,7 @@ import dinf.backend.routes.createDice
 import dinf.backend.routes.dices
 import dinf.backend.routes.index
 import dinf.backend.routes.create
+import dinf.backend.routes.dice
 import dinf.backend.routes.createForm
 import io.ktor.application.*
 import io.ktor.features.*
@@ -30,6 +31,7 @@ fun Application.configureRouting() {
         index(layout)
         create(layout)
         createForm(layout)
+        dice(layout)
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
                 call.respond(HttpStatusCode.Unauthorized)

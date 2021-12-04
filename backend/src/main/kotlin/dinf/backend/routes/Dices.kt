@@ -8,6 +8,7 @@ import dinf.backend.templates.HTMLDice
 import dinf.backend.templates.Layout
 import dinf.domain.Dice
 import dinf.domain.Edges
+import dinf.domain.ID
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -18,6 +19,8 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.html.InputType
+import kotlinx.html.a
+import kotlinx.html.div
 import kotlinx.html.input
 import kotlinx.html.p
 import kotlinx.html.textArea
@@ -53,6 +56,10 @@ fun Route.index(layout: Layout) {
                         card {
                             content {
                                 insert(HTMLDice(dice)) {}
+                                val location = call.locations.href(DiceLocation.ID(id = dice.id.nbString.toString()))
+                                div("block") {
+                                    a(href = location) { +"Open" }
+                                }
                             }
                         }
                     }
@@ -106,6 +113,22 @@ fun Route.create(layout: Layout) {
         call.respondHtmlTemplate(layout) {
             content {
                 p { +"Created" }
+            }
+        }
+    }
+}
+
+fun Route.dice(layout: Layout) {
+    get<DiceLocation.ID> {
+        val diceID = ID.Simple(it.id)
+        val dice = dices.dice(diceID)
+        if (dice == null) {
+            call.respond(status = HttpStatusCode.NotFound, "")
+        } else {
+            call.respondHtmlTemplate(layout) {
+                content {
+                    insert(HTMLDice(dice)) {}
+                }
             }
         }
     }
