@@ -6,6 +6,8 @@ kotlin {
     jvm()
     js(IR) {
         nodejs()
+        browser()
+        binaries.executable()
     }
 
     sourceSets {
@@ -26,7 +28,11 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+            }
+        }
         val jsTest by getting
     }
 }

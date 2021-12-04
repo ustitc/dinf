@@ -37,6 +37,10 @@ dependencies {
     implementation(libs.ktor.auth)
     implementation(libs.ktor.locations)
     implementation(libs.ktor.serialization)
+    implementation(libs.ktor.webjars)
+    implementation(libs.ktor.htmlBuilder)
+
+    implementation("org.webjars.npm:bulma:0.9.3")
 
     implementation(libs.logback.classic)
 
