@@ -8,8 +8,8 @@ import java.time.Instant
 fun createDiceEntity(): DiceEntity = transaction {
     DiceEntity.new {
         name = "test"
-        creation = Instant.now()
-        lastUpdate = Instant.now()
+        createdAt = Instant.now()
+        updatedAt = Instant.now()
         edges = arrayOf("1", "2", "3")
     }
 }

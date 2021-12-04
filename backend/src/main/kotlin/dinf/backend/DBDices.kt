@@ -23,8 +23,8 @@ class DBDices : Dices {
             DiceEntity.new {
                 name = dice.name.nbString.toString()
                 edges = dice.edges.stringList.toTypedArray()
-                creation = now
-                lastUpdate = now
+                createdAt = now
+                updatedAt = now
             }
         }
     }

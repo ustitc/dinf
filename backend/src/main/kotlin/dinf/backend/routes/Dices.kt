@@ -1,13 +1,12 @@
 package dinf.backend.routes
 
 import dinf.api.APIDice
+import dinf.backend.DBDices
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.Layout
 import dinf.domain.Dice
-import dinf.domain.Dices
 import dinf.domain.Edges
-import dinf.domain.ID
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -28,25 +27,7 @@ import kotlinx.html.onClick
 import kotlinx.html.p
 import kotlinx.html.textArea
 
-private val dices = Dices.Stub(
-    mutableListOf(
-        Dice.Simple(
-            id = ID.Simple(1),
-            name = "Dices",
-            edges = Edges.Simple("d4", "d6", "d8", "d10", "d12", "d20", "d100")
-        ),
-        Dice.Simple(
-            id = ID.Simple(2),
-            name = "Colors",
-            edges = Edges.Simple("red", "green", "blue", "purple", "cyan", "yellow")
-        ),
-        Dice.Simple(
-            id = ID.Simple(3),
-            name = "D6",
-            edges = Edges.Simple(1, 2, 3, 4, 5, 6)
-        )
-    )
-)
+private val dices = DBDices()
 
 fun Route.dices() {
     get<DiceLocation> {

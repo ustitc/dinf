@@ -8,7 +8,7 @@ class UserEntity(id: EntityID<Int>) : IntEntity(id) {
 
     companion object : IntEntityClass<UserEntity>(UserTable)
     var name by UserTable.name
-    var registrationTime by UserTable.registrationTime
+    var createdAt by UserTable.createdAt
     var githubCredential by UserTable.githubCredential
     var googleCredential by UserTable.googleCredential
 

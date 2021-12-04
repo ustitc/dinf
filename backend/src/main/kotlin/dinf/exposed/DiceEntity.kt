@@ -9,8 +9,8 @@ class DiceEntity(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<DiceEntity>(DiceTable)
 
     var name by DiceTable.name
-    var creation by DiceTable.creationTime
-    var lastUpdate by DiceTable.lastUpdateTime
+    var createdAt by DiceTable.createdAt
+    var updatedAt by DiceTable.updatedAt
     var edges by DiceTable.edges
 
 }

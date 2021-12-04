@@ -3,6 +3,7 @@ package dinf.backend.templates
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.div
+import kotlinx.html.p
 
 class Feed : Template<FlowContent> {
 
@@ -17,6 +18,8 @@ class Feed : Template<FlowContent> {
                     }
                 }
             }
+        } else {
+            p { +"No content" }
         }
     }
 }
