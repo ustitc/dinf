@@ -7,7 +7,7 @@ import dinf.backend.templates.Layout
 import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.Edges
-import dinf.domain.Name
+import dinf.domain.ID
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -31,14 +31,17 @@ import kotlinx.html.textArea
 private val dices = Dices.Stub(
     mutableListOf(
         Dice.Simple(
-            name = Name.Stub("Dices"),
+            id = ID.Simple(1),
+            name = "Dices",
             edges = Edges.Simple("d4", "d6", "d8", "d10", "d12", "d20", "d100")
         ),
         Dice.Simple(
-            name = Name.Stub("Colors"),
+            id = ID.Simple(2),
+            name = "Colors",
             edges = Edges.Simple("red", "green", "blue", "purple", "cyan", "yellow")
         ),
         Dice.Simple(
+            id = ID.Simple(3),
             name = "D6",
             edges = Edges.Simple(1, 2, 3, 4, 5, 6)
         )
