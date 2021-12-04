@@ -4,6 +4,7 @@ import dinf.api.APIDice
 import dinf.backend.DBDices
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
+import dinf.backend.templates.HTMLDice
 import dinf.backend.templates.Layout
 import dinf.domain.Dice
 import dinf.domain.Edges
@@ -17,13 +18,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.html.InputType
-import kotlinx.html.button
-import kotlinx.html.div
-import kotlinx.html.h1
-import kotlinx.html.h2
-import kotlinx.html.id
 import kotlinx.html.input
-import kotlinx.html.onClick
 import kotlinx.html.p
 import kotlinx.html.textArea
 
@@ -54,24 +49,10 @@ fun Route.index(layout: Layout) {
         call.respondHtmlTemplate(layout) {
             content {
                 insert(Feed()) {
-                    diceList.mapIndexed { i, dice ->
-                        val rollValues = dice.edges
-                            .stringList.joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
-                        val diceID = "result-$i"
-
+                    diceList.map { dice ->
                         card {
                             content {
-                                h1(classes = "title") { +dice.name.nbString.toString() }
-                                h2(classes = "subtitle") { +"by <unknown>" }
-                                div(classes = "block") {
-                                    button(classes = "button is-primary") {
-                                        onClick = "roll($rollValues, \"$diceID\")"
-                                        +"Roll"
-                                    }
-                                }
-                                div(classes = "block") {
-                                    this.id = diceID
-                                }
+                                insert(HTMLDice(dice)) {}
                             }
                         }
                     }
