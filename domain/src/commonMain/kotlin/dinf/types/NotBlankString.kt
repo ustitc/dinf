@@ -2,11 +2,10 @@ package dinf.types
 
 import dev.ustits.krefty.core.Refined
 import dev.ustits.krefty.dsl.refined
+import dev.ustits.krefty.dsl.refinedOrNull
 import dev.ustits.krefty.predicate.string.NotBlank
-import kotlin.jvm.JvmInline
 
-@JvmInline
-value class NotBlankString(private val refined: Refined<NotBlank, String>) {
+class NotBlankString(private val refined: Refined<NotBlank, String>): CharSequence by refined.unrefined {
 
     constructor(str: String) : this(str refined NotBlank())
 
@@ -15,3 +14,7 @@ value class NotBlankString(private val refined: Refined<NotBlank, String>) {
 }
 
 typealias NBString = NotBlankString
+
+fun String.toNBStringOrNull(): NBString? {
+    return (this refinedOrNull NotBlank())?.let { NBString(it) }
+}

@@ -1,5 +1,7 @@
 package dinf.domain
 
+import dinf.types.NBString
+
 interface Dice {
 
     suspend fun roll(): Roll
@@ -16,19 +18,25 @@ interface Dice {
         override val edges: Edges
     ) : Dice {
 
+        override suspend fun roll(): Roll {
+            return Roll.Lazy(this)
+        }
+    }
+
+    class New(name: Name<Dice>, edges: Edges) : Dice by Simple(
+        id = ID.Empty(),
+        name = name,
+        edges = edges
+    ) {
+
         constructor(
-            id: ID = ID.Empty(),
-            name: String,
+            name: NBString,
             edges: Edges
         ) : this(
-            id = id,
             name = Name.Stub(name),
             edges = edges
         )
 
-        override suspend fun roll(): Roll {
-            return Roll.Lazy(this)
-        }
     }
 
 }

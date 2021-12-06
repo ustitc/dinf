@@ -2,12 +2,13 @@ package dinf.backend.routes
 
 import dinf.api.APIDice
 import dinf.backend.DBDices
+import dinf.backend.templates.BulmaColor
+import dinf.backend.templates.BulmaMessage
+import dinf.backend.templates.CreateDiceForm
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.HTMLDice
 import dinf.backend.templates.Layout
-import dinf.domain.Dice
-import dinf.domain.Edges
 import dinf.domain.ID
 import io.ktor.application.*
 import io.ktor.html.*
@@ -18,12 +19,9 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.flow.toList
-import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.div
-import kotlinx.html.input
 import kotlinx.html.p
-import kotlinx.html.textArea
 
 private val dices = DBDices()
 
@@ -74,26 +72,8 @@ fun Route.createForm(layout: Layout) {
     get<DiceLocation.New> {
         call.respondHtmlTemplate(layout) {
             content {
-                insert(Form(newDiceURL)) {
-                    field {
-                        name = "Name"
-                        control {
-                            input(classes = "input", name = "name", type = InputType.text)
-                        }
-                    }
-                    field {
-                        name = "Edges"
-                        help = "Each value must be on new line"
-                        control {
-                            textArea(classes = "textarea") {
-                                name = "edges"
-                            }
-                        }
-                    }
-                    submit {
-                        value = "Save"
-                    }
-                }
+                val form = Form(newDiceURL)
+                insert(CreateDiceForm(form)) {}
             }
         }
     }
@@ -102,17 +82,27 @@ fun Route.createForm(layout: Layout) {
 fun Route.create(layout: Layout) {
     post<DiceLocation.New> {
         val params = call.receiveParameters()
-        val name = params["name"]!!
-        val edges = params["edges"]!!.lines().filter { it.isNotBlank() }
-        dices.create(
-            Dice.Simple(
-                name = name,
-                edges = Edges.Simple(edges)
-            )
-        )
-        call.respondHtmlTemplate(layout) {
-            content {
-                p { +"Created" }
+        val dice = HTMLParamsDice.fromParametersOrNull(params)
+        if (dice != null) {
+            dices.create(dice)
+            call.respondHtmlTemplate(layout) {
+                content {
+                    p { +"Created" }
+                }
+            }
+        } else {
+            call.respondHtmlTemplate(layout) {
+                content {
+                    insert(BulmaMessage()) {
+                        color = BulmaColor.IS_WARNING
+                        body {
+                            p { +"Please specify name and edges" }
+                        }
+                    }
+
+                    val form = Form(newDiceURL)
+                    insert(CreateDiceForm(form)) {}
+                }
             }
         }
     }

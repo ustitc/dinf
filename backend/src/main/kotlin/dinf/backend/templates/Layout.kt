@@ -53,8 +53,8 @@ class Layout(internal val newDiceURL: String) : Template<HTML> {
             section("section") {
                 insert(content)
             }
-            footer {
-                div("container has-text-centered") {
+            footer("footer") {
+                div("content has-text-centered") {
                     p { +"by Ruslan Ustits" }
                     a(href = "https://github.com/ustits") { +"Github" }
                 }
