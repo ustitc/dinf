@@ -31,7 +31,7 @@ fun Application.configureSecurity() {
                 }
             }
             challenge {
-                val url = call.locations.href(LoginLocation)
+                val url = call.locations.href(LoginLocation.Form(fail = true))
                 call.respondRedirect(url)
             }
         }

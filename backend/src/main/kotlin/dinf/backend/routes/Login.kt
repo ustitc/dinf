@@ -1,5 +1,7 @@
 package dinf.backend.routes
 
+import dinf.backend.templates.BulmaColor
+import dinf.backend.templates.BulmaMessage
 import dinf.backend.templates.Form
 import dinf.backend.templates.Layout
 import io.ktor.application.*
@@ -11,11 +13,20 @@ import io.ktor.response.*
 import io.ktor.routing.Route
 import kotlinx.html.InputType
 import kotlinx.html.input
+import kotlinx.html.p
 
 fun Route.loginForm(layout: Layout) {
-    get<LoginLocation> {
+    get<LoginLocation.Form> { form ->
         call.respondHtmlTemplate(layout) {
             content {
+                if (form.fail) {
+                    insert(BulmaMessage()) {
+                        color = BulmaColor.IS_DANGER
+                        body {
+                            p { +"Wrong username or password" }
+                        }
+                    }
+                }
                 insert(Form(loginURL)) {
                     field {
                         name = "Username"
