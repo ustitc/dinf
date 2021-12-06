@@ -11,7 +11,6 @@ import kotlinx.html.head
 import kotlinx.html.img
 import kotlinx.html.link
 import kotlinx.html.meta
-import kotlinx.html.nav
 import kotlinx.html.p
 import kotlinx.html.script
 import kotlinx.html.section
@@ -34,19 +33,22 @@ class Layout(internal val newDiceURL: String) : Template<HTML> {
             script { src = "/assets/roll.js" }
         }
         body {
-            nav("level") {
-                div("level-left") {
-                    div("level-item has-text-centered") {
-                        a("/") {
-                            img(src = "/assets/dinf.png", alt = "logo") {
-                                style = "height: 50px;"
-                            }
+            insert(BulmaNavbar()) {
+                brand {
+                    a(classes = "navbar-item", href = "/") {
+                        img(src = "/assets/dinf.png", alt = "logo") {
+                            style = "height: 50px;"
                         }
                     }
-                    div("level-item has-text-centered") {
-                        a(href = newDiceURL, classes = "link is-info") {
-                            +"Create dice"
-                        }
+                }
+                start {
+                    a(href = newDiceURL) {
+                        +"Create dice"
+                    }
+                }
+                end {
+                    a(classes = "button is-primary", href = "/login") {
+                        +"Login"
                     }
                 }
             }
