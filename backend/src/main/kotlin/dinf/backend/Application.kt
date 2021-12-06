@@ -22,10 +22,10 @@ fun main() {
     configureDatabase()
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        configureRouting()
         configureSerialization()
         configureHTTP()
         configureSecurity()
+        configureRouting()
         install(CallLogging) {
             level = Level.INFO
             format {

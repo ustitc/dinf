@@ -1,6 +1,5 @@
 package dinf.backend.plugins
 
-import dinf.backend.routes.DiceLocation
 import dinf.backend.templates.Layout
 import dinf.backend.routes.createDice
 import dinf.backend.routes.dices
@@ -8,6 +7,8 @@ import dinf.backend.routes.index
 import dinf.backend.routes.create
 import dinf.backend.routes.dice
 import dinf.backend.routes.createForm
+import dinf.backend.routes.login
+import dinf.backend.routes.loginForm
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -23,8 +24,7 @@ fun Application.configureRouting() {
     }
 
     routing {
-        val newDiceURL = application.locations.href(DiceLocation.New())
-        val layout = Layout(newDiceURL)
+        val layout = Layout(application.locations)
 
         dices()
         createDice()
@@ -32,6 +32,8 @@ fun Application.configureRouting() {
         create(layout)
         createForm(layout)
         dice(layout)
+        loginForm(layout)
+        login()
         install(StatusPages) {
             exception<AuthenticationException> { cause ->
                 call.respond(HttpStatusCode.Unauthorized)
