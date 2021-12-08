@@ -4,10 +4,8 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import dinf.backend.plugins.configureHTTP
 import dinf.backend.plugins.configureRouting
-import dinf.backend.plugins.configureSecurity
 import dinf.backend.plugins.configureSerialization
 import dinf.exposed.DiceTable
-import dinf.exposed.UserTable
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.request.*
@@ -24,7 +22,6 @@ fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         configureSerialization()
         configureHTTP()
-        configureSecurity()
         configureRouting()
         install(CallLogging) {
             level = Level.INFO
@@ -47,7 +44,7 @@ private fun configureDatabase() {
 
     transaction {
         SchemaUtils.createMissingTablesAndColumns(
-            UserTable, DiceTable
+            DiceTable
         )
     }
 }

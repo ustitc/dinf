@@ -1,7 +1,6 @@
 package dinf.backend.templates
 
 import dinf.backend.routes.DiceLocation
-import dinf.backend.routes.LoginLocation
 import io.ktor.html.*
 import io.ktor.locations.*
 import kotlinx.html.FlowContent
@@ -20,10 +19,9 @@ import kotlinx.html.section
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(internal val loginURL: String, internal val newDiceURL: String) : Template<HTML> {
+class Layout(internal val newDiceURL: String) : Template<HTML> {
 
     constructor(locations: Locations) : this(
-        loginURL = locations.href(LoginLocation),
         newDiceURL = locations.href(DiceLocation.New())
     )
 
@@ -52,11 +50,6 @@ class Layout(internal val loginURL: String, internal val newDiceURL: String) : T
                 start {
                     a(href = newDiceURL) {
                         +"Create dice"
-                    }
-                }
-                end {
-                    a(classes = "button is-primary", href = loginURL) {
-                        +"Login"
                     }
                 }
             }

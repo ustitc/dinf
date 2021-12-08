@@ -34,7 +34,6 @@ dependencies {
     implementation(libs.ktor.serverHostCommon)
     implementation(libs.ktor.serverSessions)
     implementation(libs.ktor.serverNetty)
-    implementation(libs.ktor.auth)
     implementation(libs.ktor.locations)
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.webjars)
