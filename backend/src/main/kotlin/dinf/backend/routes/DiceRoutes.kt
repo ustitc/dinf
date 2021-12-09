@@ -27,9 +27,8 @@ import kotlinx.html.p
 import org.hashids.Hashids
 
 private val dices = DBDices()
-private val hashids = Hashids("salt", 6)
 
-fun Route.index(layout: Layout) {
+fun Route.index(layout: Layout, hashids: Hashids) {
     get("/") {
         val diceViews = dices.flow()
             .map {
@@ -102,7 +101,7 @@ fun Route.create(layout: Layout) {
     }
 }
 
-fun Route.dice(layout: Layout) {
+fun Route.dice(layout: Layout, hashids: Hashids) {
     get<DiceLocation.ID> {
         val diceID = ID.Simple(it.id)
         val serial = HashSerialNumber(it.id, hashids)

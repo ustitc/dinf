@@ -1,7 +1,8 @@
 package dinf.backend
 
-import com.zaxxer.hikari.HikariConfig
+import com.sksamuel.hoplite.ConfigLoader
 import com.zaxxer.hikari.HikariDataSource
+import dinf.backend.config.Configuration
 import dinf.backend.plugins.configureHTTP
 import dinf.backend.plugins.configureRouting
 import dinf.backend.plugins.configureSerialization
@@ -17,12 +18,13 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.Level
 
 fun main() {
-    configureDatabase()
+    val config = ConfigLoader().loadConfigOrThrow<Configuration>("/application.toml")
+    configureDatabase(config.database)
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         configureSerialization()
         configureHTTP()
-        configureRouting()
+        configureRouting(config)
         install(CallLogging) {
             level = Level.INFO
             format {
@@ -36,8 +38,8 @@ fun main() {
     }.start(wait = true)
 }
 
-private fun configureDatabase() {
-    val config = HikariConfig("/hikari.properties")
+private fun configureDatabase(database: dinf.backend.config.Database) {
+    val config = database.toHikariConfig()
     config.schema = "public"
     val ds = HikariDataSource(config)
     Database.connect(ds)

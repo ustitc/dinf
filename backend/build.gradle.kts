@@ -42,6 +42,9 @@ dependencies {
 
     implementation("org.hashids:hashids:1.0.3")
 
+    implementation(libs.hoplite.core)
+    implementation(libs.hoplite.toml)
+
     implementation(libs.logback.classic)
 
     testImplementation(libs.ktor.serverTests)

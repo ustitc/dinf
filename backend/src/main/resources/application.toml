@@ -1,0 +1,10 @@
+[database]
+user = "dinf_admin"
+password = "dinf_password"
+database = "dinf"
+port = 5432
+server = "localhost"
+
+[urls]
+salt = "salt"
+publicLength = 6

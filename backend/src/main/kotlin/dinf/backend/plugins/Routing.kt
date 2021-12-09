@@ -1,5 +1,6 @@
 package dinf.backend.plugins
 
+import dinf.backend.config.Configuration
 import dinf.backend.routes.create
 import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
@@ -11,19 +12,22 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.webjars.*
+import org.hashids.Hashids
 
-fun Application.configureRouting() {
+fun Application.configureRouting(config: Configuration) {
 
     install(Locations) {
     }
 
     routing {
         val layout = Layout(application.locations)
+        val urls = config.urls
+        val hashids = Hashids(urls.salt, urls.publicLength)
 
-        index(layout)
+        index(layout, hashids)
         create(layout)
         createForm(layout)
-        dice(layout)
+        dice(layout, hashids)
         install(StatusPages) {
         }
         static("assets") {
