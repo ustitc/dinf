@@ -2,7 +2,7 @@ package dinf.backend
 
 import dinf.domain.Dice
 import dinf.domain.Dices
-import dinf.domain.ID
+import dinf.domain.SerialNumber
 import dinf.exposed.DiceEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -30,9 +30,9 @@ class DBDices : Dices {
         }
     }
 
-    override suspend fun dice(id: ID): Dice? {
+    override suspend fun dice(serialNumber: SerialNumber): Dice? {
         return newSuspendedTransaction {
-            DiceEntity.findById(id.print().toString().toInt())
+            DiceEntity.findById(serialNumber.number.toInt())
         }?.let { DBDice(it) }
     }
 }

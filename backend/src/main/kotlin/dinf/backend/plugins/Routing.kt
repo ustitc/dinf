@@ -1,10 +1,8 @@
 package dinf.backend.plugins
 
 import dinf.backend.routes.create
-import dinf.backend.routes.createDice
 import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
-import dinf.backend.routes.dices
 import dinf.backend.routes.index
 import dinf.backend.templates.Layout
 import io.ktor.application.*
@@ -22,8 +20,6 @@ fun Application.configureRouting() {
     routing {
         val layout = Layout(application.locations)
 
-        dices()
-        createDice()
         index(layout)
         create(layout)
         createForm(layout)

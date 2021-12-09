@@ -9,7 +9,7 @@ interface Dices {
 
     suspend fun flow(): Flow<Dice>
 
-    suspend fun dice(id: ID): Dice?
+    suspend fun dice(serialNumber: SerialNumber): Dice?
 
     class Stub(private val list: MutableList<Dice> = mutableListOf()) : Dices {
 
@@ -21,8 +21,8 @@ interface Dices {
             return list.asFlow()
         }
 
-        override suspend fun dice(id: ID): Dice? {
-            return list.firstOrNull { it.id == id }
+        override suspend fun dice(serialNumber: SerialNumber): Dice? {
+            return list.firstOrNull { it.serialNumber.number == serialNumber.number }
         }
     }
 

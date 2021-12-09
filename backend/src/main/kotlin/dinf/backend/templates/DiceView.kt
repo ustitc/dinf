@@ -1,32 +1,34 @@
 package dinf.backend.templates
 
 import dinf.domain.Dice
+import dinf.domain.ID
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.button
 import kotlinx.html.div
 import kotlinx.html.h1
-import kotlinx.html.h2
 import kotlinx.html.id
 import kotlinx.html.onClick
 
-class HTMLDice(dice: Dice) : Template<FlowContent>, Dice by dice {
+class DiceView(private val dice: Dice, val id: ID) : Template<FlowContent> {
+
+    val footer = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
-        val rollValues = edges.stringList
+        val rollValues = dice.edges.stringList
             .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
-        val diceTagID = "result-${id.nbString}"
+        val resultTagID = "result-${id.print()}"
 
-        h1(classes = "title") { +name.nbString.toString() }
-        h2(classes = "subtitle") { +"by <unknown>" }
+        h1(classes = "title") { +dice.name.nbString.toString() }
         div(classes = "block") {
             button(classes = "button is-primary") {
-                onClick = "roll($rollValues, \"$diceTagID\")"
+                onClick = "roll($rollValues, \"$resultTagID\")"
                 +"Roll"
             }
         }
         div(classes = "block") {
-            this.id = diceTagID
+            this.id = resultTagID
         }
+        insert(footer)
     }
 }

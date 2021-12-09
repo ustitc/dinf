@@ -1,13 +1,14 @@
 package dinf.backend.routes
 
-import dinf.api.APIDice
 import dinf.backend.DBDices
+import dinf.backend.HashID
+import dinf.backend.HashSerialNumber
 import dinf.backend.templates.BulmaColor
 import dinf.backend.templates.BulmaMessage
 import dinf.backend.templates.CreateDiceForm
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
-import dinf.backend.templates.HTMLDice
+import dinf.backend.templates.DiceView
 import dinf.backend.templates.Layout
 import dinf.domain.ID
 import io.ktor.application.*
@@ -18,45 +19,38 @@ import io.ktor.locations.post
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.p
+import org.hashids.Hashids
 
 private val dices = DBDices()
-
-fun Route.dices() {
-    get<DiceLocation> {
-        val diceList = dices.flow().toList()
-        val response: List<APIDice> = diceList.map { APIDice(it) }
-        call.respond(
-            response
-        )
-    }
-}
-
-fun Route.createDice() {
-    post<DiceLocation> {
-        val dice = call.receive<APIDice>()
-        dices.create(dice)
-        call.response.status(HttpStatusCode.OK)
-    }
-}
+private val hashids = Hashids("salt", 6)
 
 fun Route.index(layout: Layout) {
     get("/") {
-        val diceList = dices.flow().toList()
+        val diceViews = dices.flow()
+            .map {
+                val id = HashID(it.serialNumber, hashids)
+                DiceView(it, id)
+            }
+            .toList()
 
         call.respondHtmlTemplate(layout) {
             content {
                 insert(Feed()) {
-                    diceList.map { dice ->
+                    diceViews.map { view ->
                         card {
                             content {
-                                insert(HTMLDice(dice)) {}
-                                val location = call.locations.href(DiceLocation.ID(id = dice.id.nbString.toString()))
-                                div("block") {
-                                    a(href = location) { +"Open" }
+                                insert(view) {
+                                    footer {
+                                        val location = call.locations.href(DiceLocation.ID(id = id.print().toString()))
+                                        div("block") {
+                                            a(href = location) { +"Open" }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -111,13 +105,14 @@ fun Route.create(layout: Layout) {
 fun Route.dice(layout: Layout) {
     get<DiceLocation.ID> {
         val diceID = ID.Simple(it.id)
-        val dice = dices.dice(diceID)
+        val serial = HashSerialNumber(it.id, hashids)
+        val dice = dices.dice(serial)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    insert(HTMLDice(dice)) {}
+                    insert(DiceView(dice, diceID)) {}
                 }
             }
         }

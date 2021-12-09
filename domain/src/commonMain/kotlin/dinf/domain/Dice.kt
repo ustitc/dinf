@@ -6,14 +6,14 @@ interface Dice {
 
     suspend fun roll(): Roll
 
-    val id: ID
+    val serialNumber: SerialNumber
 
     val name: Name<Dice>
 
     val edges: Edges
 
     class Simple(
-        override val id: ID,
+        override val serialNumber: SerialNumber,
         override val name: Name<Dice>,
         override val edges: Edges
     ) : Dice {
@@ -24,7 +24,7 @@ interface Dice {
     }
 
     class New(name: Name<Dice>, edges: Edges) : Dice by Simple(
-        id = ID.Empty(),
+        serialNumber = SerialNumber.Empty(),
         name = name,
         edges = edges
     ) {

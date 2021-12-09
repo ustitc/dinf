@@ -14,7 +14,6 @@ tasks.withType<KotlinCompile>() {
 }
 
 dependencies {
-    implementation(project(":api"))
     implementation(project(":domain"))
 
     implementation(kotlin("stdlib-jdk8"))
@@ -40,6 +39,8 @@ dependencies {
     implementation(libs.ktor.htmlBuilder)
 
     implementation("org.webjars.npm:bulma:0.9.3")
+
+    implementation("org.hashids:hashids:1.0.3")
 
     implementation(libs.logback.classic)
 
