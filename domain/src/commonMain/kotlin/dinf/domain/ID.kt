@@ -4,20 +4,24 @@ import dinf.types.NBString
 
 interface ID {
 
-    val nbString: NBString
+    suspend fun print(): NBString
 
-    class Simple(override val nbString: NBString) : ID {
-
-        constructor(int: Int) : this(int.toString())
+    class Simple(private val nbString: NBString) : ID {
 
         constructor(string: String) : this(NBString(string))
 
+        override suspend fun print(): NBString {
+            return nbString
+        }
     }
+
+    class Serial(val int: Int) : ID by Simple(int.toString())
 
     class Empty : ID {
 
-        override val nbString: NBString
-            get() = throw IllegalStateException("Can't describe empty ID")
+        override suspend fun print(): NBString {
+            throw IllegalStateException("Can't print empty ID")
+        }
     }
 
 }
