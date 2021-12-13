@@ -72,15 +72,23 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout) {
+fun Route.create(layout: Layout, hashids: Hashids) {
     post<DiceLocation.New> {
         val params = call.receiveParameters()
-        val dice = HTMLParamsDice.fromParametersOrNull(params)
+        val dice = HTMLParamsDice
+            .fromParametersOrNull(params)
+            ?.let { dices.create(it) }
         if (dice != null) {
-            dices.create(dice)
             call.respondHtmlTemplate(layout) {
                 content {
-                    p { +"Created" }
+                    val id = HashID(dice, hashids)
+                    val uri = call.locations.href(DiceLocation.ID(id = id.print().toString()))
+                    val url = "$baseURL$uri"
+                    div("block") { +"Created new dice" }
+                    div("block") {
+                        +"Share url: "
+                        a(href = url) { +url }
+                    }
                 }
             }
         } else {

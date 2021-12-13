@@ -20,12 +20,15 @@ fun Application.configureRouting(config: Configuration) {
     }
 
     routing {
-        val layout = Layout(application.locations)
+        val layout = Layout(
+            baseURL = config.server.baseURL,
+            locations = application.locations
+        )
         val urls = config.urls
         val hashids = Hashids(urls.salt, urls.publicLength)
 
         index(layout, hashids)
-        create(layout)
+        create(layout, hashids)
         createForm(layout)
         dice(layout, hashids)
         install(StatusPages) {

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.asFlow
 
 interface Dices {
 
-    suspend fun create(dice: Dice)
+    suspend fun create(dice: Dice): Dice
 
     suspend fun flow(): Flow<Dice>
 
@@ -13,8 +13,9 @@ interface Dices {
 
     class Stub(private val list: MutableList<Dice> = mutableListOf()) : Dices {
 
-        override suspend fun create(dice: Dice) {
+        override suspend fun create(dice: Dice): Dice {
             list.add(dice)
+            return dice
         }
 
         override suspend fun flow(): Flow<Dice> {

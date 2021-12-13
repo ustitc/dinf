@@ -19,9 +19,10 @@ import kotlinx.html.section
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(internal val newDiceURL: String) : Template<HTML> {
+class Layout(internal val baseURL: String, internal val newDiceURL: String) : Template<HTML> {
 
-    constructor(locations: Locations) : this(
+    constructor(baseURL: String, locations: Locations) : this(
+        baseURL = baseURL,
         newDiceURL = locations.href(DiceLocation.New())
     )
 

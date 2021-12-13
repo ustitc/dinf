@@ -18,8 +18,8 @@ class DBDices : Dices {
             .asFlow()
     }
 
-    override suspend fun create(dice: Dice) {
-        newSuspendedTransaction {
+    override suspend fun create(dice: Dice): Dice {
+        val entity = newSuspendedTransaction {
             val now = Instant.now()
             DiceEntity.new {
                 name = dice.name.nbString.toString()
@@ -28,6 +28,7 @@ class DBDices : Dices {
                 updatedAt = now
             }
         }
+        return DBDice(entity)
     }
 
     override suspend fun dice(serialNumber: SerialNumber): Dice? {

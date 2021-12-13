@@ -29,7 +29,6 @@ dependencies {
 
     implementation(libs.ktor.clientCore)
     implementation(libs.ktor.clientCoreJVM)
-    implementation(libs.ktor.clientApache)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverHostCommon)
     implementation(libs.ktor.serverSessions)
