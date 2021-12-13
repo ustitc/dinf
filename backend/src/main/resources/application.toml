@@ -2,8 +2,14 @@
 jdbcURL = "jdbc:sqlite:db/dinf.db"
 
 [urls]
+
+[urls.share]
 salt = "salt"
-publicLength = 6
+length = 6
+
+[urls.edit]
+salt = "another_salt"
+length = 24
 
 [server]
 port = 8080

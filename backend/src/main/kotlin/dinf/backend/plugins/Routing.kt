@@ -5,6 +5,7 @@ import dinf.backend.routes.create
 import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
 import dinf.backend.routes.index
+import dinf.backend.routes.edit
 import dinf.backend.templates.Layout
 import io.ktor.application.*
 import io.ktor.features.*
@@ -12,7 +13,6 @@ import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.webjars.*
-import org.hashids.Hashids
 
 fun Application.configureRouting(config: Configuration) {
 
@@ -25,12 +25,14 @@ fun Application.configureRouting(config: Configuration) {
             locations = application.locations
         )
         val urls = config.urls
-        val hashids = Hashids(urls.salt, urls.publicLength)
+        val shareHashids = urls.share.hashids()
+        val editHashids = urls.edit.hashids()
 
-        index(layout, hashids)
-        create(layout, hashids)
-        createForm(layout)
-        dice(layout, hashids)
+        index(layout = layout, shareHashids = shareHashids)
+        create(layout = layout, editHashids = editHashids)
+        createForm(layout = layout)
+        dice(layout = layout, shareHashids = shareHashids)
+        edit(layout = layout, shareHashids = shareHashids, editHashids = editHashids)
         install(StatusPages) {
         }
         static("assets") {

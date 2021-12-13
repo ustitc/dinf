@@ -10,6 +10,7 @@ import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.DiceView
 import dinf.backend.templates.Layout
+import dinf.backend.templates.URLBlock
 import dinf.domain.ID
 import io.ktor.application.*
 import io.ktor.html.*
@@ -28,11 +29,11 @@ import org.hashids.Hashids
 
 private val dices = DBDices()
 
-fun Route.index(layout: Layout, hashids: Hashids) {
+fun Route.index(layout: Layout, shareHashids: Hashids) {
     get("/") {
         val diceViews = dices.flow()
             .map {
-                val id = HashID(it.serialNumber, hashids)
+                val id = HashID(it.serialNumber, shareHashids)
                 DiceView(it, id)
             }
             .toList()
@@ -72,15 +73,15 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, hashids: Hashids) {
+fun Route.create(layout: Layout, editHashids: Hashids) {
     post<DiceLocation.New> {
         val params = call.receiveParameters()
         val dice = HTMLParamsDice
             .fromParametersOrNull(params)
             ?.let { dices.create(it) }
         if (dice != null) {
-            val id = HashID(dice, hashids)
-            val url = call.locations.href(DiceLocation.ID(id))
+            val id = HashID(dice, editHashids)
+            val url = call.locations.href(DiceLocation.Edit(id))
             call.respondRedirect(url)
         } else {
             call.respondHtmlTemplate(layout) {
@@ -100,10 +101,10 @@ fun Route.create(layout: Layout, hashids: Hashids) {
     }
 }
 
-fun Route.dice(layout: Layout, hashids: Hashids) {
+fun Route.dice(layout: Layout, shareHashids: Hashids) {
     get<DiceLocation.ID> {
         val diceID = ID.Simple(it.id)
-        val serial = HashSerialNumber(it.id, hashids)
+        val serial = HashSerialNumber(it.id, shareHashids)
         val dice = dices.dice(serial)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
@@ -112,12 +113,11 @@ fun Route.dice(layout: Layout, hashids: Hashids) {
                 content {
                     insert(DiceView(dice, diceID)) {
                         header {
-                            val id = HashID(dice, hashids)
-                            val uri = call.locations.href(DiceLocation.ID(id))
-                            val url = "$baseURL$uri"
-                            div("block") {
-                                +"Share url: "
-                                a(href = url) { +url }
+                            val shareURL = DiceLocation.ID(
+                                HashID(dice, shareHashids)
+                            ).url(baseURL, call)
+                            insert(URLBlock(shareURL)) {
+                                text = "Share url: "
                             }
                         }
                     }
@@ -126,3 +126,37 @@ fun Route.dice(layout: Layout, hashids: Hashids) {
         }
     }
 }
+
+fun Route.edit(layout: Layout, shareHashids: Hashids, editHashids: Hashids) {
+    get<DiceLocation.Edit> {
+        val diceID = ID.Simple(it.id)
+        val serial = HashSerialNumber(it.id, editHashids)
+        val dice = dices.dice(serial)
+        if (dice == null) {
+            call.respond(status = HttpStatusCode.NotFound, "")
+        } else {
+            call.respondHtmlTemplate(layout) {
+                content {
+                    insert(DiceView(dice, diceID)) {
+                        header {
+                            val shareURL = DiceLocation.ID(
+                                HashID(dice, shareHashids)
+                            ).url(baseURL, call)
+                            insert(URLBlock(shareURL)) {
+                                text = "Share url: "
+                            }
+
+                            val editURL = DiceLocation.Edit(
+                                HashID(dice, editHashids)
+                            ).url(baseURL, call)
+                            insert(URLBlock(editURL)) {
+                                text = "Edit url: "
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
