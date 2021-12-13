@@ -1,6 +1,7 @@
 package dinf.backend
 
 import com.sksamuel.hoplite.ConfigLoader
+import com.sksamuel.hoplite.PropertySource
 import com.zaxxer.hikari.HikariDataSource
 import dinf.backend.config.Configuration
 import dinf.backend.plugins.configureHTTP
@@ -16,12 +17,23 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.Level
+import java.io.File
 
 fun main() {
-    val config = ConfigLoader().loadConfigOrThrow<Configuration>("/application.toml")
+    val config = ConfigLoader.Builder()
+        .also {
+            val path = System.getenv("CONFIG_PATH")
+            if (path != null) {
+                it.addSource(PropertySource.file(file = File(path), optional = true))
+            }
+        }
+        .addSource(PropertySource.resource("/application.toml"))
+        .build()
+        .loadConfigOrThrow<Configuration>()
+
     configureDatabase(config.database)
 
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = config.server.port, host = "0.0.0.0") {
         configureSerialization()
         configureHTTP()
         configureRouting(config)
