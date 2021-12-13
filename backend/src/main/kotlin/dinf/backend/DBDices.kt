@@ -33,7 +33,7 @@ class DBDices : Dices {
 
     override suspend fun dice(serialNumber: SerialNumber): Dice? {
         return newSuspendedTransaction {
-            DiceEntity.findById(serialNumber.number.toInt())
+            DiceEntity.findById(serialNumber.number)
         }?.let { DBDice(it) }
     }
 }

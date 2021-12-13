@@ -1,12 +1,12 @@
 package dinf.exposed
 
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.LongEntity
+import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 
-class DiceEntity(id: EntityID<Int>) : IntEntity(id) {
+class DiceEntity(id: EntityID<Long>) : LongEntity(id) {
 
-    companion object : IntEntityClass<DiceEntity>(DiceTable)
+    companion object : LongEntityClass<DiceEntity>(DiceTable)
 
     var name by DiceTable.name
     var createdAt by DiceTable.createdAt
