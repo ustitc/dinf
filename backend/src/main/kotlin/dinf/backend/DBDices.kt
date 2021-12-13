@@ -23,7 +23,7 @@ class DBDices : Dices {
             val now = Instant.now()
             DiceEntity.new {
                 name = dice.name.nbString.toString()
-                edges = dice.edges.stringList.toTypedArray()
+                edges = dice.edges.stringList.joinToString(separator = "\n")
                 createdAt = now
                 updatedAt = now
             }

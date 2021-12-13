@@ -19,6 +19,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     runtimeOnly("org.postgresql:postgresql:42.3.1")
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
 
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation(libs.exposed.core)

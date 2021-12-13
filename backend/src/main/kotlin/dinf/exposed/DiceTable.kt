@@ -8,6 +8,6 @@ object DiceTable : IntIdTable(name = "dices") {
     val name = text("name")
     val createdAt = timestamp("created_at")
     val updatedAt = timestamp("updated_at")
-    val edges = textArray("edges")
+    val edges = text("edges")
 
 }

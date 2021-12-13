@@ -1,9 +1,5 @@
 [database]
-user = "dinf_admin"
-password = "dinf_password"
-database = "dinf"
-port = 5432
-server = "localhost"
+jdbcURL = "jdbc:sqlite:db/dinf.db"
 
 [urls]
 salt = "salt"

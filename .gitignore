@@ -2,5 +2,6 @@
 /.idea
 /.gradle
 /.vscode
+/db
 
 todo.md
