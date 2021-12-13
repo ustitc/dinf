@@ -45,7 +45,7 @@ fun Route.index(layout: Layout, hashids: Hashids) {
                             content {
                                 insert(view) {
                                     footer {
-                                        val location = call.locations.href(DiceLocation.ID(id = id.print().toString()))
+                                        val location = call.locations.href(DiceLocation.ID(id))
                                         div("block") {
                                             a(href = location) { +"Open" }
                                         }
@@ -79,18 +79,9 @@ fun Route.create(layout: Layout, hashids: Hashids) {
             .fromParametersOrNull(params)
             ?.let { dices.create(it) }
         if (dice != null) {
-            call.respondHtmlTemplate(layout) {
-                content {
-                    val id = HashID(dice, hashids)
-                    val uri = call.locations.href(DiceLocation.ID(id = id.print().toString()))
-                    val url = "$baseURL$uri"
-                    div("block") { +"Created new dice" }
-                    div("block") {
-                        +"Share url: "
-                        a(href = url) { +url }
-                    }
-                }
-            }
+            val id = HashID(dice, hashids)
+            val url = call.locations.href(DiceLocation.ID(id))
+            call.respondRedirect(url)
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
@@ -119,7 +110,17 @@ fun Route.dice(layout: Layout, hashids: Hashids) {
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    insert(DiceView(dice, diceID)) {}
+                    insert(DiceView(dice, diceID)) {
+                        header {
+                            val id = HashID(dice, hashids)
+                            val uri = call.locations.href(DiceLocation.ID(id))
+                            val url = "$baseURL$uri"
+                            div("block") {
+                                +"Share url: "
+                                a(href = url) { +url }
+                            }
+                        }
+                    }
                 }
             }
         }

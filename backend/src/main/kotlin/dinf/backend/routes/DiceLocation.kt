@@ -9,6 +9,10 @@ object DiceLocation {
     class New(val dices: DiceLocation = DiceLocation)
 
     @Location("/{id}")
-    class ID(val dices: DiceLocation = DiceLocation, val id: String)
+    class ID(val dices: DiceLocation = DiceLocation, val id: String) {
+
+        constructor(id: dinf.domain.ID) : this(id = id.print().toString())
+
+    }
 
 }

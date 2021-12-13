@@ -12,6 +12,7 @@ import kotlinx.html.onClick
 
 class DiceView(private val dice: Dice, val id: ID) : Template<FlowContent> {
 
+    val header = Placeholder<FlowContent>()
     val footer = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
@@ -19,6 +20,7 @@ class DiceView(private val dice: Dice, val id: ID) : Template<FlowContent> {
             .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
         val resultTagID = "result-${id.print()}"
 
+        insert(header)
         h1(classes = "title") { +dice.name.nbString.toString() }
         div(classes = "block") {
             button(classes = "button is-primary") {
