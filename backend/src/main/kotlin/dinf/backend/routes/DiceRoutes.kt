@@ -131,6 +131,15 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
+                    if (loc.updated) {
+                        insert(BulmaMessage()) {
+                            color = BulmaColor.IS_PRIMARY
+                            body {
+                                p { +"Updated" }
+                            }
+                        }
+                    }
+
                     val shareURL = DiceLocation.ID(
                         HashID(dice, shareHashids)
                     ).url(baseURL, call)
@@ -165,7 +174,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
             if (htmlDice != null) {
                 dice.name.change(htmlDice.name.nbString)
                 dice.edges.change(htmlDice.edges)
-                val url = call.locations.href(loc)
+                val url = call.locations.href(loc.copy(updated = true))
                 call.respondRedirect(url)
             } else {
                 call.respondHtmlTemplate(layout) {

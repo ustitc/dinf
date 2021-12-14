@@ -27,7 +27,7 @@ object DiceLocation {
     }
 
     @Location("/edit/{id}")
-    class Edit(val dices: DiceLocation = DiceLocation, val id: String) {
+    data class Edit(val dices: DiceLocation = DiceLocation, val id: String, val updated: Boolean = false) {
 
         constructor(id: dinf.domain.ID) : this(id = id.print().toString())
 
