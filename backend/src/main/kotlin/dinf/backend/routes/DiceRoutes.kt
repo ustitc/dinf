@@ -101,7 +101,7 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: Hashids) {
+fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
     get<DiceLocation.ID> { loc ->
         val serial = HashSerialNumber(loc.id, shareHashids)
         val dice = dices.dice(serial)
@@ -122,7 +122,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids) {
     }
 }
 
-fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids) {
+fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, baseURL: String) {
     get<DiceLocation.Edit> { loc ->
         val serial = HashSerialNumber(loc.id, editHashids)
         val dice = dices.dice(serial)

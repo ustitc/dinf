@@ -21,20 +21,18 @@ fun Application.configureRouting(config: Configuration) {
     }
 
     routing {
-        val layout = Layout(
-            baseURL = config.server.baseURL,
-            locations = application.locations
-        )
+        val layout = Layout(locations = application.locations)
         val urls = config.urls
         val shareHashids = urls.share.hashids()
         val editHashids = urls.edit.hashids()
+        val baseURL = config.server.baseURL
 
         index(layout = layout, shareHashids = shareHashids)
         create(layout = layout, editHashids = editHashids)
         createForm(layout = layout)
-        dice(layout = layout, shareHashids = shareHashids)
+        dice(layout = layout, shareHashids = shareHashids, baseURL = baseURL)
         edit(layout = layout, editHashids = editHashids)
-        editForm(layout = layout, shareHashids = shareHashids, editHashids = editHashids)
+        editForm(layout = layout, shareHashids = shareHashids, editHashids = editHashids, baseURL = baseURL)
 
         install(StatusPages) {
         }
