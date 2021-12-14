@@ -2,13 +2,13 @@ package dinf.domain
 
 import dinf.types.NBString
 
-interface Name<T> {
+interface Name {
 
     suspend fun change(new: NBString)
 
     val nbString: NBString
 
-    class Stub<T>(override var nbString: NBString) : Name<T> {
+    class Stub(override var nbString: NBString) : Name {
 
         constructor(str: String) : this(NBString(str))
 

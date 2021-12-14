@@ -5,7 +5,7 @@ import dinf.backend.HashID
 import dinf.backend.HashSerialNumber
 import dinf.backend.templates.BulmaColor
 import dinf.backend.templates.BulmaMessage
-import dinf.backend.templates.CreateDiceForm
+import dinf.backend.templates.DiceForm
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.DiceView
@@ -63,18 +63,18 @@ fun Route.index(layout: Layout, shareHashids: Hashids) {
 }
 
 fun Route.createForm(layout: Layout) {
-    get<DiceLocation.New> {
+    get<DiceLocation.New> { loc ->
         call.respondHtmlTemplate(layout) {
             content {
-                val form = Form(newDiceURL)
-                insert(CreateDiceForm(form)) {}
+                val form = Form(loc.uri(call))
+                insert(DiceForm(form)) {}
             }
         }
     }
 }
 
 fun Route.create(layout: Layout, editHashids: Hashids) {
-    post<DiceLocation.New> {
+    post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice
             .fromParametersOrNull(params)
@@ -93,8 +93,8 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
                         }
                     }
 
-                    val form = Form(newDiceURL)
-                    insert(CreateDiceForm(form)) {}
+                    val form = Form(loc.uri(call))
+                    insert(DiceForm(form)) {}
                 }
             }
         }
@@ -102,24 +102,51 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
 }
 
 fun Route.dice(layout: Layout, shareHashids: Hashids) {
-    get<DiceLocation.ID> {
-        val diceID = ID.Simple(it.id)
-        val serial = HashSerialNumber(it.id, shareHashids)
+    get<DiceLocation.ID> { loc ->
+        val serial = HashSerialNumber(loc.id, shareHashids)
         val dice = dices.dice(serial)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    insert(DiceView(dice, diceID)) {
-                        header {
-                            val shareURL = DiceLocation.ID(
-                                HashID(dice, shareHashids)
-                            ).url(baseURL, call)
-                            insert(URLBlock(shareURL)) {
-                                text = "Share url: "
-                            }
-                        }
+                    val shareURL = loc.url(baseURL, call)
+                    insert(URLBlock(shareURL)) {
+                        text = "Share url: "
+                    }
+                    val diceID = ID.Simple(loc.id)
+                    insert(DiceView(dice, diceID)) {}
+                }
+            }
+        }
+    }
+}
+
+fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids) {
+    get<DiceLocation.Edit> { loc ->
+        val serial = HashSerialNumber(loc.id, editHashids)
+        val dice = dices.dice(serial)
+        if (dice == null) {
+            call.respond(status = HttpStatusCode.NotFound, "")
+        } else {
+            call.respondHtmlTemplate(layout) {
+                content {
+                    val shareURL = DiceLocation.ID(
+                        HashID(dice, shareHashids)
+                    ).url(baseURL, call)
+                    insert(URLBlock(shareURL)) {
+                        text = "Share url: "
+                    }
+
+                    val editURL = loc.url(baseURL, call)
+                    insert(URLBlock(editURL)) {
+                        text = "Edit url: "
+                    }
+
+                    val form = Form(loc.uri(call))
+                    insert(DiceForm(form)) {
+                        name = dice.name.nbString.toString()
+                        edges = dice.edges.stringList.joinToString("\n")
                     }
                 }
             }
@@ -127,36 +154,36 @@ fun Route.dice(layout: Layout, shareHashids: Hashids) {
     }
 }
 
-fun Route.edit(layout: Layout, shareHashids: Hashids, editHashids: Hashids) {
-    get<DiceLocation.Edit> {
-        val diceID = ID.Simple(it.id)
-        val serial = HashSerialNumber(it.id, editHashids)
-        val dice = dices.dice(serial)
+fun Route.edit(layout: Layout, editHashids: Hashids) {
+    post<DiceLocation.Edit> { loc ->
+        val params = call.receiveParameters()
+        val dice = HashSerialNumber(loc.id, editHashids).let { dices.dice(it) }
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
-            call.respondHtmlTemplate(layout) {
-                content {
-                    insert(DiceView(dice, diceID)) {
-                        header {
-                            val shareURL = DiceLocation.ID(
-                                HashID(dice, shareHashids)
-                            ).url(baseURL, call)
-                            insert(URLBlock(shareURL)) {
-                                text = "Share url: "
-                            }
-
-                            val editURL = DiceLocation.Edit(
-                                HashID(dice, editHashids)
-                            ).url(baseURL, call)
-                            insert(URLBlock(editURL)) {
-                                text = "Edit url: "
+            val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
+            if (htmlDice != null) {
+                dice.name.change(htmlDice.name.nbString)
+                dice.edges.change(htmlDice.edges)
+                val url = call.locations.href(loc)
+                call.respondRedirect(url)
+            } else {
+                call.respondHtmlTemplate(layout) {
+                    content {
+                        insert(BulmaMessage()) {
+                            color = BulmaColor.IS_WARNING
+                            body {
+                                p { +"Please specify name and edges" }
                             }
                         }
+
+                        val form = Form(loc.uri(call))
+                        insert(DiceForm(form)) {}
                     }
                 }
             }
         }
+
     }
 }
 

@@ -6,7 +6,10 @@ import kotlinx.html.InputType
 import kotlinx.html.input
 import kotlinx.html.textArea
 
-class CreateDiceForm(private val form: Form) : Template<FlowContent> {
+class DiceForm(private val form: Form) : Template<FlowContent> {
+
+    var name: String = ""
+    var edges: String = ""
 
     override fun FlowContent.apply() {
         insert(form) {
@@ -15,6 +18,7 @@ class CreateDiceForm(private val form: Form) : Template<FlowContent> {
                 control {
                     input(classes = "input", name = "name", type = InputType.text) {
                         required = true
+                        value = this@DiceForm.name
                     }
                 }
             }
@@ -25,6 +29,7 @@ class CreateDiceForm(private val form: Form) : Template<FlowContent> {
                     textArea(classes = "textarea") {
                         name = "edges"
                         required = true
+                        +edges
                     }
                 }
             }

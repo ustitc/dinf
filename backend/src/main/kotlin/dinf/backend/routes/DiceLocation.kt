@@ -7,7 +7,13 @@ import io.ktor.locations.*
 object DiceLocation {
 
     @Location("/new")
-    class New(val dices: DiceLocation = DiceLocation)
+    class New(val dices: DiceLocation = DiceLocation) {
+
+        fun uri(call: ApplicationCall): String {
+            return buildURI(call, this)
+        }
+
+    }
 
     @Location("/{id}")
     class ID(val dices: DiceLocation = DiceLocation, val id: String) {
@@ -29,10 +35,18 @@ object DiceLocation {
             return buildURL(baseURL, call, this)
         }
 
+        fun uri(call: ApplicationCall): String {
+            return buildURI(call, this)
+        }
+
+    }
+
+    private fun buildURI(call: ApplicationCall, location: Any): String {
+        return call.locations.href(location)
     }
 
     private fun buildURL(baseURL: String, call: ApplicationCall, location: Any): String {
-        val uri = call.locations.href(location)
+        val uri = buildURI(call, location)
         return "$baseURL$uri"
     }
 

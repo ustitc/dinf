@@ -19,7 +19,7 @@ import kotlinx.html.section
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(internal val baseURL: String, internal val newDiceURL: String) : Template<HTML> {
+class Layout(internal val baseURL: String, private val newDiceURL: String) : Template<HTML> {
 
     constructor(baseURL: String, locations: Locations) : this(
         baseURL = baseURL,

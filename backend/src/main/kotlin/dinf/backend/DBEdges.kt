@@ -2,5 +2,16 @@ package dinf.backend
 
 import dinf.domain.Edges
 import dinf.exposed.DiceEntity
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-class DBEdges(diceEntity: DiceEntity) : Edges by Edges.Simple(diceEntity.edges.lines())
+class DBEdges(private val diceEntity: DiceEntity) : Edges {
+
+    override val stringList: List<String>
+        get() = diceEntity.edges.lines()
+
+    override suspend fun change(new: Edges) {
+        newSuspendedTransaction {
+            diceEntity.edges = new.stringList.joinToString("\n")
+        }
+    }
+}

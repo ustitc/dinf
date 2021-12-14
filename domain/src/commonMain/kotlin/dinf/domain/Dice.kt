@@ -8,13 +8,13 @@ interface Dice {
 
     val serialNumber: SerialNumber
 
-    val name: Name<Dice>
+    val name: Name
 
     val edges: Edges
 
     class Simple(
         override val serialNumber: SerialNumber,
-        override val name: Name<Dice>,
+        override val name: Name,
         override val edges: Edges
     ) : Dice {
 
@@ -23,7 +23,7 @@ interface Dice {
         }
     }
 
-    class New(name: Name<Dice>, edges: Edges) : Dice by Simple(
+    class New(name: Name, edges: Edges) : Dice by Simple(
         serialNumber = SerialNumber.Empty(),
         name = name,
         edges = edges

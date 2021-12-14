@@ -6,6 +6,7 @@ import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
 import dinf.backend.routes.index
 import dinf.backend.routes.edit
+import dinf.backend.routes.editForm
 import dinf.backend.templates.Layout
 import io.ktor.application.*
 import io.ktor.features.*
@@ -32,7 +33,9 @@ fun Application.configureRouting(config: Configuration) {
         create(layout = layout, editHashids = editHashids)
         createForm(layout = layout)
         dice(layout = layout, shareHashids = shareHashids)
-        edit(layout = layout, shareHashids = shareHashids, editHashids = editHashids)
+        edit(layout = layout, editHashids = editHashids)
+        editForm(layout = layout, shareHashids = shareHashids, editHashids = editHashids)
+
         install(StatusPages) {
         }
         static("assets") {
