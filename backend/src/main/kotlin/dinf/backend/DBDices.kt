@@ -36,4 +36,10 @@ class DBDices : Dices {
             DiceEntity.findById(serialNumber.number)
         }?.let { DBDice(it) }
     }
+
+    override suspend fun delete(dice: Dice) {
+        newSuspendedTransaction {
+            DiceEntity.findById(dice.serialNumber.number)?.delete()
+        }
+    }
 }

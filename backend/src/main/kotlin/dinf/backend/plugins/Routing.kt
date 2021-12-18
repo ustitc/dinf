@@ -4,6 +4,7 @@ import dinf.backend.config.Configuration
 import dinf.backend.routes.create
 import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
+import dinf.backend.routes.delete
 import dinf.backend.routes.index
 import dinf.backend.routes.edit
 import dinf.backend.routes.editForm
@@ -33,6 +34,7 @@ fun Application.configureRouting(config: Configuration) {
         dice(layout = layout, shareHashids = shareHashids, baseURL = baseURL)
         edit(layout = layout, editHashids = editHashids)
         editForm(layout = layout, shareHashids = shareHashids, editHashids = editHashids, baseURL = baseURL)
+        delete(layout = layout, editHashids = editHashids)
 
         install(StatusPages) {
         }

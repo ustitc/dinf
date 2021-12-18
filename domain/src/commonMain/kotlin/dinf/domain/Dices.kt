@@ -11,6 +11,8 @@ interface Dices {
 
     suspend fun dice(serialNumber: SerialNumber): Dice?
 
+    suspend fun delete(dice: Dice)
+
     class Stub(private val list: MutableList<Dice> = mutableListOf()) : Dices {
 
         override suspend fun create(dice: Dice): Dice {
@@ -24,6 +26,10 @@ interface Dices {
 
         override suspend fun dice(serialNumber: SerialNumber): Dice? {
             return list.firstOrNull { it.serialNumber.number == serialNumber.number }
+        }
+
+        override suspend fun delete(dice: Dice) {
+            list.removeAll { it.serialNumber.number == dice.serialNumber.number }
         }
     }
 

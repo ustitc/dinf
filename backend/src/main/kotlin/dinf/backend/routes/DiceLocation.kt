@@ -41,6 +41,9 @@ object DiceLocation {
 
     }
 
+    @Location("/delete/{id}")
+    data class Delete(val dices: DiceLocation = DiceLocation, val id: String)
+
     private fun buildURI(call: ApplicationCall, location: Any): String {
         return call.locations.href(location)
     }

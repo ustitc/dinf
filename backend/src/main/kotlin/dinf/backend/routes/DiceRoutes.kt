@@ -22,8 +22,12 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import kotlinx.html.FormMethod
+import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
 
@@ -157,6 +161,13 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
                         name = dice.name.nbString.toString()
                         edges = dice.edges.stringList.joinToString("\n")
                     }
+
+                    val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
+                    form(action = deleteURL, method = FormMethod.post) {
+                        input(type = InputType.submit, classes = "button is-danger") {
+                            value = "Delete"
+                        }
+                    }
                 }
             }
         }
@@ -192,7 +203,23 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
                 }
             }
         }
-
     }
 }
 
+
+fun Route.delete(layout: Layout, editHashids: Hashids) {
+    post<DiceLocation.Delete> { loc ->
+        val serialNumber = HashSerialNumber(loc.id, editHashids)
+        val dice = dices.dice(serialNumber)
+        if (dice == null) {
+            call.respond(status = HttpStatusCode.NotFound, "")
+        } else {
+            dices.delete(dice)
+            call.respondHtmlTemplate(layout) {
+                content {
+                    p { +"Dice deleted" }
+                }
+            }
+        }
+    }
+}
