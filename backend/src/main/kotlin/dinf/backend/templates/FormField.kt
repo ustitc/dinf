@@ -2,8 +2,8 @@ package dinf.backend.templates
 
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.div
 import kotlinx.html.label
+import kotlinx.html.small
 
 class FormField : Template<FlowContent> {
 
@@ -12,15 +12,11 @@ class FormField : Template<FlowContent> {
     val control = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
-        div("field") {
-            label("label") {
-                +name
-            }
-            div("control") {
-                insert(control)
-            }
+        label {
+            +name
+            insert(control)
             if (help.isNotBlank()) {
-                div("help") {
+                small {
                     +help
                 }
             }

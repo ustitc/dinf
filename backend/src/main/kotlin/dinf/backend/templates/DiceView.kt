@@ -12,23 +12,18 @@ import kotlinx.html.onClick
 
 class DiceView(private val dice: Dice, val id: ID) : Template<FlowContent> {
 
-    val footer = Placeholder<FlowContent>()
-
     override fun FlowContent.apply() {
         val rollValues = dice.edges.stringList
             .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
         val resultTagID = "result-${id.print()}"
 
-        h1(classes = "title") { +dice.name.nbString.toString() }
-        div(classes = "block") {
-            button(classes = "button is-primary") {
-                onClick = "roll($rollValues, \"$resultTagID\")"
-                +"Roll"
-            }
+        h1 { +dice.name.nbString.toString() }
+        button {
+            onClick = "roll($rollValues, \"$resultTagID\")"
+            +"Roll"
         }
-        div(classes = "block") {
+        div {
             this.id = resultTagID
         }
-        insert(footer)
     }
 }

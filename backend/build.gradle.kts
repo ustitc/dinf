@@ -38,7 +38,7 @@ dependencies {
     implementation(libs.ktor.webjars)
     implementation(libs.ktor.htmlBuilder)
 
-    implementation("org.webjars.npm:bulma:0.9.3")
+    implementation("org.webjars.bowergithub.picocss:pico:1.4.2")
 
     implementation("org.hashids:hashids:1.0.3")
 

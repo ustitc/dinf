@@ -2,31 +2,30 @@ package dinf.backend.templates
 
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.div
+import kotlinx.html.li
 import kotlinx.html.nav
+import kotlinx.html.ul
 
-class BulmaNavbar : Template<FlowContent> {
+class Navbar : Template<FlowContent> {
 
-    val brand = Placeholder<FlowContent>()
     val start = PlaceholderList<FlowContent, FlowContent>()
     val end = PlaceholderList<FlowContent, FlowContent>()
 
     override fun FlowContent.apply() {
-        nav("navbar") {
-            div("navbar-brand") {
-                insert(brand)
-            }
-            div("navbar-menu") {
-                div("navbar-start") {
+        nav {
+            if (!start.isEmpty()) {
+                ul {
                     each(start) {
-                        div("navbar-item") {
+                        this@ul.li {
                             insert(it)
                         }
                     }
                 }
-                div("navbar-end") {
+            }
+            if (!end.isEmpty()) {
+                ul {
                     each(end) {
-                        div("navbar-item") {
+                        this@ul.li {
                             insert(it)
                         }
                     }

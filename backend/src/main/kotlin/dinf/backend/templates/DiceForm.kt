@@ -10,15 +10,19 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
 
     var name: String = ""
     var edges: String = ""
+    var failed: Boolean = false
 
     override fun FlowContent.apply() {
         insert(form) {
             field {
                 name = "Name"
                 control {
-                    input(classes = "input", name = "name", type = InputType.text) {
+                    input(name = "name", type = InputType.text) {
                         required = true
                         value = this@DiceForm.name
+                        if (failed) {
+                            attributes["aria-invalid"] = "true"
+                        }
                     }
                 }
             }
@@ -26,9 +30,12 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
                 name = "Edges"
                 help = "Each value must be on new line"
                 control {
-                    textArea(classes = "textarea") {
+                    textArea {
                         name = "edges"
                         required = true
+                        if (failed) {
+                            attributes["aria-invalid"] = "true"
+                        }
                         +edges
                     }
                 }

@@ -24,7 +24,7 @@ class Form(private val url: String) : Template<FlowContent> {
                     }
                 }
             }
-            input(type = InputType.submit, classes = "button is-primary") {
+            input(type = InputType.submit) {
                 insert(submit)
             }
         }

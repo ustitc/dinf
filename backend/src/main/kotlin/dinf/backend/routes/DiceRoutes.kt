@@ -3,8 +3,6 @@ package dinf.backend.routes
 import dinf.backend.DBDices
 import dinf.backend.HashID
 import dinf.backend.HashSerialNumber
-import dinf.backend.templates.BulmaColor
-import dinf.backend.templates.BulmaMessage
 import dinf.backend.templates.DiceForm
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
@@ -28,7 +26,9 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.input
+import kotlinx.html.ins
 import kotlinx.html.p
+import kotlinx.html.role
 import org.hashids.Hashids
 
 private val dices = DBDices()
@@ -47,20 +47,15 @@ fun Route.index(layout: Layout, shareHashids: Hashids) {
                 insert(Feed()) {
                     diceViews.map { view ->
                         card {
-                            content {
-                                insert(view) {
-                                    footer {
-                                        val location = call.locations.href(DiceLocation.ID(id))
-                                        div("block") {
-                                            a(href = location) { +"Open" }
-                                        }
-                                    }
-                                }
+                            insert(view) {}
+                            val location = call.locations.href(DiceLocation.ID(view.id))
+                            a(href = location) {
+                                role = "button"
+                                +"Open"
                             }
                         }
                     }
                 }
-
             }
         }
     }
@@ -90,15 +85,10 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    insert(BulmaMessage()) {
-                        color = BulmaColor.IS_WARNING
-                        body {
-                            p { +"Please specify name and edges" }
-                        }
-                    }
-
                     val form = Form(loc.uri(call))
-                    insert(DiceForm(form)) {}
+                    insert(DiceForm(form)) {
+                        failed = true
+                    }
                 }
             }
         }
@@ -136,10 +126,9 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
             call.respondHtmlTemplate(layout) {
                 content {
                     if (loc.updated) {
-                        insert(BulmaMessage()) {
-                            color = BulmaColor.IS_PRIMARY
-                            body {
-                                p { +"Updated" }
+                        div {
+                            ins {
+                                +"Updated"
                             }
                         }
                     }
@@ -164,7 +153,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
 
                     val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
                     form(action = deleteURL, method = FormMethod.post) {
-                        input(type = InputType.submit, classes = "button is-danger") {
+                        input(type = InputType.submit) {
                             value = "Delete"
                         }
                     }
@@ -190,15 +179,10 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
             } else {
                 call.respondHtmlTemplate(layout) {
                     content {
-                        insert(BulmaMessage()) {
-                            color = BulmaColor.IS_WARNING
-                            body {
-                                p { +"Please specify name and edges" }
-                            }
-                        }
-
                         val form = Form(loc.uri(call))
-                        insert(DiceForm(form)) {}
+                        insert(DiceForm(form)) {
+                            failed = true
+                        }
                     }
                 }
             }

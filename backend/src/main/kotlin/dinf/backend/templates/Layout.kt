@@ -12,6 +12,7 @@ import kotlinx.html.footer
 import kotlinx.html.head
 import kotlinx.html.img
 import kotlinx.html.link
+import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.p
 import kotlinx.html.script
@@ -33,13 +34,13 @@ class Layout(private val newDiceURL: String) : Template<HTML> {
                 name = "viewport"
                 content = "width=device-width, initial-scale=1"
             }
-            link(rel = "stylesheet", href = "/assets/bulma/css/bulma.min.css")
+            link(rel = "stylesheet", href = "/assets/pico/css/pico.min.css")
             script { src = "/assets/roll.js" }
         }
         body {
-            insert(BulmaNavbar()) {
-                brand {
-                    a(classes = "navbar-item", href = "/") {
+            insert(Navbar()) {
+                start {
+                    a(href = "/") {
                         img(src = "/assets/dinf.png", alt = "logo") {
                             style = "height: 50px;"
                         }
@@ -51,11 +52,13 @@ class Layout(private val newDiceURL: String) : Template<HTML> {
                     }
                 }
             }
-            section("section") {
-                insert(content)
+            main(classes = "container") {
+                section {
+                    insert(content)
+                }
             }
-            footer("footer") {
-                div("content has-text-centered") {
+            footer {
+                div("container") {
                     p { +"by Ruslan Ustits" }
                     a(href = "https://github.com/ustits") { +"Github" }
                 }
