@@ -2,14 +2,16 @@ package dinf.backend.routes
 
 import dinf.backend.DBDices
 import dinf.backend.HashID
-import dinf.backend.HashSerialNumber
 import dinf.backend.templates.DiceForm
+import dinf.backend.templates.DiceView
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
-import dinf.backend.templates.DiceView
 import dinf.backend.templates.Layout
 import dinf.backend.templates.URLBlock
+import dinf.domain.Dice
+import dinf.domain.Dices
 import dinf.domain.ID
+import dinf.domain.SerialNumber
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -97,8 +99,7 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
 
 fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
     get<DiceLocation.ID> { loc ->
-        val serial = HashSerialNumber(loc.id, shareHashids)
-        val dice = dices.dice(serial)
+        val dice = dices.diceOrNull(loc.id, shareHashids)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
@@ -118,8 +119,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
 
 fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, baseURL: String) {
     get<DiceLocation.Edit> { loc ->
-        val serial = HashSerialNumber(loc.id, editHashids)
-        val dice = dices.dice(serial)
+        val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
@@ -166,7 +166,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
 fun Route.edit(layout: Layout, editHashids: Hashids) {
     post<DiceLocation.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = HashSerialNumber(loc.id, editHashids).let { dices.dice(it) }
+        val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
@@ -193,8 +193,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
 
 fun Route.delete(layout: Layout, editHashids: Hashids) {
     post<DiceLocation.Delete> { loc ->
-        val serialNumber = HashSerialNumber(loc.id, editHashids)
-        val dice = dices.dice(serialNumber)
+        val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
             call.respond(status = HttpStatusCode.NotFound, "")
         } else {
@@ -206,4 +205,19 @@ fun Route.delete(layout: Layout, editHashids: Hashids) {
             }
         }
     }
+}
+
+fun Hashids.decodeOrNull(str: String): Long? {
+    val array = decode(str)
+    return if (array.isEmpty()) {
+        null
+    } else {
+        array[0]
+    }
+}
+
+suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
+    return hashids.decodeOrNull(id)
+        ?.let { SerialNumber.Simple(it) }
+        ?.let { dice(it) }
 }
