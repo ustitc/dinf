@@ -13,8 +13,8 @@ import dinf.domain.Dices
 import dinf.domain.ID
 import dinf.domain.SerialNumber
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.html.*
-import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.locations.post
 import io.ktor.request.*
@@ -101,7 +101,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
     get<DiceLocation.ID> { loc ->
         val dice = dices.diceOrNull(loc.id, shareHashids)
         if (dice == null) {
-            call.respond(status = HttpStatusCode.NotFound, "")
+            throw NotFoundException()
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
@@ -121,7 +121,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
     get<DiceLocation.Edit> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
-            call.respond(status = HttpStatusCode.NotFound, "")
+            throw NotFoundException()
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
@@ -168,7 +168,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
         val params = call.receiveParameters()
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
-            call.respond(status = HttpStatusCode.NotFound, "")
+            throw NotFoundException()
         } else {
             val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
             if (htmlDice != null) {
@@ -195,7 +195,7 @@ fun Route.delete(layout: Layout, editHashids: Hashids) {
     post<DiceLocation.Delete> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
-            call.respond(status = HttpStatusCode.NotFound, "")
+            throw NotFoundException()
         } else {
             dices.delete(dice)
             call.respondHtmlTemplate(layout) {

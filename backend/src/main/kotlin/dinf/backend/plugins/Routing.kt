@@ -11,23 +11,37 @@ import dinf.backend.routes.editForm
 import dinf.backend.templates.Layout
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.html.*
+import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.routing.*
 import io.ktor.webjars.*
+import kotlinx.html.p
 
 fun Application.configureRouting(config: Configuration) {
-
     install(Locations) {
     }
 
-    routing {
-        val layout = Layout(locations = application.locations)
-        val urls = config.urls
-        val shareHashids = urls.share.hashids()
-        val editHashids = urls.edit.hashids()
-        val baseURL = config.server.baseURL
+    val layout = Layout(locations = locations)
+    val urls = config.urls
+    val shareHashids = urls.share.hashids()
+    val editHashids = urls.edit.hashids()
+    val baseURL = config.server.baseURL
 
+    install(StatusPages) {
+        status(HttpStatusCode.NotFound) {
+            call.respondHtmlTemplate(layout) {
+                content {
+                    p {
+                        +"There is nothing here"
+                    }
+                }
+            }
+        }
+    }
+
+    routing {
         index(layout = layout, shareHashids = shareHashids)
         create(layout = layout, editHashids = editHashids)
         createForm(layout = layout)
@@ -36,8 +50,6 @@ fun Application.configureRouting(config: Configuration) {
         editForm(layout = layout, shareHashids = shareHashids, editHashids = editHashids, baseURL = baseURL)
         delete(layout = layout, editHashids = editHashids)
 
-        install(StatusPages) {
-        }
         static("assets") {
             resources("js")
             resources("img")
