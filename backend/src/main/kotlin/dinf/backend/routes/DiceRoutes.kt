@@ -219,5 +219,5 @@ fun Hashids.decodeOrNull(str: String): Long? {
 suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
     return hashids.decodeOrNull(id)
         ?.let { SerialNumber.Simple(it) }
-        ?.let { dice(it) }
+        ?.let { diceOrNull(it) }
 }

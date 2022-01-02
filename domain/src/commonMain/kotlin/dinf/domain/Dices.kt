@@ -9,7 +9,7 @@ interface Dices {
 
     suspend fun flow(): Flow<Dice>
 
-    suspend fun dice(serialNumber: SerialNumber): Dice?
+    suspend fun diceOrNull(serialNumber: SerialNumber): Dice?
 
     suspend fun delete(dice: Dice)
 
@@ -24,7 +24,7 @@ interface Dices {
             return list.asFlow()
         }
 
-        override suspend fun dice(serialNumber: SerialNumber): Dice? {
+        override suspend fun diceOrNull(serialNumber: SerialNumber): Dice? {
             return list.firstOrNull { it.serialNumber.number == serialNumber.number }
         }
 
