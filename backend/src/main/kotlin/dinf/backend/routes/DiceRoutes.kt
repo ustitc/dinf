@@ -125,14 +125,6 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    if (loc.updated) {
-                        div {
-                            ins {
-                                +"Updated"
-                            }
-                        }
-                    }
-
                     val shareURL = DiceLocation.ID(
                         HashID(dice, shareHashids)
                     ).url(baseURL, call)
@@ -174,7 +166,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
             if (htmlDice != null) {
                 dice.name.change(htmlDice.name.nbString)
                 dice.edges.change(htmlDice.edges)
-                val url = call.locations.href(loc.copy(updated = true))
+                val url = call.locations.href(loc)
                 call.respondRedirect(url)
             } else {
                 call.respondHtmlTemplate(layout) {
