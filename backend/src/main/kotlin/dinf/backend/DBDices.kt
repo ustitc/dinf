@@ -7,11 +7,12 @@ import dinf.exposed.DiceEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 
 class DBDices : Dices {
 
-    override suspend fun flow(): Flow<Dice> = newSuspendedTransaction {
+    override fun flow(): Flow<Dice> = transaction {
         DiceEntity
             .all()
             .map { DBDice(it) }

@@ -7,7 +7,7 @@ interface Dices {
 
     suspend fun create(dice: Dice): Dice
 
-    suspend fun flow(): Flow<Dice>
+    fun flow(): Flow<Dice>
 
     suspend fun diceOrNull(serialNumber: SerialNumber): Dice?
 
@@ -20,7 +20,7 @@ interface Dices {
             return dice
         }
 
-        override suspend fun flow(): Flow<Dice> {
+        override fun flow(): Flow<Dice> {
             return list.asFlow()
         }
 

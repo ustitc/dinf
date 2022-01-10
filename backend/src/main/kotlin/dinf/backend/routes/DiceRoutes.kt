@@ -10,7 +10,6 @@ import dinf.backend.templates.Layout
 import dinf.backend.templates.URLBlock
 import dinf.domain.Dice
 import dinf.domain.Dices
-import dinf.domain.ID
 import dinf.domain.SerialNumber
 import io.ktor.application.*
 import io.ktor.features.*
@@ -57,7 +56,7 @@ fun Route.index(layout: Layout, shareHashids: Hashids) {
                                 +"Open"
                             }
                         }
-                    }
+                    }.toList()
                 }
             }
         }
