@@ -52,6 +52,7 @@ fun Application.configureRouting(config: Configuration) {
 
         static("assets") {
             resources("js")
+            resources("css")
             resources("img")
         }
         install(Webjars) {

@@ -2,8 +2,8 @@ package dinf.backend.templates
 
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.article
 import kotlinx.html.p
+import kotlinx.html.section
 
 class Feed : Template<FlowContent> {
 
@@ -12,7 +12,7 @@ class Feed : Template<FlowContent> {
     override fun FlowContent.apply() {
         if (!card.isEmpty()) {
             each(card) {
-                article {
+                section {
                     insert(it)
                 }
             }

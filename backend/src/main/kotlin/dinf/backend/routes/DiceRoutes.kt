@@ -25,10 +25,9 @@ import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.form
-import kotlinx.html.h1
+import kotlinx.html.h2
 import kotlinx.html.input
 import kotlinx.html.p
-import kotlinx.html.role
 import org.hashids.Hashids
 
 private val dices = DBDices()
@@ -47,13 +46,11 @@ fun Route.index(layout: Layout, shareHashids: Hashids) {
                         val location = call.locations.href(DiceLocation.ID(id))
 
                         card {
-                            h1 { +button.dice.name.nbString.toString() }
+                            h2 {
+                                a(href = location) { +button.dice.name.nbString.toString() }
+                            }
                             insert(button) {
                                 resultTagID = "dice-$index"
-                            }
-                            a(href = location) {
-                                role = "button"
-                                +"Open"
                             }
                         }
                     }.toList()
@@ -107,7 +104,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
 
             call.respondHtmlTemplate(layout) {
                 content {
-                    h1 { +dice.name.nbString.toString() }
+                    h2 { +dice.name.nbString.toString() }
 
                     insert(URLBlock(shareURL)) {
                         text = "Share url: "
@@ -143,17 +140,17 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
                         text = "Edit url: "
                     }
 
+                    insert(RollButton(dice)) {
+                        resultTagID = "result"
+                    }
+
                     insert(DiceForm(form)) {
                         name = dice.name.nbString.toString()
                         edges = dice.edges.stringList.joinToString("\n")
                     }
 
-                    insert(RollButton(dice)) {
-                        resultTagID = "result"
-                    }
-
                     form(action = deleteURL, method = FormMethod.post) {
-                        input(type = InputType.submit) {
+                        input(type = InputType.submit, classes = "delete") {
                             value = "Delete"
                         }
                     }

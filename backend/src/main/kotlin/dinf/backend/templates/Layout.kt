@@ -15,8 +15,9 @@ import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.p
+import kotlinx.html.role
 import kotlinx.html.script
-import kotlinx.html.section
+import kotlinx.html.small
 import kotlinx.html.style
 import kotlinx.html.title
 
@@ -35,30 +36,33 @@ class Layout(private val newDiceURL: String) : Template<HTML> {
                 content = "width=device-width, initial-scale=1"
             }
             link(rel = "stylesheet", href = "/assets/pico/css/pico.min.css")
+            link(rel = "stylesheet", href = "/assets/dinf.css")
             script { src = "/assets/roll.js" }
         }
         body {
-            insert(Navbar()) {
-                start {
-                    a(href = "/") {
-                        img(src = "/assets/dinf.png", alt = "logo") {
-                            style = "height: 50px;"
+            div("container-fluid") {
+                insert(Navbar()) {
+                    start {
+                        a(href = "/") {
+                            img(src = "/assets/dinf.png", alt = "logo") {
+                                style = "height: 50px;"
+                            }
+                        }
+                    }
+                    end {
+                        a(href = newDiceURL) {
+                            role = "button"
+                            +"New dice"
                         }
                     }
                 }
-                start {
-                    a(href = newDiceURL) {
-                        +"Create dice"
-                    }
-                }
             }
+
             main(classes = "container") {
-                section {
-                    insert(content)
-                }
+                insert(content)
             }
-            footer {
-                div("container") {
+            footer("container") {
+                small {
                     p { +"by Ruslan Ustits" }
                     a(href = "https://github.com/ustits") { +"Github" }
                 }

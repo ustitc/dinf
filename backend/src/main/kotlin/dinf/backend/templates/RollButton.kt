@@ -3,10 +3,11 @@ package dinf.backend.templates
 import dinf.domain.Dice
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.button
-import kotlinx.html.div
+import kotlinx.html.a
 import kotlinx.html.id
 import kotlinx.html.onClick
+import kotlinx.html.p
+import kotlinx.html.role
 import kotlin.random.Random
 
 class RollButton(val dice: Dice) : Template<FlowContent> {
@@ -17,11 +18,14 @@ class RollButton(val dice: Dice) : Template<FlowContent> {
         val rollValues = dice.edges.stringList
             .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
 
-        button {
-            onClick = "roll($rollValues, \"$resultTagID\")"
-            +"Roll"
+        p {
+            a {
+                role = "button"
+                onClick = "roll($rollValues, \"$resultTagID\")"
+                +"Roll"
+            }
         }
-        div {
+        p {
             this.id = resultTagID
         }
     }

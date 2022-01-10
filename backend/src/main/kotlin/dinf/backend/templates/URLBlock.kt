@@ -12,7 +12,7 @@ class URLBlock(private val url: String) : Template<FlowContent> {
     override fun FlowContent.apply() {
         p {
             +text
+            a(href = url) { +url }
         }
-        a(href = url) { +url }
     }
 }
