@@ -3,7 +3,7 @@ package dinf.backend.routes
 import dinf.backend.DBDices
 import dinf.backend.HashID
 import dinf.backend.templates.DiceForm
-import dinf.backend.templates.DiceView
+import dinf.backend.templates.RollButton
 import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.Layout
@@ -25,10 +25,9 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.a
-import kotlinx.html.div
 import kotlinx.html.form
+import kotlinx.html.h1
 import kotlinx.html.input
-import kotlinx.html.ins
 import kotlinx.html.p
 import kotlinx.html.role
 import org.hashids.Hashids
@@ -37,20 +36,22 @@ private val dices = DBDices()
 
 fun Route.index(layout: Layout, shareHashids: Hashids) {
     get("/") {
-        val diceViews = dices.flow()
-            .map {
-                val id = HashID(it.serialNumber, shareHashids)
-                DiceView(it, id)
-            }
+        val rollButtons = dices.flow()
+            .map { RollButton(it) }
             .toList()
 
         call.respondHtmlTemplate(layout) {
             content {
                 insert(Feed()) {
-                    diceViews.map { view ->
+                    rollButtons.mapIndexed { index, button ->
+                        val id = HashID(button.dice.serialNumber, shareHashids)
+                        val location = call.locations.href(DiceLocation.ID(id))
+
                         card {
-                            insert(view) {}
-                            val location = call.locations.href(DiceLocation.ID(view.id))
+                            h1 { +button.dice.name.nbString.toString() }
+                            insert(button) {
+                                resultTagID = "dice-$index"
+                            }
                             a(href = location) {
                                 role = "button"
                                 +"Open"
@@ -103,14 +104,19 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
         if (dice == null) {
             throw NotFoundException()
         } else {
+            val shareURL = loc.url(baseURL, call)
+
             call.respondHtmlTemplate(layout) {
                 content {
-                    val shareURL = loc.url(baseURL, call)
+                    h1 { +dice.name.nbString.toString() }
+
                     insert(URLBlock(shareURL)) {
                         text = "Share url: "
                     }
-                    val diceID = ID.Simple(loc.id)
-                    insert(DiceView(dice, diceID)) {}
+
+                    insert(RollButton(dice)) {
+                        resultTagID = "result"
+                    }
                 }
             }
         }
@@ -123,27 +129,30 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
         if (dice == null) {
             throw NotFoundException()
         } else {
+            val diceID = HashID(dice, shareHashids)
+            val shareURL = DiceLocation.ID(diceID).url(baseURL, call)
+            val editURL = loc.url(baseURL, call)
+            val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
+            val form = Form(loc.uri(call))
+
             call.respondHtmlTemplate(layout) {
                 content {
-                    val shareURL = DiceLocation.ID(
-                        HashID(dice, shareHashids)
-                    ).url(baseURL, call)
                     insert(URLBlock(shareURL)) {
                         text = "Share url: "
                     }
-
-                    val editURL = loc.url(baseURL, call)
                     insert(URLBlock(editURL)) {
                         text = "Edit url: "
                     }
 
-                    val form = Form(loc.uri(call))
                     insert(DiceForm(form)) {
                         name = dice.name.nbString.toString()
                         edges = dice.edges.stringList.joinToString("\n")
                     }
 
-                    val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
+                    insert(RollButton(dice)) {
+                        resultTagID = "result"
+                    }
+
                     form(action = deleteURL, method = FormMethod.post) {
                         input(type = InputType.submit) {
                             value = "Delete"

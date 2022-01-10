@@ -1,23 +1,22 @@
 package dinf.backend.templates
 
 import dinf.domain.Dice
-import dinf.domain.ID
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.button
 import kotlinx.html.div
-import kotlinx.html.h1
 import kotlinx.html.id
 import kotlinx.html.onClick
+import kotlin.random.Random
 
-class DiceView(private val dice: Dice, val id: ID) : Template<FlowContent> {
+class RollButton(val dice: Dice) : Template<FlowContent> {
+
+    var resultTagID = "result-${Random.nextInt()}"
 
     override fun FlowContent.apply() {
         val rollValues = dice.edges.stringList
             .joinToString(prefix = "[", postfix = "]") { "\"$it\"" }
-        val resultTagID = "result-${id.print()}"
 
-        h1 { +dice.name.nbString.toString() }
         button {
             onClick = "roll($rollValues, \"$resultTagID\")"
             +"Roll"
