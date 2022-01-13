@@ -1,7 +1,6 @@
 package dinf.backend
 
 import dinf.exposed.DiceEntity
-import dinf.exposed.UserEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 
@@ -10,12 +9,6 @@ fun createDiceEntity(): DiceEntity = transaction {
         name = "test"
         createdAt = Instant.now()
         updatedAt = Instant.now()
-        edges = arrayOf("1", "2", "3")
-    }
-}
-
-fun createUser(): UserEntity = transaction {
-    UserEntity.new {
-        name = "name"
+        edges = "1\n2\n3"
     }
 }

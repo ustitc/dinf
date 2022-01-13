@@ -1,6 +1,5 @@
 package dinf.backend.routes
 
-import dinf.backend.DBDices
 import dinf.backend.HashID
 import dinf.backend.templates.DiceForm
 import dinf.backend.templates.RollButton
@@ -30,9 +29,7 @@ import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
 
-private val dices = DBDices()
-
-fun Route.index(layout: Layout, shareHashids: Hashids) {
+fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
     get("/") {
         val rollButtons = dices.flow()
             .map { RollButton(it) }
@@ -71,7 +68,7 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, editHashids: Hashids) {
+fun Route.create(layout: Layout, editHashids: Hashids, dices: Dices) {
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice
@@ -94,7 +91,7 @@ fun Route.create(layout: Layout, editHashids: Hashids) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
+fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Dices) {
     get<DiceLocation.ID> { loc ->
         val dice = dices.diceOrNull(loc.id, shareHashids)
         if (dice == null) {
@@ -119,7 +116,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String) {
     }
 }
 
-fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, baseURL: String) {
+fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, baseURL: String, dices: Dices) {
     get<DiceLocation.Edit> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
@@ -160,7 +157,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
     }
 }
 
-fun Route.edit(layout: Layout, editHashids: Hashids) {
+fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
     post<DiceLocation.Edit> { loc ->
         val params = call.receiveParameters()
         val dice = dices.diceOrNull(loc.id, editHashids)
@@ -188,7 +185,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids) {
 }
 
 
-fun Route.delete(layout: Layout, editHashids: Hashids) {
+fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices) {
     post<DiceLocation.Delete> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {

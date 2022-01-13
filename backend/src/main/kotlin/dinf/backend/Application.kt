@@ -32,11 +32,12 @@ fun main() {
         .loadConfigOrThrow<Configuration>()
 
     configureDatabase(config.database)
+    val dices = DBDices()
 
     embeddedServer(Netty, port = config.server.port, host = "0.0.0.0") {
         configureSerialization()
         configureHTTP()
-        configureRouting(config)
+        configureRouting(config, dices)
         install(CallLogging) {
             level = Level.INFO
             format {

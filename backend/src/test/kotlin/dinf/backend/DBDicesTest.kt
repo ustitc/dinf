@@ -1,13 +1,13 @@
 package dinf.backend
 
-import dinf.exposed.postgresTestListeners
+import dinf.test.sqLiteTestListener
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 
 class DBDicesTest : StringSpec({
 
-    listeners(postgresTestListeners)
+    listeners(sqLiteTestListener)
 
     "lists all dices" {
         val count = 40
