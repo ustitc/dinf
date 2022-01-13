@@ -4,7 +4,6 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.zaxxer.hikari.HikariDataSource
 import dinf.backend.config.Configuration
-import dinf.backend.plugins.configureHTTP
 import dinf.backend.plugins.configureRouting
 import dinf.backend.plugins.configureSerialization
 import dinf.exposed.DiceTable
@@ -36,7 +35,6 @@ fun main() {
 
     embeddedServer(Netty, port = config.server.port, host = "0.0.0.0") {
         configureSerialization()
-        configureHTTP()
         configureRouting(config, dices)
         install(CallLogging) {
             level = Level.INFO

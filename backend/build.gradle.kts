@@ -26,17 +26,14 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
 
-    implementation("com.zaxxer:HikariCP:5.0.0")
+    implementation("com.zaxxer:HikariCP:5.0.1")
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.javatime)
     implementation(libs.exposed.dao)
 
-    implementation(libs.ktor.clientCore)
-    implementation(libs.ktor.clientCoreJVM)
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverHostCommon)
-    implementation(libs.ktor.serverSessions)
     implementation(libs.ktor.serverNetty)
     implementation(libs.ktor.locations)
     implementation(libs.ktor.serialization)
