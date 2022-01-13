@@ -3,6 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm")
     alias(libs.plugins.kotlin.serialization)
+    application
+}
+
+application {
+    mainClass.set("dinf.backend.ApplicationKt")
 }
 
 tasks.test {
