@@ -4,7 +4,17 @@
 
 Sample website: [dinf.ustits.dev](https://dinf.ustits.dev)
 
-Currently, it is a playground to:
+## Configuration
 
-- try out Kotlin multiplatform
-- experiment with OOP styles
+To overload [log configuration](backend/src/main/resources/logback.xml) pass `logback.configurationFile` 
+system property. For example via `JAVA_OPTS` environment variable:
+
+```shell
+export JAVA_OPTS='-Dlogback.configurationFile=/path/to/config.xml'
+```
+
+To enable call logging:
+
+```xml
+<logger name="ktor.application" level="DEBUG"/>
+```

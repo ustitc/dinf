@@ -9,4 +9,8 @@
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="ktor.application" level="INFO"/>
+    <logger name="Exposed" level="INFO"/>
+    <logger name="dinf.backend" level="INFO"/>
 </configuration>

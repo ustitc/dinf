@@ -37,7 +37,7 @@ fun main() {
         configureSerialization()
         configureRouting(config, dices)
         install(CallLogging) {
-            level = Level.INFO
+            level = Level.DEBUG
             format {
                 val status = it.response.status()
                 val httpMethod = it.request.httpMethod.value
