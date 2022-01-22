@@ -2,6 +2,8 @@
 
 **dInf** (infinity dice) - project for creating random generators and sharing them with others.
 
+Sample website: [dinf.ustits.dev](https://dinf.ustits.dev)
+
 Currently, it is a playground to:
 
 - try out Kotlin multiplatform
