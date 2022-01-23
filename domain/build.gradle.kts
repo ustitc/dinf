@@ -16,7 +16,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation(libs.kotlinx.coroutinesCore)
                 api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                api("dev.ustits.krefty:krefty-core:0.1.0-LOCAL")
+                api("dev.ustits.krefty:krefty-core:0.3.4")
             }
         }
         val commonTest by getting {
