@@ -19,8 +19,6 @@ tasks.withType<KotlinCompile>() {
 }
 
 dependencies {
-    implementation(project(":domain"))
-
     implementation(kotlin("stdlib-jdk8"))
 
     runtimeOnly("org.postgresql:postgresql:42.3.1")
@@ -43,6 +41,7 @@ dependencies {
     implementation("org.webjars.bowergithub.picocss:pico:1.4.2")
 
     implementation("org.hashids:hashids:1.0.3")
+    implementation("dev.ustits.krefty:krefty-core:0.3.4")
 
     implementation(libs.hoplite.core)
     implementation(libs.hoplite.toml)
