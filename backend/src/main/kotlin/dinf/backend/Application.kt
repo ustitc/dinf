@@ -4,6 +4,7 @@ import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.zaxxer.hikari.HikariDataSource
 import dinf.backend.config.Configuration
+import dinf.backend.plugins.configureMetrics
 import dinf.backend.plugins.configureRouting
 import dinf.backend.plugins.configureSerialization
 import dinf.exposed.DiceTable
@@ -46,6 +47,7 @@ fun main() {
                 "$status: $httpMethod $uri headers: $headers"
             }
         }
+        configureMetrics()
     }.start(wait = true)
 }
 

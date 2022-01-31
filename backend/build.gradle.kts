@@ -37,6 +37,9 @@ dependencies {
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.webjars)
     implementation(libs.ktor.htmlBuilder)
+    implementation(libs.ktor.metricsMicrometer)
+
+    implementation("io.micrometer:micrometer-registry-prometheus:1.8.2")
 
     implementation("org.webjars.bowergithub.picocss:pico:1.4.2")
 
