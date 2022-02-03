@@ -20,8 +20,15 @@ jobs:
           distribution: 'temurin'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Build
-        run: ./gradlew build
+      - name: Publish package
+        uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
+        with:
+          arguments: publish
+        env:
+          MAVEN_NAME: "GitHubPackages"
+          MAVEN_URL: "https://maven.pkg.github.com/ustits/dinf"
+          MAVEN_USERNAME: "ustits"
+          MAVEN_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 env:
   GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=2048m"
