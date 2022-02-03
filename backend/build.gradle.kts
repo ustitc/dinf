@@ -4,7 +4,6 @@ plugins {
     kotlin("jvm")
     alias(libs.plugins.kotlin.serialization)
     application
-    `maven-publish`
 }
 
 application {
@@ -17,24 +16,6 @@ tasks.test {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "11"
-}
-
-publishing {
-    repositories {
-        maven {
-            name = System.getenv("MAVEN_NAME") ?: ""
-            url = uri(System.getenv("MAVEN_URL") ?: "")
-            credentials {
-                username = System.getenv("MAVEN_USERNAME") ?: ""
-                password = System.getenv("MAVEN_PASSWORD") ?: ""
-            }
-        }
-    }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["java"])
-        }
-    }
 }
 
 dependencies {
