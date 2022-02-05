@@ -1,9 +1,9 @@
-name: CD
+name: Manual deploy
 
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  load:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,24 +16,19 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      - name: Transfer files to server
-        uses: appleboy/scp-action@v0.1.2
+      - name: Upload distribution
+        uses: actions/upload-artifact@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
-          source: "distribution/backend.tar"
-          target: "dinf_v${{ github.run_id }}"
+          name: distribution
+          path: distribution/backend.tar
 
-      - name: Prepare and run
-        uses: garygrossgarten/github-action-ssh@v0.6.3
-        with:
-          command: |
-            cd dinf_v${{ github.run_id }}/distribution && 
-            tar xf backend.tar &&
-            ln -sf ~/dinf_v${{ github.run_id }}/distribution/backend/bin/backend /usr/local/bin/dinf &&
-            systemctl restart dinf
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          privateKey: ${{ secrets.KEY }}
+  deploy:
+    needs: load
+    uses: ustits/dinf/.github/workflows/deploy_workflow.yml@main
+    with:
+      version: ${{ github.run_id }}
+    secrets:
+      host: ${{ secrets.HOST }}
+      username: ${{ secrets.USERNAME }}
+      ssh_port: ${{ secrets.PORT }}
+      ssh_key: ${{ secrets.KEY }}

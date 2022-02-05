@@ -2,33 +2,20 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
     paths-ignore:
       - '*.md'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-      - name: Build
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
-      - name: Upload distribution
-        uses: actions/upload-artifact@v2
-        with:
-          name: distribution
-          path: backend/build/distributions/backend.tar
-
-env:
-  GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=2048m"
+    uses: ustits/dinf/.github/workflows/build_workflow.yml@main
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    uses: ustits/dinf/.github/workflows/deploy_workflow.yml@main
+    with:
+      version: ${{ github.run_id }}
+    secrets:
+      host: ${{ secrets.HOST }}
+      username: ${{ secrets.USERNAME }}
+      ssh_port: ${{ secrets.PORT }}
+      ssh_key: ${{ secrets.KEY }}
