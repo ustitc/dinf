@@ -23,5 +23,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
-          source: "backend.tar"
+          source: "distribution/backend.tar"
           target: "dinf"

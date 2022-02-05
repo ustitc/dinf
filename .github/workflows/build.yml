@@ -27,8 +27,8 @@ jobs:
       - name: Upload distribution
         uses: actions/upload-artifact@v2
         with:
-          name: Distribution
-          path: backend/build/distributions
+          name: distribution
+          path: backend/build/distributions/backend.tar
 
 env:
   GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx3g -XX:MaxMetaspaceSize=2048m"
