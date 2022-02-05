@@ -32,7 +32,7 @@ jobs:
           command: |
             cd dinf_v${{ github.run_id }}/distribution && 
             tar xf backend.tar &&
-            ln -sf ~/dinf_v${{ github.run_id }}/distribution/bin/backend /usr/local/bin/dinf &&
+            ln -sf ~/dinf_v${{ github.run_id }}/distribution/backend/bin/backend /usr/local/bin/dinf &&
             systemctl restart dinf
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
