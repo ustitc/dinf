@@ -24,12 +24,12 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
           source: "distribution/backend.tar"
-          target: "dinf_v${{ GITHUB_RUN_ID }}"
+          target: "dinf_v$GITHUB_RUN_ID"
 
       - name: Prepare
         uses: garygrossgarten/github-action-ssh@v0.6.3
         with:
-          command: tar xf dinf_v${{ GITHUB_RUN_ID }}/distribution/backend.tar
+          command: tar xf dinf_v$GITHUB_RUN_ID/distribution/backend.tar
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           privateKey: ${{ secrets.KEY }}
