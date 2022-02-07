@@ -13,7 +13,7 @@ import org.hashids.Hashids
 
 fun Route.search(diceSearch: DiceSearch, shareHashids: Hashids) {
     get<HTMXLocations.Search> { loc ->
-        val dices = diceSearch.forText(loc.query)
+        val dices = diceSearch.forText(loc.query ?: "")
 
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {

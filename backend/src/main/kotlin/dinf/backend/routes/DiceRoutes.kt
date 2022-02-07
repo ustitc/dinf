@@ -10,6 +10,11 @@ import dinf.backend.templates.URLBlock
 import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
+import dinf.htmx.HTMX_INDICATOR
+import dinf.htmx.hxGet
+import dinf.htmx.hxIndicator
+import dinf.htmx.hxTarget
+import dinf.htmx.hxTrigger
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -30,6 +35,9 @@ import kotlinx.html.p
 import org.hashids.Hashids
 
 fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
+    val searchAPI = application.locations.href(HTMXLocations.Search())
+    val searchResultID = "search-results"
+    val loadBlockID = "load-block"
     get("/") {
         val diceList = dices.flow().toList()
 
@@ -37,17 +45,17 @@ fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
             content {
                 input(type = InputType.search, name = "query") {
                     placeholder = "Search"
-                    attributes["hx-get"] = "/api/htmx/search"
-                    attributes["hx-target"] = "#search-results"
-                    attributes["hx-trigger"] = "keyup changed delay:300ms"
-                    attributes["hx-indicator"] = "#load-block"
+                    hxGet = searchAPI
+                    hxTarget = "#$searchResultID"
+                    hxTrigger = "keyup changed delay:300ms"
+                    hxIndicator = "#$loadBlockID"
                 }
-                div("htmx-indicator") {
-                    id = "load-block"
+                div(HTMX_INDICATOR) {
+                    id = loadBlockID
                     attributes["aria-busy"] = "true"
                 }
                 div {
-                    id = "search-results"
+                    id = searchResultID
                     diceFeed(diceList, shareHashids, call)
                 }
             }
