@@ -8,7 +8,9 @@ import dinf.backend.routes.delete
 import dinf.backend.routes.index
 import dinf.backend.routes.edit
 import dinf.backend.routes.editForm
+import dinf.backend.routes.search
 import dinf.backend.templates.Layout
+import dinf.domain.DiceSearch
 import dinf.domain.Dices
 import io.ktor.application.*
 import io.ktor.features.*
@@ -56,6 +58,7 @@ fun Application.configureRouting(config: Configuration, dices: Dices) {
             dices = dices
         )
         delete(layout = layout, editHashids = editHashids, dices = dices)
+        search(diceSearch = DiceSearch.Stub(dices), shareHashids = shareHashids)
 
         static("assets") {
             resources("js")

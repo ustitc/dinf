@@ -37,6 +37,7 @@ class Layout(private val newDiceURL: String) : Template<HTML> {
             }
             link(rel = "stylesheet", href = "/assets/pico/css/pico.min.css")
             link(rel = "stylesheet", href = "/assets/dinf.css")
+            script { src = "/assets/htmx.org/htmx.min.js" }
             script { src = "/assets/roll.js" }
         }
         body {

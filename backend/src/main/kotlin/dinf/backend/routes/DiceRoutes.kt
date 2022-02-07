@@ -1,11 +1,11 @@
 package dinf.backend.routes
 
 import dinf.backend.HashID
+import dinf.backend.components.diceFeed
 import dinf.backend.templates.DiceForm
-import dinf.backend.templates.RollButton
-import dinf.backend.templates.Feed
 import dinf.backend.templates.Form
 import dinf.backend.templates.Layout
+import dinf.backend.templates.RollButton
 import dinf.backend.templates.URLBlock
 import dinf.domain.Dice
 import dinf.domain.Dices
@@ -18,39 +18,37 @@ import io.ktor.locations.post
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
-import kotlinx.html.a
+import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
+import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
 
 fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
     get("/") {
-        val rollButtons = dices.flow()
-            .map { RollButton(it) }
-            .toList()
+        val diceList = dices.flow().toList()
 
         call.respondHtmlTemplate(layout) {
             content {
-                insert(Feed()) {
-                    rollButtons.mapIndexed { index, button ->
-                        val id = HashID(button.dice.serialNumber, shareHashids)
-                        val location = call.locations.href(DiceLocation.ID(id))
-
-                        card {
-                            h2 {
-                                a(href = location) { +button.dice.name.nbString.toString() }
-                            }
-                            insert(button) {
-                                resultTagID = "dice-$index"
-                            }
-                        }
-                    }.toList()
+                input(type = InputType.search, name = "query") {
+                    placeholder = "Search"
+                    attributes["hx-get"] = "/api/htmx/search"
+                    attributes["hx-target"] = "#search-results"
+                    attributes["hx-trigger"] = "keyup changed delay:300ms"
+                    attributes["hx-indicator"] = "#load-block"
+                }
+                div("htmx-indicator") {
+                    id = "load-block"
+                    attributes["aria-busy"] = "true"
+                }
+                div {
+                    id = "search-results"
+                    diceFeed(diceList, shareHashids, call)
                 }
             }
         }

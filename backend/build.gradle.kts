@@ -42,6 +42,7 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.2")
 
     implementation("org.webjars.bowergithub.picocss:pico:1.4.2")
+    implementation("org.webjars.npm:htmx.org:1.6.1")
 
     implementation("org.hashids:hashids:1.0.3")
     implementation("dev.ustits.krefty:krefty-core:0.3.4")

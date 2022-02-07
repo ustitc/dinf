@@ -18,3 +18,7 @@ typealias NBString = NotBlankString
 fun String.toNBStringOrNull(): NBString? {
     return (this refinedOrNull NotBlank())?.let { NBString(it) }
 }
+
+fun String.toNBString(): NBString {
+    return toNBStringOrNull()!!
+}
