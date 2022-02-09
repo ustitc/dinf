@@ -8,6 +8,7 @@ import dinf.backend.templates.Layout
 import dinf.backend.templates.RollButton
 import dinf.backend.templates.URLBlock
 import dinf.domain.Dice
+import dinf.domain.DiceSave
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
 import dinf.htmx.HTMX_INDICATOR
@@ -74,12 +75,12 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, editHashids: Hashids, dices: Dices) {
+fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice
             .fromParametersOrNull(params)
-            ?.let { dices.create(it) }
+            ?.let { diceSave.create(it) }
         if (dice != null) {
             val id = HashID(dice, editHashids)
             val url = call.locations.href(DiceLocation.Edit(id))

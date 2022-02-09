@@ -4,11 +4,11 @@ import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
 import dinf.exposed.DiceEntity
+import dinf.exposed.DiceTable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.Instant
 
 class DBDices : Dices {
 
@@ -19,23 +19,18 @@ class DBDices : Dices {
             .asFlow()
     }
 
-    override suspend fun create(dice: Dice): Dice {
-        val entity = newSuspendedTransaction {
-            val now = Instant.now()
-            DiceEntity.new {
-                name = dice.name.nbString.toString()
-                edges = dice.edges.stringList.joinToString(separator = "\n")
-                createdAt = now
-                updatedAt = now
-            }
-        }
-        return DBDice(entity)
-    }
-
     override suspend fun diceOrNull(serialNumber: SerialNumber): Dice? {
         return newSuspendedTransaction {
             DiceEntity.findById(serialNumber.number)
         }?.let { DBDice(it) }
+    }
+
+    override suspend fun dices(serials: List<SerialNumber>): List<Dice> {
+        return newSuspendedTransaction {
+            DiceEntity
+                .find { DiceTable.id inList serials.map { it.number } }
+                .map { DBDice(it) }
+        }
     }
 
     override suspend fun delete(dice: Dice) {

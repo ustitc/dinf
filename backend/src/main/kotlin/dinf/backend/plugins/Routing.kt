@@ -10,6 +10,7 @@ import dinf.backend.routes.edit
 import dinf.backend.routes.editForm
 import dinf.backend.routes.search
 import dinf.backend.templates.Layout
+import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
 import io.ktor.application.*
@@ -22,7 +23,12 @@ import io.ktor.routing.*
 import io.ktor.webjars.*
 import kotlinx.html.p
 
-fun Application.configureRouting(config: Configuration, dices: Dices) {
+fun Application.configureRouting(
+    config: Configuration,
+    dices: Dices,
+    diceSave: DiceSave,
+    diceSearch: DiceSearch
+) {
     install(Locations) {
     }
 
@@ -46,7 +52,7 @@ fun Application.configureRouting(config: Configuration, dices: Dices) {
 
     routing {
         index(layout = layout, shareHashids = shareHashids, dices = dices)
-        create(layout = layout, editHashids = editHashids, dices = dices)
+        create(layout = layout, editHashids = editHashids, diceSave = diceSave)
         createForm(layout = layout)
         dice(layout = layout, shareHashids = shareHashids, baseURL = baseURL, dices = dices)
         edit(layout = layout, editHashids = editHashids, dices = dices)
@@ -58,7 +64,7 @@ fun Application.configureRouting(config: Configuration, dices: Dices) {
             dices = dices
         )
         delete(layout = layout, editHashids = editHashids, dices = dices)
-        search(diceSearch = DiceSearch.Stub(dices), shareHashids = shareHashids)
+        search(diceSearch = diceSearch, shareHashids = shareHashids)
 
         static("assets") {
             resources("js")
