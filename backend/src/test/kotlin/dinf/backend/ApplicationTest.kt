@@ -13,7 +13,7 @@ import io.ktor.server.testing.*
 class ApplicationTest : StringSpec({
 
     "root" {
-        withTestApplication({ configureRouting(Configuration(), Dices.Stub(), DiceSave.Stub(), DiceSearch.Stub()) }) {
+        withTestApplication({ configureRouting(Configuration(), Dices.Stub(), DiceSave.Stub(), DiceSearch.Simple()) }) {
             handleRequest(HttpMethod.Get, "/").apply {
                 response shouldHaveStatus HttpStatusCode.OK
             }

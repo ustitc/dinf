@@ -46,7 +46,10 @@ fun main() {
     val dicesIndex = meiliClient.index(MeiliDiceCollection.indexName)
     val meiliDiceSave = MeiliDiceSave(dicesIndex)
     val dbDiceSave = DBDiceSave()
-    val meiliDiceSearch = MeiliDiceSearch(dicesIndex, dices)
+    val diceSearch = FailoverDiceSearch(
+        main = MeiliDiceSearch(dicesIndex, dices),
+        fallback = DBDiceSearch()
+    )
 
     val scheduledEventFlow = flow {
         while(true) {
@@ -64,7 +67,7 @@ fun main() {
         }.launchIn(this)
 
         configureSerialization()
-        configureRouting(config, dices, dbDiceSave, meiliDiceSearch)
+        configureRouting(config, dices, dbDiceSave, diceSearch)
         install(CallLogging) {
             level = Level.DEBUG
             format {

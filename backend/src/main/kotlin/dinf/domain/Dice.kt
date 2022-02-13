@@ -12,6 +12,12 @@ interface Dice {
 
     val edges: Edges
 
+    class Stub : Dice by Simple(
+        serialNumber = SerialNumber.Empty(),
+        name = Name.Stub("stub"),
+        edges = Edges.Simple(listOf())
+    )
+
     class Simple(
         override val serialNumber: SerialNumber,
         override val name: Name,
