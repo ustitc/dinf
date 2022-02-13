@@ -27,6 +27,7 @@ import io.ktor.routing.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
+import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
@@ -51,9 +52,10 @@ fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
                     hxTrigger = "keyup changed delay:300ms"
                     hxIndicator = "#$loadBlockID"
                 }
-                div(HTMX_INDICATOR) {
+                a(href = "#", classes = HTMX_INDICATOR) {
                     id = loadBlockID
                     attributes["aria-busy"] = "true"
+                    +"Searching for dices..."
                 }
                 div {
                     id = searchResultID

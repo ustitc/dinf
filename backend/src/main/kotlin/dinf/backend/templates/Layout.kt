@@ -1,6 +1,8 @@
 package dinf.backend.templates
 
 import dinf.backend.routes.DiceLocation
+import dinf.htmx.HTMXConfiguration
+import dinf.htmx.htmxConfiguration
 import io.ktor.html.*
 import io.ktor.locations.*
 import kotlinx.html.FlowContent
@@ -21,9 +23,12 @@ import kotlinx.html.small
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(private val newDiceURL: String) : Template<HTML> {
+class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMXConfiguration) : Template<HTML> {
 
-    constructor(locations: Locations) : this(newDiceURL = locations.href(DiceLocation.New()))
+    constructor(locations: Locations, htmxConfiguration: HTMXConfiguration) : this(
+        newDiceURL = locations.href(DiceLocation.New()),
+        htmxConfiguration = htmxConfiguration
+    )
 
     val content = Placeholder<FlowContent>()
 
@@ -35,10 +40,13 @@ class Layout(private val newDiceURL: String) : Template<HTML> {
                 name = "viewport"
                 content = "width=device-width, initial-scale=1"
             }
+            htmxConfiguration(htmxConfiguration)
+
             link(rel = "stylesheet", href = "/assets/pico/css/pico.min.css")
             link(rel = "stylesheet", href = "/assets/dinf.css")
             script { src = "/assets/htmx.org/htmx.min.js" }
             script { src = "/assets/roll.js" }
+            script { src = "/assets/htmx_events.js" }
         }
         body {
             div("container-fluid") {

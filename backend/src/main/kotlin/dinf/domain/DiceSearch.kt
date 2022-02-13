@@ -2,6 +2,8 @@ package dinf.domain
 
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.time.delay
+import java.time.Duration
 
 interface DiceSearch {
 
@@ -17,6 +19,13 @@ interface DiceSearch {
     class Empty : DiceSearch {
         override suspend fun forText(text: String): List<Dice> {
             return emptyList()
+        }
+    }
+
+    class Delay(private val main: DiceSearch, private val duration: Duration) : DiceSearch {
+        override suspend fun forText(text: String): List<Dice> {
+            delay(duration)
+            return main.forText(text)
         }
     }
 

@@ -32,7 +32,7 @@ fun Application.configureRouting(
     install(Locations) {
     }
 
-    val layout = Layout(locations = locations)
+    val layout = Layout(locations = locations, htmxConfiguration = config.htmx)
     val urls = config.urls
     val shareHashids = urls.share.hashids()
     val editHashids = urls.edit.hashids()
