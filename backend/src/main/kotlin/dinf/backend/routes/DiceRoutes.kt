@@ -1,7 +1,7 @@
 package dinf.backend.routes
 
 import dinf.backend.HashID
-import dinf.backend.components.diceFeed
+import dinf.backend.components.DiceFeed
 import dinf.backend.templates.DiceForm
 import dinf.backend.templates.Form
 import dinf.backend.templates.Layout
@@ -36,7 +36,7 @@ import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
 
-fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
+fun Route.index(layout: Layout, dices: Dices, diceFeed: DiceFeed) {
     val searchAPI = application.locations.href(HTMXLocations.Search())
     val searchResultID = "search-results"
     val loadBlockID = "load-block"
@@ -59,7 +59,7 @@ fun Route.index(layout: Layout, shareHashids: Hashids, dices: Dices) {
                 }
                 div {
                     id = searchResultID
-                    diceFeed(diceList, shareHashids, call)
+                    diceFeed.component(this, diceList)
                 }
             }
         }

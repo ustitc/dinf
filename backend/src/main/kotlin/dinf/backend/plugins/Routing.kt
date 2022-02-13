@@ -1,6 +1,9 @@
 package dinf.backend.plugins
 
+import dinf.backend.components.DiceCard
+import dinf.backend.components.DiceFeed
 import dinf.backend.config.Configuration
+import dinf.backend.routes.DiceLocation
 import dinf.backend.routes.create
 import dinf.backend.routes.createForm
 import dinf.backend.routes.dice
@@ -38,6 +41,11 @@ fun Application.configureRouting(
     val editHashids = urls.edit.hashids()
     val baseURL = config.server.baseURL
 
+    val newDiceURL = locations.href(DiceLocation.New())
+
+    val diceCard = DiceCard(shareHashids = shareHashids, locations = locations)
+    val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
+
     install(StatusPages) {
         status(HttpStatusCode.NotFound) {
             call.respondHtmlTemplate(layout) {
@@ -51,7 +59,7 @@ fun Application.configureRouting(
     }
 
     routing {
-        index(layout = layout, shareHashids = shareHashids, dices = dices)
+        index(layout = layout, dices = dices, diceFeed = diceFeed)
         create(layout = layout, editHashids = editHashids, diceSave = diceSave)
         createForm(layout = layout)
         dice(layout = layout, shareHashids = shareHashids, baseURL = baseURL, dices = dices)
@@ -64,7 +72,7 @@ fun Application.configureRouting(
             dices = dices
         )
         delete(layout = layout, editHashids = editHashids, dices = dices)
-        search(diceSearch = diceSearch, shareHashids = shareHashids)
+        search(diceSearch = diceSearch, diceFeed = diceFeed)
 
         static("assets") {
             resources("js")

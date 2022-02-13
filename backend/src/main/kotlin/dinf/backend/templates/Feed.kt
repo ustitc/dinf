@@ -2,22 +2,19 @@ package dinf.backend.templates
 
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.p
-import kotlinx.html.section
 
 class Feed : Template<FlowContent> {
 
-    val card = PlaceholderList<FlowContent, FlowContent>()
+    val item = PlaceholderList<FlowContent, FlowContent>()
+    val noContent = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
-        if (!card.isEmpty()) {
-            each(card) {
-                section {
-                    insert(it)
-                }
+        if (!item.isEmpty()) {
+            each(item) {
+                insert(it)
             }
         } else {
-            p { +"No content" }
+            insert(noContent)
         }
     }
 }
