@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-    mainClass.set("dinf.backend.ApplicationKt")
+    mainClass.set("dinf.ApplicationKt")
 }
 
 tasks.test {
