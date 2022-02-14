@@ -1,11 +1,11 @@
 package dinf.html.templates
 
 import dinf.domain.Dice
+import dinf.hyperscript.hyperscript
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.a
 import kotlinx.html.id
-import kotlinx.html.onClick
 import kotlinx.html.p
 import kotlinx.html.role
 import kotlin.random.Random
@@ -21,11 +21,17 @@ class RollButton(val dice: Dice) : Template<FlowContent> {
         p {
             a {
                 role = "button"
-                onClick = "roll($rollValues, \"$resultTagID\")"
+                hyperscript = "on click send roll to the #$resultTagID"
                 +"Roll"
             }
         }
-        p {
+        p("roll") {
+            hyperscript = """
+                on roll get roll($rollValues) then put it into me
+                then repeat 2 times
+                    toggle *opacity then settle
+            """.trimIndent()
+
             this.id = resultTagID
         }
     }

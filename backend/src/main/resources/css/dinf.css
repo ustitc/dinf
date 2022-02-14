@@ -28,3 +28,7 @@
   --switch-color: var(--primary-inverse);
   --switch-checked-background-color: var(--primary);
 }
+
+.roll {
+  transition: all 500ms ease-in;
+}
