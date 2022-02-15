@@ -1,8 +1,7 @@
-package dinf.htmx
+package dev.ustits.htmx
 
 import kotlinx.html.HEAD
 import kotlinx.html.meta
-import org.json.simple.JSONObject
 import java.time.Duration
 
 data class HTMXConfiguration(
@@ -10,9 +9,11 @@ data class HTMXConfiguration(
 ) {
 
     fun jsonString(): String {
-        return JSONObject().also {
-            it["timeout"] = timeout.toMillis()
-        }.toJSONString()
+        return """
+            {
+                "timeout": ${timeout.toMillis()}
+            }
+        """.trimIndent()
     }
 }
 

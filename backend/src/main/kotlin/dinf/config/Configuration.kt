@@ -1,6 +1,6 @@
 package dinf.config
 
-import dinf.htmx.HTMXConfiguration
+import dev.ustits.htmx.HTMXConfiguration
 import java.time.Duration
 
 data class Configuration(

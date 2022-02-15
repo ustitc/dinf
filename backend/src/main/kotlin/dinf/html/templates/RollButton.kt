@@ -5,7 +5,7 @@ import dinf.domain.Edges
 import dinf.html.EscapedString
 import dinf.html.JSStringArray
 import dinf.html.dataAttribute
-import dinf.hyperscript.hyperscript
+import dev.ustits.hyperscript.hyperscript
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.a

@@ -1,8 +1,8 @@
 package dinf.html.templates
 
 import dinf.routes.DiceLocation
-import dinf.htmx.HTMXConfiguration
-import dinf.htmx.htmxConfiguration
+import dev.ustits.htmx.HTMXConfiguration
+import dev.ustits.htmx.htmxConfiguration
 import io.ktor.html.*
 import io.ktor.locations.*
 import kotlinx.html.FlowContent

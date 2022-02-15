@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
     repositories {
         mavenCentral()
@@ -12,6 +14,12 @@ group = "dinf"
 version = "1.0-SNAPSHOT"
 
 allprojects {
+    apply(plugin = "kotlin")
+
+    tasks.withType<KotlinCompile>() {
+        kotlinOptions.jvmTarget = "11"
+    }
+
     repositories {
         mavenCentral()
         mavenLocal()

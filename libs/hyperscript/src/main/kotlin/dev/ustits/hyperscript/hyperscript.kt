@@ -1,4 +1,4 @@
-package dinf.hyperscript
+package dev.ustits.hyperscript
 
 import kotlinx.html.HTMLTag
 

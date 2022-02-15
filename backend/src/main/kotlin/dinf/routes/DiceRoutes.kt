@@ -11,11 +11,11 @@ import dinf.domain.Dice
 import dinf.domain.DiceSave
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
-import dinf.htmx.HTMX_INDICATOR
-import dinf.htmx.hxGet
-import dinf.htmx.hxIndicator
-import dinf.htmx.hxTarget
-import dinf.htmx.hxTrigger
+import dev.ustits.htmx.HTMX_INDICATOR
+import dev.ustits.htmx.hxGet
+import dev.ustits.htmx.hxIndicator
+import dev.ustits.htmx.hxTarget
+import dev.ustits.htmx.hxTrigger
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*

@@ -1,4 +1,4 @@
-package dinf.htmx
+package dev.ustits.htmx
 
 import kotlinx.html.HTMLTag
 

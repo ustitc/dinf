@@ -1,7 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm")
     alias(libs.plugins.kotlin.serialization)
     application
 }
@@ -14,12 +11,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "11"
-}
-
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation(project(":libs:htmx"))
+    implementation(project(":libs:hyperscript"))
 
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
