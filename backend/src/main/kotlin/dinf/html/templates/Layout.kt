@@ -46,7 +46,6 @@ class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMX
             link(rel = "stylesheet", href = "/assets/dinf.css")
             script { src = "/assets/htmx.org/htmx.min.js" }
             script { src = "/assets/hyperscript.org/_hyperscript_web.min.js" }
-            script { src = "/assets/roll.js" }
             script { src = "/assets/htmx_events.js" }
         }
         body {
