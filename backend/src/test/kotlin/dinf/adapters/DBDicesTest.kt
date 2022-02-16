@@ -17,9 +17,9 @@ class DBDicesTest : StringSpec({
             createDiceEntity()
         }
 
-        val uc = DBDices()
+        val dices = DBDices()
 
-        uc.flow().toList().size shouldBe count
+        dices.flow().toList().size shouldBe count
     }
 
     "lists only specified dices" {
@@ -28,10 +28,10 @@ class DBDicesTest : StringSpec({
             createDiceEntity()
         }
 
-        val uc = DBDices()
+        val dices = DBDices()
 
         val serialsCount = 10
-        uc.dices(
+        dices.list(
             List(serialsCount) { SerialNumber.Simple(it + 1L) }
         ).size shouldBe serialsCount
     }

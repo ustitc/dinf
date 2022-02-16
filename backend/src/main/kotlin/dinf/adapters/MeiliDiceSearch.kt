@@ -14,6 +14,6 @@ class MeiliDiceSearch(private val index: Index, private val dices: Dices) : Dice
             .map { it[MeiliDiceCollection.idField]!! as Double }
             .map { it.toLong() }
             .map { SerialNumber.Simple(it) }
-        return dices.dices(serials)
+        return dices.list(serials)
     }
 }

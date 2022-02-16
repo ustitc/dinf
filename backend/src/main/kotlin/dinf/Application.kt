@@ -5,6 +5,7 @@ import com.meilisearch.sdk.Config
 import com.sksamuel.hoplite.ConfigLoader
 import com.sksamuel.hoplite.PropertySource
 import com.zaxxer.hikari.HikariDataSource
+import dinf.adapters.DBDiceDelete
 import dinf.adapters.DBDiceSave
 import dinf.adapters.DBDiceSearch
 import dinf.adapters.DBDices
@@ -59,6 +60,7 @@ fun main() {
         fallback = DBDiceSearch()
     )
     val diceMetrics = DiceMetrics.Simple()
+    val diceDelete = DBDiceDelete()
 
     val scheduledEventFlow = flow {
         while(true) {
@@ -76,7 +78,7 @@ fun main() {
         }.launchIn(this)
 
         configureSerialization()
-        configureRouting(config, dices, dbDiceSave, diceMetrics, diceSearch)
+        configureRouting(config, dices, dbDiceSave, diceMetrics, diceSearch, diceDelete)
         install(CallLogging) {
             level = Level.DEBUG
             format {

@@ -3,6 +3,7 @@ package dinf.plugins
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
+import dinf.domain.DiceDelete
 import dinf.domain.DiceMetrics
 import dinf.routes.DiceLocation
 import dinf.routes.create
@@ -32,7 +33,8 @@ fun Application.configureRouting(
     dices: Dices,
     diceSave: DiceSave,
     diceMetrics: DiceMetrics,
-    diceSearch: DiceSearch
+    diceSearch: DiceSearch,
+    diceDelete: DiceDelete
 ) {
     install(Locations) {
     }
@@ -79,7 +81,7 @@ fun Application.configureRouting(
             baseURL = baseURL,
             dices = dices
         )
-        delete(layout = layout, editHashids = editHashids, dices = dices)
+        delete(layout = layout, editHashids = editHashids, dices = dices, diceDelete = diceDelete)
         search(diceSearch = diceSearch, diceFeed = diceFeed)
 
         static("assets") {

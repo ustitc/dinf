@@ -2,6 +2,7 @@ package dinf.routes
 
 import dinf.adapters.HashID
 import dinf.domain.Dice
+import dinf.domain.DiceDelete
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
@@ -176,13 +177,13 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
 }
 
 
-fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices) {
+fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices, diceDelete: DiceDelete) {
     post<DiceLocation.Delete> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {
-            dices.delete(dice)
+            diceDelete.delete(dice)
             call.respondHtmlTemplate(layout) {
                 content {
                     p { +"Dice deleted" }
@@ -204,5 +205,5 @@ fun Hashids.decodeOrNull(str: String): Long? {
 suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
     return hashids.decodeOrNull(id)
         ?.let { SerialNumber.Simple(it) }
-        ?.let { diceOrNull(it) }
+        ?.let { oneOrNull(it) }
 }

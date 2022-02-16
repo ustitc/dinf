@@ -19,23 +19,17 @@ class DBDices : Dices {
             .asFlow()
     }
 
-    override suspend fun diceOrNull(serialNumber: SerialNumber): Dice? {
+    override suspend fun oneOrNull(serialNumber: SerialNumber): Dice? {
         return newSuspendedTransaction {
             DiceEntity.findById(serialNumber.number)
         }?.let { DBDice(it) }
     }
 
-    override suspend fun dices(serials: List<SerialNumber>): List<Dice> {
+    override suspend fun list(serials: List<SerialNumber>): List<Dice> {
         return newSuspendedTransaction {
             DiceEntity
                 .find { DiceTable.id inList serials.map { it.number } }
                 .map { DBDice(it) }
-        }
-    }
-
-    override suspend fun delete(dice: Dice) {
-        newSuspendedTransaction {
-            DiceEntity.findById(dice.serialNumber.number)?.delete()
         }
     }
 }
