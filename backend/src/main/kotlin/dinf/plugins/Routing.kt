@@ -3,6 +3,7 @@ package dinf.plugins
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
+import dinf.domain.DiceMetrics
 import dinf.routes.DiceLocation
 import dinf.routes.create
 import dinf.routes.createForm
@@ -30,6 +31,7 @@ fun Application.configureRouting(
     config: Configuration,
     dices: Dices,
     diceSave: DiceSave,
+    diceMetrics: DiceMetrics,
     diceSearch: DiceSearch
 ) {
     install(Locations) {
@@ -62,7 +64,13 @@ fun Application.configureRouting(
         index(layout = layout, dices = dices, diceFeed = diceFeed)
         create(layout = layout, editHashids = editHashids, diceSave = diceSave)
         createForm(layout = layout)
-        dice(layout = layout, shareHashids = shareHashids, baseURL = baseURL, dices = dices)
+        dice(
+            layout = layout,
+            shareHashids = shareHashids,
+            baseURL = baseURL,
+            dices = dices,
+            diceMetrics = diceMetrics
+        )
         edit(layout = layout, editHashids = editHashids, dices = dices)
         editForm(
             layout = layout,

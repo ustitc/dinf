@@ -2,6 +2,7 @@ package dinf.routes
 
 import dinf.adapters.HashID
 import dinf.domain.Dice
+import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
@@ -80,12 +81,13 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Dices) {
+fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Dices, diceMetrics: DiceMetrics) {
     get<DiceLocation.ID> { loc ->
         val dice = dices.diceOrNull(loc.id, shareHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {
+            diceMetrics.increment(dice)
             val shareURL = loc.url(baseURL, call)
 
             call.respondHtmlTemplate(layout) {

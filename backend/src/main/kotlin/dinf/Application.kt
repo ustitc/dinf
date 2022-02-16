@@ -13,6 +13,7 @@ import dinf.adapters.MeiliDiceCollection
 import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
+import dinf.domain.DiceMetrics
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
 import dinf.plugins.configureSerialization
@@ -57,6 +58,7 @@ fun main() {
         main = MeiliDiceSearch(dicesIndex, dices),
         fallback = DBDiceSearch()
     )
+    val diceMetrics = DiceMetrics.Simple()
 
     val scheduledEventFlow = flow {
         while(true) {
@@ -74,7 +76,7 @@ fun main() {
         }.launchIn(this)
 
         configureSerialization()
-        configureRouting(config, dices, dbDiceSave, diceSearch)
+        configureRouting(config, dices, dbDiceSave, diceMetrics, diceSearch)
         install(CallLogging) {
             level = Level.DEBUG
             format {
