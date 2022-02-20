@@ -6,19 +6,18 @@ import io.kotest.matchers.collections.shouldContainInOrder
 class DiceSearchTest : StringSpec({
 
     "dices with higher click count must be first" {
-        val metrics = DiceMetrics.Simple()
         val first = Dice.Stub("first")
         val second = Dice.Stub("second")
         val third = Dice.Stub("third")
 
-        metrics.increment(first)
-        metrics.increment(first)
-        metrics.increment(second)
+        val metrics = DiceMetrics.InMemory(
+            first to Metric.Stub(10),
+            second to Metric.Stub(3),
+            third to Metric.Stub(0)
+        )
 
         val search = DiceSearch.PopularFirst(
-            search = DiceSearch.Stub {
-                listOf(third, second, first)
-            },
+            search = DiceSearch.Stub(third, second, first),
             metrics = metrics
         )
 

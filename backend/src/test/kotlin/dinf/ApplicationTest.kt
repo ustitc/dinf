@@ -20,7 +20,7 @@ class ApplicationTest : StringSpec({
                 Configuration(),
                 Dices.Stub(),
                 DiceSave.Stub(),
-                DiceMetrics.Simple(),
+                DiceMetrics.InMemory(),
                 DiceSearch.Simple(),
                 DiceDelete.Stub()
             )

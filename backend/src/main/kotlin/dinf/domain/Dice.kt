@@ -13,7 +13,7 @@ interface Dice {
     val edges: Edges
 
     class Stub(name: String = "stub") : Dice by Simple(
-        serialNumber = SerialNumber.Empty(),
+        serialNumber = SerialNumber.Rand(),
         name = Name.Stub(name),
         edges = Edges.Simple(listOf())
     )

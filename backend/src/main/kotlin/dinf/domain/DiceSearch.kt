@@ -2,6 +2,7 @@ package dinf.domain
 
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import java.time.Duration
 
@@ -10,6 +11,8 @@ interface DiceSearch {
     suspend fun forText(text: String): List<Dice>
 
     class Stub(private val block: () -> List<Dice>) : DiceSearch {
+
+        constructor(vararg dices: Dice) : this({ dices.toList() })
 
         override suspend fun forText(text: String): List<Dice> {
             return block()
@@ -41,8 +44,8 @@ interface DiceSearch {
         override suspend fun forText(text: String): List<Dice> {
             return search
                 .forText(text)
-                .map { it to metrics.clicks(it) }
-                .sortedByDescending { it.second }
+                .map { it to metrics.forDice(it) }
+                .sortedByDescending { runBlocking { it.second.clicks() } }
                 .map { it.first }
         }
     }

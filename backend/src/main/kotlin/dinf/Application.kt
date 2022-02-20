@@ -56,7 +56,7 @@ fun main() {
     val dicesIndex = meiliClient.index(MeiliDiceCollection.indexName)
     val meiliDiceSave = MeiliDiceSave(dicesIndex)
     val dbDiceSave = DBDiceSave()
-    val diceMetrics = DiceMetrics.Simple()
+    val diceMetrics = DiceMetrics.InMemory()
     val diceSearch = DiceSearch.PopularFirst(
         search = FailoverDiceSearch(
             main = MeiliDiceSearch(dicesIndex, dices),

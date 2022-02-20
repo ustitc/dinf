@@ -88,7 +88,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Di
         if (dice == null) {
             throw NotFoundException()
         } else {
-            diceMetrics.increment(dice)
+            diceMetrics.forDice(dice).increment()
             val shareURL = loc.url(baseURL, call)
 
             call.respondHtmlTemplate(layout) {

@@ -2,20 +2,36 @@ package dinf.domain
 
 interface DiceMetrics {
 
-    suspend fun increment(dice: Dice)
+    suspend fun forDice(dice: Dice): Metric
 
-    suspend fun clicks(dice: Dice): Long
+    class InMemory private constructor(private val map: MutableMap<Long, Metric>) : DiceMetrics {
 
-    class Simple(private val map: MutableMap<SerialNumber, Long> = mutableMapOf()): DiceMetrics {
+        constructor() : this(mutableMapOf())
 
-        override suspend fun increment(dice: Dice) {
-            map.putIfAbsent(dice.serialNumber, 0L)
-            map.computeIfPresent(dice.serialNumber) { _, i -> i + 1 }
+        constructor(vararg initial: Pair<Dice, Metric>) : this(
+            initial
+                .toMap()
+                .mapKeys { it.key.serialNumber.number }
+                .toMutableMap()
+        )
+
+        override suspend fun forDice(dice: Dice): Metric {
+            return map.getOrPut(dice.serialNumber.number) { InMemoryMetric() }
         }
 
-        override suspend fun clicks(dice: Dice): Long {
-            return map.getOrDefault(dice.serialNumber, 0L)
+        private class InMemoryMetric private constructor(private var value: Clicks) : Metric {
+
+            constructor() : this(0L)
+
+            override suspend fun increment() {
+                value += 1
+            }
+
+            override suspend fun clicks(): Clicks {
+                return value
+            }
         }
+
     }
 
 }
