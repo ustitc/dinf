@@ -12,9 +12,9 @@ interface Dice {
 
     val edges: Edges
 
-    class Stub : Dice by Simple(
+    class Stub(name: String = "stub") : Dice by Simple(
         serialNumber = SerialNumber.Empty(),
-        name = Name.Stub("stub"),
+        name = Name.Stub(name),
         edges = Edges.Simple(listOf())
     )
 

@@ -36,4 +36,15 @@ interface DiceSearch {
         }
     }
 
+    class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) : DiceSearch {
+
+        override suspend fun forText(text: String): List<Dice> {
+            return search
+                .forText(text)
+                .map { it to metrics.clicks(it) }
+                .sortedByDescending { it.second }
+                .map { it.first }
+        }
+    }
+
 }

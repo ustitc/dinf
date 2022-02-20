@@ -15,6 +15,7 @@ import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
 import dinf.domain.DiceMetrics
+import dinf.domain.DiceSearch
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
 import dinf.plugins.configureSerialization
@@ -55,15 +56,18 @@ fun main() {
     val dicesIndex = meiliClient.index(MeiliDiceCollection.indexName)
     val meiliDiceSave = MeiliDiceSave(dicesIndex)
     val dbDiceSave = DBDiceSave()
-    val diceSearch = FailoverDiceSearch(
-        main = MeiliDiceSearch(dicesIndex, dices),
-        fallback = DBDiceSearch()
-    )
     val diceMetrics = DiceMetrics.Simple()
+    val diceSearch = DiceSearch.PopularFirst(
+        search = FailoverDiceSearch(
+            main = MeiliDiceSearch(dicesIndex, dices),
+            fallback = DBDiceSearch()
+        ),
+        metrics = diceMetrics
+    )
     val diceDelete = DBDiceDelete()
 
     val scheduledEventFlow = flow {
-        while(true) {
+        while (true) {
             delay(config.search.reindex)
             dices
                 .flow()
@@ -73,7 +77,7 @@ fun main() {
     }
 
     embeddedServer(Netty, port = config.server.port, host = "0.0.0.0") {
-        scheduledEventFlow.onEach{
+        scheduledEventFlow.onEach {
             meiliDiceSave.create(it)
         }.launchIn(this)
 
