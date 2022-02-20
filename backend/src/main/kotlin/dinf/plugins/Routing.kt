@@ -1,6 +1,6 @@
 package dinf.plugins
 
-import dinf.AppDependencies
+import dinf.AppDeps
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
@@ -26,7 +26,7 @@ import kotlinx.html.p
 
 fun Application.configureRouting(
     config: Configuration,
-    dependencies: AppDependencies
+    dependencies: AppDeps
 ) {
     install(Locations) {
     }

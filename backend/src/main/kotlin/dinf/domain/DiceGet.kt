@@ -8,6 +8,12 @@ typealias Count = PInt
 
 fun interface DiceGet : suspend (Count) -> List<Dice> {
 
+    class Empty : DiceGet {
+        override suspend fun invoke(p1: Count): List<Dice> {
+            return emptyList()
+        }
+    }
+
     class TopByClicks(private val dices: Dices, private val metrics: DiceMetrics) : DiceGet {
 
         override suspend fun invoke(p1: Count): List<Dice> {

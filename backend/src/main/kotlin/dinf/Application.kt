@@ -31,8 +31,8 @@ fun main() {
 
     configureDatabase(config.database)
 
-    val meiliDeps = MeiliDependencies(config.search)
-    val appDeps = AppDependencies(meiliDeps)
+    val meiliDeps = MeiliDeps(config.search)
+    val appDeps = AppDepsImpl(meiliDeps)
     val reindexJob = ReindexJob(
         dices = appDeps.dices(),
         delay = config.search.reindex,

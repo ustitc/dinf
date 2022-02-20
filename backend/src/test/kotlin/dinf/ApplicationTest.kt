@@ -1,7 +1,6 @@
 package dinf
 
 import dinf.config.Configuration
-import dinf.config.Search
 import dinf.plugins.configureRouting
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.core.spec.style.StringSpec
@@ -14,7 +13,7 @@ class ApplicationTest : StringSpec({
         withTestApplication({
             configureRouting(
                 Configuration(),
-                AppDependencies(MeiliDependencies(Search())),
+                AppDeps.Stub(),
             )
         }) {
             handleRequest(HttpMethod.Get, "/").apply {

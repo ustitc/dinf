@@ -13,40 +13,40 @@ import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
 
-class AppDependencies(private val meiliDependencies: MeiliDependencies) {
+class AppDepsImpl(private val meiliDeps: MeiliDeps): AppDeps {
 
     private val diceMetrics = DiceMetrics.InMemory()
 
-    fun dices(): Dices {
+    override fun dices(): Dices {
         return DBDices()
     }
 
-    fun diceMetrics(): DiceMetrics {
+    override fun diceMetrics(): DiceMetrics {
         return diceMetrics
     }
 
-    fun diceGet(): DiceGet {
+    override fun diceGet(): DiceGet {
         return DiceGet.TopByClicks(
             dices = dices(),
             metrics = diceMetrics
         )
     }
 
-    fun diceDelete(): DiceDelete {
+    override fun diceDelete(): DiceDelete {
         return DBDiceDelete()
     }
 
-    fun diceSearch(): DiceSearch {
+    override fun diceSearch(): DiceSearch {
         return DiceSearch.PopularFirst(
             search = FailoverDiceSearch(
-                main = MeiliDiceSearch(meiliDependencies.meiliDiceIndex(), dices()),
+                main = MeiliDiceSearch(meiliDeps.meiliDiceIndex(), dices()),
                 fallback = DBDiceSearch()
             ),
             metrics = diceMetrics()
         )
     }
 
-    fun diceSave(): DiceSave {
+    override fun diceSave(): DiceSave {
         return DBDiceSave()
     }
 

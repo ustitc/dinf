@@ -5,7 +5,7 @@ import com.meilisearch.sdk.Config
 import com.meilisearch.sdk.Index
 import dinf.config.Search
 
-class MeiliDependencies(private val search: Search) {
+class MeiliDeps(private val search: Search) {
 
     private val indexName = "dices"
 
