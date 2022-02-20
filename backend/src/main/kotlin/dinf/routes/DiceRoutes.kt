@@ -14,7 +14,7 @@ import dinf.html.templates.SearchBar
 import dinf.html.templates.DiceForm
 import dinf.html.templates.Form
 import dinf.html.templates.Layout
-import dinf.html.templates.RollButton
+import dinf.html.templates.RollBlock
 import dinf.html.templates.URLBlock
 import io.ktor.application.*
 import io.ktor.features.*
@@ -100,8 +100,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Di
                         text = "Share url: "
                     }
 
-                    insert(RollButton(dice)) {
-                        resultTagID = "result"
+                    insert(RollBlock(dice)) {
                     }
                 }
             }
@@ -130,8 +129,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
                         text = "Edit url: "
                     }
 
-                    insert(RollButton(dice)) {
-                        resultTagID = "result"
+                    insert(RollBlock(dice)) {
                     }
 
                     insert(DiceForm(form)) {

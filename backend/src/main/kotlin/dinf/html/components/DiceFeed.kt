@@ -6,6 +6,7 @@ import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.form
+import kotlinx.html.hr
 import kotlinx.html.input
 
 class DiceFeed(
@@ -18,6 +19,7 @@ class DiceFeed(
             diceList.forEach { dice ->
                 item {
                     diceCard.component(this, dice)
+                    hr {  }
                 }
             }
             noContent {
