@@ -2,8 +2,8 @@ package dinf.adapters
 
 import dinf.domain.Dice
 import dinf.domain.DiceSearch
-import dinf.exposed.DiceEntity
-import dinf.exposed.DiceTable
+import dinf.db.DiceEntity
+import dinf.db.DiceTable
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class DBDiceSearch : DiceSearch {

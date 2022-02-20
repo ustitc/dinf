@@ -1,4 +1,4 @@
-package dinf.exposed
+package dinf.db
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass

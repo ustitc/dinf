@@ -1,7 +1,7 @@
 package dinf.adapters
 
 import dinf.domain.Edges
-import dinf.exposed.DiceEntity
+import dinf.db.DiceEntity
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class DBEdges(private val diceEntity: DiceEntity) : Edges {

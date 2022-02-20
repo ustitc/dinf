@@ -2,7 +2,7 @@ package dinf.test
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import dinf.exposed.DiceTable
+import dinf.db.DiceTable
 import io.kotest.core.listeners.TestListener
 import io.kotest.core.test.TestCase
 import org.jetbrains.exposed.sql.Database

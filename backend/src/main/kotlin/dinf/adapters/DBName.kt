@@ -1,7 +1,7 @@
 package dinf.adapters
 
 import dinf.domain.Name
-import dinf.exposed.DiceEntity
+import dinf.db.DiceEntity
 import dinf.types.NBString
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 

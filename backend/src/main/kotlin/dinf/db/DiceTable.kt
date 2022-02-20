@@ -1,4 +1,4 @@
-package dinf.exposed
+package dinf.db
 
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.javatime.timestamp

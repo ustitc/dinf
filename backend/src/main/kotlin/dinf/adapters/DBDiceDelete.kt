@@ -2,7 +2,7 @@ package dinf.adapters
 
 import dinf.domain.Dice
 import dinf.domain.DiceDelete
-import dinf.exposed.DiceEntity
+import dinf.db.DiceEntity
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class DBDiceDelete : DiceDelete {

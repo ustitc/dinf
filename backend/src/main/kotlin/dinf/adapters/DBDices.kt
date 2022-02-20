@@ -3,8 +3,8 @@ package dinf.adapters
 import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
-import dinf.exposed.DiceEntity
-import dinf.exposed.DiceTable
+import dinf.db.DiceEntity
+import dinf.db.DiceTable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

@@ -1,6 +1,6 @@
 package dinf
 
-import dinf.exposed.DiceEntity
+import dinf.db.DiceEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 
