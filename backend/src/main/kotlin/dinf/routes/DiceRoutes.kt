@@ -1,8 +1,10 @@
 package dinf.routes
 
 import dinf.adapters.HashID
+import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceDelete
+import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
@@ -22,7 +24,6 @@ import io.ktor.locations.post
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.coroutines.flow.toList
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.form
@@ -31,11 +32,11 @@ import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
 
-fun Route.index(layout: Layout, dices: Dices, diceFeed: DiceFeed) {
+fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val searchAPI = application.locations.href(HTMXLocations.Search())
 
     get("/") {
-        val diceList = dices.flow().toList()
+        val diceList = diceGet.invoke(Count(10))
 
         call.respondHtmlTemplate(layout) {
             content {

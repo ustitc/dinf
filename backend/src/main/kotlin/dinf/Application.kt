@@ -8,18 +8,16 @@ import com.zaxxer.hikari.HikariDataSource
 import dinf.adapters.DBDiceDelete
 import dinf.adapters.DBDiceSave
 import dinf.adapters.DBDiceSearch
-import dinf.adapters.DBDices
 import dinf.adapters.FailoverDiceSearch
 import dinf.adapters.MeiliDiceCollection
 import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
-import dinf.domain.DiceMetrics
 import dinf.domain.DiceSearch
+import dinf.exposed.DiceTable
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
 import dinf.plugins.configureSerialization
-import dinf.exposed.DiceTable
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.request.*
@@ -49,24 +47,24 @@ fun main() {
         .loadConfigOrThrow<Configuration>()
 
     configureDatabase(config.database)
-    val dices = DBDices()
+
     val meiliClient = Client(
         Config(config.search.url, config.search.key)
     )
     val dicesIndex = meiliClient.index(MeiliDiceCollection.indexName)
     val meiliDiceSave = MeiliDiceSave(dicesIndex)
     val dbDiceSave = DBDiceSave()
-    val diceMetrics = DiceMetrics.InMemory()
     val diceSearch = DiceSearch.PopularFirst(
         search = FailoverDiceSearch(
-            main = MeiliDiceSearch(dicesIndex, dices),
+            main = MeiliDiceSearch(dicesIndex, Dependencies.dices()),
             fallback = DBDiceSearch()
         ),
-        metrics = diceMetrics
+        metrics = Dependencies.diceMetrics()
     )
     val diceDelete = DBDiceDelete()
 
     val scheduledEventFlow = flow {
+        val dices = Dependencies.dices()
         while (true) {
             delay(config.search.reindex)
             dices
@@ -82,7 +80,7 @@ fun main() {
         }.launchIn(this)
 
         configureSerialization()
-        configureRouting(config, dices, dbDiceSave, diceMetrics, diceSearch, diceDelete)
+        configureRouting(config, Dependencies, dbDiceSave, diceSearch, diceDelete)
         install(CallLogging) {
             level = Level.DEBUG
             format {

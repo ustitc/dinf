@@ -1,10 +1,10 @@
 package dinf.plugins
 
+import dinf.Dependencies
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
 import dinf.domain.DiceDelete
-import dinf.domain.DiceMetrics
 import dinf.routes.DiceLocation
 import dinf.routes.create
 import dinf.routes.createForm
@@ -17,7 +17,6 @@ import dinf.routes.search
 import dinf.html.templates.Layout
 import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
-import dinf.domain.Dices
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -30,9 +29,8 @@ import kotlinx.html.p
 
 fun Application.configureRouting(
     config: Configuration,
-    dices: Dices,
+    dependencies: Dependencies,
     diceSave: DiceSave,
-    diceMetrics: DiceMetrics,
     diceSearch: DiceSearch,
     diceDelete: DiceDelete
 ) {
@@ -63,25 +61,25 @@ fun Application.configureRouting(
     }
 
     routing {
-        index(layout = layout, dices = dices, diceFeed = diceFeed)
+        index(layout = layout, diceGet = dependencies.diceGet(), diceFeed = diceFeed)
         create(layout = layout, editHashids = editHashids, diceSave = diceSave)
         createForm(layout = layout)
         dice(
             layout = layout,
             shareHashids = shareHashids,
             baseURL = baseURL,
-            dices = dices,
-            diceMetrics = diceMetrics
+            dices = dependencies.dices(),
+            diceMetrics = dependencies.diceMetrics()
         )
-        edit(layout = layout, editHashids = editHashids, dices = dices)
+        edit(layout = layout, editHashids = editHashids, dices = dependencies.dices())
         editForm(
             layout = layout,
             shareHashids = shareHashids,
             editHashids = editHashids,
             baseURL = baseURL,
-            dices = dices
+            dices = dependencies.dices()
         )
-        delete(layout = layout, editHashids = editHashids, dices = dices, diceDelete = diceDelete)
+        delete(layout = layout, editHashids = editHashids, dices = dependencies.dices(), diceDelete = diceDelete)
         search(diceSearch = diceSearch, diceFeed = diceFeed)
 
         static("assets") {

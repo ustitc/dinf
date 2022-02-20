@@ -2,11 +2,9 @@ package dinf
 
 import dinf.config.Configuration
 import dinf.domain.DiceDelete
-import dinf.domain.DiceMetrics
 import dinf.plugins.configureRouting
 import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
-import dinf.domain.Dices
 import io.kotest.assertions.ktor.shouldHaveStatus
 import io.kotest.core.spec.style.StringSpec
 import io.ktor.http.*
@@ -18,9 +16,8 @@ class ApplicationTest : StringSpec({
         withTestApplication({
             configureRouting(
                 Configuration(),
-                Dices.Stub(),
+                Dependencies,
                 DiceSave.Stub(),
-                DiceMetrics.InMemory(),
                 DiceSearch.Simple(),
                 DiceDelete.Stub()
             )
