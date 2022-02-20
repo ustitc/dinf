@@ -1,10 +1,9 @@
 package dinf.plugins
 
-import dinf.Dependencies
+import dinf.AppDependencies
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
-import dinf.domain.DiceDelete
 import dinf.routes.DiceLocation
 import dinf.routes.create
 import dinf.routes.createForm
@@ -15,8 +14,6 @@ import dinf.routes.edit
 import dinf.routes.editForm
 import dinf.routes.search
 import dinf.html.templates.Layout
-import dinf.domain.DiceSave
-import dinf.domain.DiceSearch
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -29,10 +26,7 @@ import kotlinx.html.p
 
 fun Application.configureRouting(
     config: Configuration,
-    dependencies: Dependencies,
-    diceSave: DiceSave,
-    diceSearch: DiceSearch,
-    diceDelete: DiceDelete
+    dependencies: AppDependencies
 ) {
     install(Locations) {
     }
@@ -62,7 +56,7 @@ fun Application.configureRouting(
 
     routing {
         index(layout = layout, diceGet = dependencies.diceGet(), diceFeed = diceFeed)
-        create(layout = layout, editHashids = editHashids, diceSave = diceSave)
+        create(layout = layout, editHashids = editHashids, diceSave = dependencies.diceSave())
         createForm(layout = layout)
         dice(
             layout = layout,
@@ -79,8 +73,13 @@ fun Application.configureRouting(
             baseURL = baseURL,
             dices = dependencies.dices()
         )
-        delete(layout = layout, editHashids = editHashids, dices = dependencies.dices(), diceDelete = diceDelete)
-        search(diceSearch = diceSearch, diceFeed = diceFeed)
+        delete(
+            layout = layout,
+            editHashids = editHashids,
+            dices = dependencies.dices(),
+            diceDelete = dependencies.diceDelete()
+        )
+        search(diceSearch = dependencies.diceSearch(), diceFeed = diceFeed)
 
         static("assets") {
             resources("js")
