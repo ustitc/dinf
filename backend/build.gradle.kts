@@ -15,6 +15,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":libs:htmx"))
     implementation(project(":libs:hyperscript"))
+    implementation(project(":libs:ktor-ext"))
 
     runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")

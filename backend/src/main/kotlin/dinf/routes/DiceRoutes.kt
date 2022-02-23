@@ -11,7 +11,7 @@ import dinf.domain.Dices
 import dinf.domain.SerialNumber
 import dinf.html.components.DiceFeed
 import dinf.html.templates.SearchBar
-import dinf.html.templates.DiceForm
+import dinf.html.templates.DiceFormWithInputs
 import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
@@ -55,7 +55,7 @@ fun Route.createForm(layout: Layout) {
         call.respondHtmlTemplate(layout) {
             content {
                 val form = Form(loc.uri(call))
-                insert(DiceForm(form)) {}
+                insert(DiceFormWithInputs(form)) {}
             }
         }
     }
@@ -74,7 +74,7 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
             call.respondHtmlTemplate(layout) {
                 content {
                     val form = Form(loc.uri(call))
-                    insert(DiceForm(form)) {
+                    insert(DiceFormWithInputs(form)) {
                         failed = true
                     }
                 }
@@ -132,7 +132,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
                     insert(RollBlock(dice)) {
                     }
 
-                    insert(DiceForm(form)) {
+                    insert(DiceFormWithInputs(form)) {
                         name = dice.name.nbString.toString()
                         edges = dice.edges.stringList.joinToString("\n")
                     }
@@ -165,7 +165,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
                 call.respondHtmlTemplate(layout) {
                     content {
                         val form = Form(loc.uri(call))
-                        insert(DiceForm(form)) {
+                        insert(DiceFormWithInputs(form)) {
                             failed = true
                         }
                     }

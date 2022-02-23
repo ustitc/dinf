@@ -1,12 +1,13 @@
 package dinf.html.templates
 
+import dev.ustits.hyperscript.hyperscript
+import dinf.types.NBString
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.input
-import kotlinx.html.textArea
 
-class DiceForm(private val form: Form) : Template<FlowContent> {
+class DiceFormWithLists(private val form: Form) : Template<FlowContent> {
 
     var name: String = ""
     var edges: String = ""
@@ -15,11 +16,12 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
     override fun FlowContent.apply() {
         insert(form) {
             field {
-                name = "Name"
+                name = "Dice Name"
                 control {
                     input(name = "name", type = InputType.text) {
                         required = true
-                        value = this@DiceForm.name
+                        autoFocus = true
+                        value = this@DiceFormWithLists.name
                         if (failed) {
                             attributes["aria-invalid"] = "true"
                         }
@@ -28,20 +30,14 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
             }
             field {
                 name = "Edges"
-                help = "Each value must be on new line"
                 control {
-                    textArea {
-                        name = "edges"
-                        required = true
-                        if (failed) {
-                            attributes["aria-invalid"] = "true"
-                        }
-                        +edges
+                    insert(EditableList()) {
+                        addButtonText = NBString("Add edge")
                     }
                 }
             }
             submit {
-                value = "Save"
+                value = "Create Dice"
             }
         }
     }
