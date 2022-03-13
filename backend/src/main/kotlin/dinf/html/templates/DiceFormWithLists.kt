@@ -31,7 +31,11 @@ class DiceFormWithLists(private val form: Form) : DiceForm {
                 name = "Edges"
                 control {
                     insert(EditableList()) {
+                        name = "edges"
                         addButtonText = NBString("Add edge")
+                        if (edges.isNotBlank()) {
+                            items = edges.split("\n").toList()
+                        }
                     }
                 }
             }
