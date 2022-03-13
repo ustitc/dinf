@@ -1,17 +1,16 @@
 package dinf.html.templates
 
-import dev.ustits.hyperscript.hyperscript
 import dinf.types.NBString
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.input
 
-class DiceFormWithLists(private val form: Form) : Template<FlowContent> {
+class DiceFormWithLists(private val form: Form) : DiceForm {
 
-    var name: String = ""
-    var edges: String = ""
-    var failed: Boolean = false
+    override var name: String = ""
+    override var edges: String = ""
+    override var failed: Boolean = false
 
     override fun FlowContent.apply() {
         insert(form) {

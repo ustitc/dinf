@@ -6,11 +6,11 @@ import kotlinx.html.InputType
 import kotlinx.html.input
 import kotlinx.html.textArea
 
-class DiceFormWithInputs(private val form: Form) : Template<FlowContent> {
+class DiceFormWithInputs(private val form: Form) : DiceForm {
 
-    var name: String = ""
-    var edges: String = ""
-    var failed: Boolean = false
+    override var name: String = ""
+    override var edges: String = ""
+    override var failed: Boolean = false
 
     override fun FlowContent.apply() {
         insert(form) {

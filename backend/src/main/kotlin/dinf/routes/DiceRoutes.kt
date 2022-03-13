@@ -11,8 +11,6 @@ import dinf.domain.Dices
 import dinf.domain.SerialNumber
 import dinf.html.components.DiceFeed
 import dinf.html.templates.SearchBar
-import dinf.html.templates.DiceFormWithInputs
-import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
 import dinf.html.templates.URLBlock
@@ -31,6 +29,8 @@ import kotlinx.html.h2
 import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
+
+private val componentDeps = ComponentDeps()
 
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val searchAPI = application.locations.href(HTMXLocations.Search())
@@ -54,8 +54,8 @@ fun Route.createForm(layout: Layout) {
     get<DiceLocation.New> { loc ->
         call.respondHtmlTemplate(layout) {
             content {
-                val form = Form(loc.uri(call))
-                insert(DiceFormWithInputs(form)) {}
+                val form = componentDeps.diceForm(loc.uri(call))
+                insert(form) {}
             }
         }
     }
@@ -73,8 +73,8 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    val form = Form(loc.uri(call))
-                    insert(DiceFormWithInputs(form)) {
+                    val form = componentDeps.diceForm(loc.uri(call))
+                    insert(form) {
                         failed = true
                     }
                 }
@@ -118,7 +118,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
             val shareURL = DiceLocation.ID(diceID).url(baseURL, call)
             val editURL = loc.url(baseURL, call)
             val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
-            val form = Form(loc.uri(call))
+            val form = componentDeps.diceForm(loc.uri(call))
 
             call.respondHtmlTemplate(layout) {
                 content {
@@ -132,7 +132,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
                     insert(RollBlock(dice)) {
                     }
 
-                    insert(DiceFormWithInputs(form)) {
+                    insert(form) {
                         name = dice.name.nbString.toString()
                         edges = dice.edges.stringList.joinToString("\n")
                     }
@@ -164,8 +164,8 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
             } else {
                 call.respondHtmlTemplate(layout) {
                     content {
-                        val form = Form(loc.uri(call))
-                        insert(DiceFormWithInputs(form)) {
+                        val form = componentDeps.diceForm(loc.uri(call))
+                        insert(form) {
                             failed = true
                         }
                     }
