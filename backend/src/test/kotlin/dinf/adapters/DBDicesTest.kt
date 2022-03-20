@@ -1,15 +1,13 @@
 package dinf.adapters
 
-import dinf.createDiceEntity
 import dinf.domain.SerialNumber
-import dinf.test.sqLiteTestListener
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 
 class DBDicesTest : StringSpec({
 
-    listeners(sqLiteTestListener)
+    listeners(DBListener())
 
     "lists all dices" {
         val count = 40

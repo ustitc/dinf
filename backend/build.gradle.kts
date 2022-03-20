@@ -17,17 +17,11 @@ dependencies {
     implementation(project(":libs:hyperscript"))
     implementation(project(":libs:ktor-ext"))
 
-    runtimeOnly("org.postgresql:postgresql:42.3.1")
     implementation("org.xerial:sqlite-jdbc:3.36.0.3")
-
+    implementation("org.flywaydb:flyway-core:8.5.4")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
     implementation("com.meilisearch.sdk:meilisearch-java:0.7.0")
-
-    implementation(libs.exposed.core)
-    implementation(libs.exposed.jdbc)
-    implementation(libs.exposed.javatime)
-    implementation(libs.exposed.dao)
 
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverHostCommon)
@@ -38,7 +32,7 @@ dependencies {
     implementation(libs.ktor.htmlBuilder)
     implementation(libs.ktor.metricsMicrometer)
 
-    implementation("io.micrometer:micrometer-registry-prometheus:1.8.2")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.8.3")
 
     implementation("org.webjars.bowergithub.picocss:pico:1.4.2")
     implementation("org.webjars.npm:htmx.org:1.6.1")

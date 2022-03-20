@@ -7,6 +7,7 @@ data class Database(val jdbcURL: String) {
     fun toHikariConfig(): HikariConfig {
         val config = HikariConfig()
         config.jdbcUrl = jdbcURL
+        config.isAutoCommit = false
         return config
     }
 

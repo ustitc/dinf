@@ -1,16 +1,33 @@
 package dinf.adapters
 
 import dinf.domain.Name
-import dinf.db.DiceEntity
+import dinf.db.firstOrNull
+import dinf.db.transaction
+import dinf.domain.SerialNumber
 import dinf.types.NBString
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import dinf.types.toNBString
 
-class DBName(private val diceEntity: DiceEntity) : Name {
+class DBName(private val diceSerial: SerialNumber) : Name {
 
     override val nbString: NBString
-        get() = NBString(diceEntity.name)
+        get() = transaction {
+            prepareStatement("SELECT name FROM dices WHERE id = ?")
+                .also { it.setLong(1, diceSerial.number) }
+                .use {
+                    it.executeQuery().firstOrNull {
+                        getString(1)
+                    }!!.toNBString()
+                }
 
-    override suspend fun change(new: NBString) = newSuspendedTransaction {
-        diceEntity.name = new.toString()
+        }
+
+    override suspend fun change(new: NBString) {
+        transaction {
+            prepareStatement("UPDATE dices SET name = ? WHERE id = ?")
+                .also {
+                    it.setString(1, new.toString())
+                    it.setLong(2, diceSerial.number)
+                }.use { it.execute() }
+        }
     }
 }

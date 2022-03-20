@@ -1,23 +1,46 @@
 package dinf.adapters
 
+import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceSave
-import dinf.db.DiceEntity
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import java.time.Instant
+import dinf.domain.SerialNumber
+import java.sql.Connection
 
 class DBDiceSave : DiceSave {
 
     override suspend fun create(dice: Dice): Dice {
-        val entity = newSuspendedTransaction {
-            val now = Instant.now()
-            DiceEntity.new {
-                name = dice.name.nbString.toString()
-                edges = dice.edges.stringList.joinToString(separator = "\n")
-                createdAt = now
-                updatedAt = now
+        val id = transaction {
+            val statement = prepareStatement(
+                """
+                    INSERT INTO dices (name, created_at, updated_at, edges) 
+                    VALUES (?, date('now'), date('now'), '')
+                    RETURNING id, name
+                """.trimIndent()
+            ).also { it.setString(1, dice.name.nbString.toString()) }
+
+            val rs = statement.executeQuery()
+            val id = rs.getLong("id")
+            dice.edges.stringList.forEach { edge ->
+                saveEdge(id, edge)
             }
+            statement.close()
+            rs.close()
+            id
         }
-        return DBDice(entity)
+        return DBDices().oneOrNull(SerialNumber.Simple(id)) ?: error("Dice was not saved")
+    }
+
+    private fun Connection.saveEdge(diceID: Long, edge: String) {
+        val statement = prepareStatement(
+            """
+                INSERT INTO edges (value, dice)
+                VALUES (?, ?)
+            """.trimIndent()
+        ).also {
+            it.setString(1, edge)
+            it.setLong(2, diceID)
+        }
+        statement.execute()
+        statement.close()
     }
 }
