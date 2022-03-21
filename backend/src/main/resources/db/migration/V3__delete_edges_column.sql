@@ -1,0 +1,1 @@
+ALTER TABLE dices DROP COLUMN edges;

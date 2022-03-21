@@ -20,8 +20,6 @@ private fun migrateDatabase() {
         .baselineOnMigrate(true)
         .load()
         .migrate()
-
-    migrateEdges()
 }
 
 fun <R> transaction(block: Connection.() -> R): R =
@@ -37,24 +35,3 @@ fun <R> transaction(block: Connection.() -> R): R =
             close()
         }
     }
-
-private fun migrateEdges() {
-    transaction {
-        prepareStatement("SELECT id, edges FROM dices")
-            .use { ps ->
-                prepareStatement("DELETE FROM edges").use { it.execute() }
-                ps.executeQuery().forEach { rs ->
-                    val id = rs.getLong("id")
-                    val edges = rs.getString("edges").split("\n")
-                    edges.filter { it.isNotBlank() }.forEach { edge ->
-                        prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?)")
-                            .also {
-                                it.setString(1, edge)
-                                it.setLong(2, id)
-                            }.use { it.execute() }
-                    }
-                }
-            }
-
-    }
-}

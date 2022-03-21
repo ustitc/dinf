@@ -12,8 +12,8 @@ class DBDiceSave : DiceSave {
         val id = transaction {
             val statement = prepareStatement(
                 """
-                    INSERT INTO dices (name, created_at, updated_at, edges) 
-                    VALUES (?, date('now'), date('now'), '')
+                    INSERT INTO dices (name, created_at, updated_at) 
+                    VALUES (?, date('now'), date('now'))
                     RETURNING id, name
                 """.trimIndent()
             ).also { it.setString(1, dice.name.nbString.toString()) }
