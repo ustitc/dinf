@@ -4,12 +4,16 @@ import dev.ustits.hyperscript.hyperscript
 import dinf.domain.Dice
 import dinf.domain.Edges
 import dinf.html.EscapedString
+import dinf.html.HTMLTextWithNewLines
+import dinf.html.HtmlContent
 import dinf.html.JSStringArray
 import dinf.html.dataAttribute
 import io.ktor.html.*
 import kotlinx.html.FlowContent
+import kotlinx.html.P
 import kotlinx.html.id
 import kotlinx.html.p
+import kotlinx.html.style
 
 class RollResult(
     private val _id: String,
@@ -22,6 +26,7 @@ class RollResult(
     override fun FlowContent.apply() {
         p("roll") {
             dataAttribute(edgesAttr, EdgesAttr(dice.edges))
+            withRenderedNewLineSymbols()
             hyperscript = """
                 on $eventName get JSON.parse(@$edgesAttr)
                 then put random it into me
@@ -33,11 +38,19 @@ class RollResult(
         }
     }
 
+    private fun P.withRenderedNewLineSymbols() {
+        style = "white-space: pre-wrap;"
+    }
+
     @JvmInline
-    private value class EdgesAttr(private val edges: Edges) : dinf.html.HtmlContent {
+    private value class EdgesAttr(private val edges: Edges) : HtmlContent {
         override fun print(): String {
             return JSStringArray(
-                edges.stringList.map { EscapedString(it) }
+                edges.stringList.map {
+                    HTMLTextWithNewLines(
+                        EscapedString(it)
+                    )
+                }
             ).print()
         }
     }

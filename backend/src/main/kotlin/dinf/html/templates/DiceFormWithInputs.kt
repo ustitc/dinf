@@ -9,7 +9,7 @@ import kotlinx.html.textArea
 class DiceFormWithInputs(private val form: Form) : DiceForm {
 
     override var name: String = ""
-    override var edges: String = ""
+    override var edges: List<String> = emptyList()
     override var failed: Boolean = false
 
     override fun FlowContent.apply() {
@@ -36,7 +36,7 @@ class DiceFormWithInputs(private val form: Form) : DiceForm {
                         if (failed) {
                             attributes["aria-invalid"] = "true"
                         }
-                        +edges
+                        +edges.joinToString(separator = "\n")
                     }
                 }
             }

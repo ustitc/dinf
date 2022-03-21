@@ -8,13 +8,11 @@ import io.ktor.http.*
 
 class HTMLParamsDice(name: NBString, edges: List<String>) : Dice by Dice.New(name, Edges.Simple(edges)) {
 
-    constructor(name: NBString, edges: NBString) : this(name, edges.lines().filter { it.isNotBlank() })
-
     companion object {
 
         fun fromParametersOrNull(parameters: Parameters): HTMLParamsDice? {
             val name = parameters["name"]?.toNBStringOrNull()
-            val edges = parameters["edges"]?.toNBStringOrNull()
+            val edges = parameters.getAll("edges")?.filter { it.isNotBlank() }
             return if (name == null || edges == null) {
                 null
             } else {

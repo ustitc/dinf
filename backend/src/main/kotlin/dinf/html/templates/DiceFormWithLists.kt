@@ -9,7 +9,7 @@ import kotlinx.html.input
 class DiceFormWithLists(private val form: Form) : DiceForm {
 
     override var name: String = ""
-    override var edges: String = ""
+    override var edges: List<String> = emptyList()
     override var failed: Boolean = false
 
     override fun FlowContent.apply() {
@@ -33,9 +33,7 @@ class DiceFormWithLists(private val form: Form) : DiceForm {
                     insert(EditableList()) {
                         name = "edges"
                         addButtonText = NBString("Add edge")
-                        if (edges.isNotBlank()) {
-                            items = edges.split("\n").toList()
-                        }
+                        items = edges
                     }
                 }
             }

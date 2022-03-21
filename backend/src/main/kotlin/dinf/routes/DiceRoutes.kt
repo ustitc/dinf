@@ -134,7 +134,7 @@ fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, 
 
                     insert(form) {
                         name = dice.name.nbString.toString()
-                        edges = dice.edges.stringList.joinToString("\n")
+                        edges = dice.edges.stringList
                     }
 
                     form(action = deleteURL, method = FormMethod.post) {

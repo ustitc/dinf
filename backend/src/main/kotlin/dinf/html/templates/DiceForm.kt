@@ -6,7 +6,7 @@ import kotlinx.html.FlowContent
 interface DiceForm : Template<FlowContent> {
 
     var name: String
-    var edges: String
+    var edges: List<String>
     var failed: Boolean
 
 }
