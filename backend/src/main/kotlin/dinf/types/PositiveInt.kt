@@ -14,6 +14,10 @@ value class PositiveInt(private val refined: Refined<Positive, Int>) {
         return refined.unrefined
     }
 
+    operator fun minus(decrement: Int): Int {
+        return toInt() - decrement
+    }
+
 }
 
 typealias PInt = PositiveInt

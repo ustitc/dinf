@@ -8,6 +8,7 @@ import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
+import dinf.domain.Page
 import dinf.domain.SerialNumber
 import dinf.html.components.DiceFeed
 import dinf.html.templates.SearchBar
@@ -36,7 +37,7 @@ fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val searchAPI = application.locations.href(HTMXLocations.Search())
 
     get("/") {
-        val diceList = diceGet.invoke(Count(10))
+        val diceList = diceGet.invoke(Page(1), Count(10))
 
         call.respondHtmlTemplate(layout) {
             content {
