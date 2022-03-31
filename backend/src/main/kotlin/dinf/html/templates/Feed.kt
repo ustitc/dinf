@@ -6,6 +6,7 @@ import kotlinx.html.FlowContent
 class Feed : Template<FlowContent> {
 
     val item = PlaceholderList<FlowContent, FlowContent>()
+    val pagination = Placeholder<FlowContent>()
     val noContent = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
@@ -13,6 +14,7 @@ class Feed : Template<FlowContent> {
             each(item) {
                 insert(it)
             }
+            insert(pagination)
         } else {
             insert(noContent)
         }

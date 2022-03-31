@@ -22,6 +22,9 @@ class DiceFeed(
                     hr {  }
                 }
             }
+            pagination {
+                loadingComponent("Loading more dices...")
+            }
             noContent {
                 form(action = newDiceURL) {
                     input(type = InputType.submit) {
