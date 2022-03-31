@@ -4,8 +4,6 @@ import dinf.types.NBString
 
 interface Dice {
 
-    suspend fun roll(): Roll
-
     val serialNumber: SerialNumber
 
     val name: Name
@@ -22,12 +20,7 @@ interface Dice {
         override val serialNumber: SerialNumber,
         override val name: Name,
         override val edges: Edges
-    ) : Dice {
-
-        override suspend fun roll(): Roll {
-            return Roll.Lazy(this)
-        }
-    }
+    ) : Dice
 
     class New(name: Name, edges: Edges) : Dice by Simple(
         serialNumber = SerialNumber.Empty(),
