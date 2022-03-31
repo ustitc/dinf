@@ -1,5 +1,6 @@
 package dinf.adapters
 
+import dinf.db.connection
 import dinf.db.firstOrNull
 import dinf.db.toSequence
 import dinf.db.transaction
@@ -7,16 +8,17 @@ import dinf.domain.Dice
 import dinf.domain.Dices
 import dinf.domain.SerialNumber
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onCompletion
 
 class DBDices : Dices {
 
     private val edgesSeparator = ";"
 
     override fun flow(): Flow<Dice> {
-        return transaction {
-            val statement = prepareStatement(
-                """
+        val connection = connection()
+        val statement = connection.prepareStatement(
+            """
                     SELECT 
                         dices.id AS id, 
                         dices.name AS name, 
@@ -25,12 +27,16 @@ class DBDices : Dices {
                     WHERE dices.id = edges.dice
                     GROUP BY dices.id
                 """.trimIndent()
-            )
-            val dices = statement.executeQuery().toSequence {
+        )
+        val rs = statement.executeQuery()
+        return flow<Dice> {
+            rs.toSequence {
                 DBDice(this)
-            }.toList().asFlow()
+            }.forEach { emit(it) }
+        }.onCompletion {
+            rs.close()
             statement.close()
-            dices
+            connection.close()
         }
     }
 

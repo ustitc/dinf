@@ -22,8 +22,12 @@ private fun migrateDatabase() {
         .migrate()
 }
 
+fun connection(): Connection {
+    return dataSource.connection
+}
+
 fun <R> transaction(block: Connection.() -> R): R =
-    dataSource.connection.run {
+    connection().run {
         return try {
             val result = block.invoke(this)
             commit()
