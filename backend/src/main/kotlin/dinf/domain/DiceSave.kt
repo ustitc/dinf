@@ -1,15 +1,10 @@
 package dinf.domain
 
-interface DiceSave {
+fun interface DiceSave : suspend (Dice) -> Dice {
 
-    suspend fun create(dice: Dice): Dice
-
-    class Stub(private val list: MutableList<Dice> = mutableListOf()) : DiceSave {
-
-        override suspend fun create(dice: Dice): Dice {
-            list.add(dice)
-            return dice
-        }
-    }
+    class Stub(private val list: MutableList<Dice> = mutableListOf()) : DiceSave by DiceSave({
+        list.add(it)
+        it
+    })
 
 }

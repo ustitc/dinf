@@ -1,6 +1,5 @@
 package dinf.adapters
 
-import dinf.adapters.FailoverDiceSearch
 import dinf.domain.Dice
 import dinf.domain.DiceSearch
 import io.kotest.core.spec.style.StringSpec
@@ -17,7 +16,7 @@ class FailoverDiceSearchTest : StringSpec({
             fallback = DiceSearch.Empty()
         )
 
-        val result = search.forText("test")
+        val result = search.invoke("test")
 
         result shouldContainExactly expected
     }
@@ -28,7 +27,7 @@ class FailoverDiceSearchTest : StringSpec({
             fallback = DiceSearch.Empty()
         )
 
-        val result = search.forText("test")
+        val result = search.invoke("test")
 
         result shouldHaveSize 0
     }

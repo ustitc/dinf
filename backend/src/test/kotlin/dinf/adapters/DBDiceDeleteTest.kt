@@ -12,7 +12,7 @@ class DBDiceDeleteTest : StringSpec({
         val dice = createDiceEntity()
         val deleteDice = DBDiceDelete()
 
-        deleteDice.delete(dice)
+        deleteDice.invoke(dice)
 
         DBDices().flow().count() shouldBe 0
     }

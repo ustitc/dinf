@@ -66,7 +66,7 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
-            ?.let { diceSave.create(it) }
+            ?.let { diceSave.invoke(it) }
         if (dice != null) {
             val id = HashID(dice, editHashids)
             val url = call.locations.href(DiceLocation.Edit(id))
@@ -183,7 +183,7 @@ fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices, diceDelete:
         if (dice == null) {
             throw NotFoundException()
         } else {
-            diceDelete.delete(dice)
+            diceDelete.invoke(dice)
             call.respondHtmlTemplate(layout) {
                 content {
                     p { +"Dice deleted" }

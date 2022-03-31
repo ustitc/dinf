@@ -8,7 +8,7 @@ import java.sql.Connection
 
 class DBDiceSave : DiceSave {
 
-    override suspend fun create(dice: Dice): Dice {
+    override suspend fun invoke(dice: Dice): Dice {
         val id = transaction {
             val statement = prepareStatement(
                 """

@@ -11,7 +11,7 @@ class DBDiceSearchTest : StringSpec({
         createDiceEntity("pinky")
         val searchDice = DBDiceSearch()
 
-        val result = searchDice.forText("pinky")
+        val result = searchDice.invoke("pinky")
 
         result shouldHaveSize 1
     }
@@ -20,7 +20,7 @@ class DBDiceSearchTest : StringSpec({
         createDiceEntity("pinky")
         val searchDice = DBDiceSearch()
 
-        val result = searchDice.forText("pi")
+        val result = searchDice.invoke("pi")
 
         result shouldHaveSize 1
     }

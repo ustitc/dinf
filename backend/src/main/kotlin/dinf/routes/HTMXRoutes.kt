@@ -12,7 +12,7 @@ import kotlinx.html.stream.createHTML
 
 fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
     get<HTMXLocations.Search> { loc ->
-        val dices = diceSearch.forText(loc.query ?: "")
+        val dices = diceSearch.invoke(loc.query ?: "")
 
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {

@@ -6,48 +6,29 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import java.time.Duration
 
-interface DiceSearch {
+fun interface DiceSearch : suspend (String) -> List<Dice> {
 
-    suspend fun forText(text: String): List<Dice>
-
-    class Stub(private val block: () -> List<Dice>) : DiceSearch {
-
+    class Stub(private val block: () -> List<Dice>) : DiceSearch by DiceSearch({ block() }) {
         constructor(vararg dices: Dice) : this({ dices.toList() })
-
-        override suspend fun forText(text: String): List<Dice> {
-            return block()
-        }
     }
 
-    class Empty : DiceSearch {
-        override suspend fun forText(text: String): List<Dice> {
-            return emptyList()
-        }
-    }
+    class Empty : DiceSearch by DiceSearch({ emptyList() })
 
-    class Delay(private val main: DiceSearch, private val duration: Duration) : DiceSearch {
-        override suspend fun forText(text: String): List<Dice> {
-            delay(duration)
-            return main.forText(text)
-        }
-    }
+    class Delay(private val main: DiceSearch, private val duration: Duration) : DiceSearch by DiceSearch({
+        delay(duration)
+        main.invoke(it)
+    })
 
-    class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch {
+    class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch by DiceSearch({ text ->
+        dices.flow().filter { it.name.nbString.contains(text) }.toList()
+    })
 
-        override suspend fun forText(text: String): List<Dice> {
-            return dices.flow().filter { it.name.nbString.contains(text) }.toList()
-        }
-    }
-
-    class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) : DiceSearch {
-
-        override suspend fun forText(text: String): List<Dice> {
-            return search
-                .forText(text)
+    class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) :
+        DiceSearch by DiceSearch({ text ->
+            search.invoke(text)
                 .map { it to metrics.forDice(it) }
                 .sortedByDescending { runBlocking { it.second.clicks() } }
                 .map { it.first }
-        }
-    }
+        })
 
 }

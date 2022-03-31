@@ -10,25 +10,17 @@ typealias Page = PInt
 
 fun interface DiceGet : suspend (Page, Count) -> List<Dice> {
 
-    class Empty : DiceGet {
-        override suspend fun invoke(p1: Page, p2: Count): List<Dice> {
-            return emptyList()
-        }
-    }
+    class Empty : DiceGet by DiceGet({ _, _ -> emptyList() })
 
-    class TopByClicks(private val dices: Dices, private val metrics: DiceMetrics) : DiceGet {
-
-        override suspend fun invoke(p1: Page, p2: Count): List<Dice> {
-            val toDrop = (p1 - 1) * p2.toInt()
-            return dices
-                .flow()
-                .map { it to metrics.forDice(it) }
-                .toList()
-                .sortedByDescending { runBlocking { it.second.clicks() } }
-                .map { it.first }
-                .drop(toDrop)
-                .take(p2.toInt())
-        }
-    }
+    class TopByClicks(private val dices: Dices, private val metrics: DiceMetrics) : DiceGet by DiceGet({ page, count ->
+        val toDrop = (page - 1) * count.toInt()
+        dices.flow()
+            .map { it to metrics.forDice(it) }
+            .toList()
+            .sortedByDescending { runBlocking { it.second.clicks() } }
+            .map { it.first }
+            .drop(toDrop)
+            .take(count.toInt())
+    })
 
 }

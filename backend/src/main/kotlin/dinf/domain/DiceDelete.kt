@@ -1,13 +1,7 @@
 package dinf.domain
 
-interface DiceDelete {
+fun interface DiceDelete : suspend (Dice) -> Unit {
 
-    suspend fun delete(dice: Dice)
-
-    class Stub : DiceDelete {
-
-        override suspend fun delete(dice: Dice) {
-        }
-    }
+    class Stub : DiceDelete by DiceDelete({})
 
 }

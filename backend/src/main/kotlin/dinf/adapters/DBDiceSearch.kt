@@ -9,7 +9,7 @@ class DBDiceSearch : DiceSearch {
 
     private val edgesSeparator = ";"
 
-    override suspend fun forText(text: String): List<Dice> {
+    override suspend fun invoke(text: String): List<Dice> {
         return transaction {
             val statement = prepareStatement(
                 """

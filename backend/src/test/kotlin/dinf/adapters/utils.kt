@@ -6,7 +6,7 @@ import dinf.domain.Name
 import dinf.domain.SerialNumber
 
 suspend fun createDiceEntity(name: String = "test"): Dice {
-    return DBDiceSave().create(
+    return DBDiceSave().invoke(
         Dice.New(
             name = Name.Stub(name),
             edges = Edges.Simple(listOf("1", "2", "3"))

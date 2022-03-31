@@ -26,7 +26,7 @@ class ReindexJob(
                 .collect()
         }
     }.onEach {
-        meiliDiceSave.create(it)
+        meiliDiceSave.invoke(it)
     }
 
 }

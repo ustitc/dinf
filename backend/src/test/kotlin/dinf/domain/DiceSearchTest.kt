@@ -21,7 +21,7 @@ class DiceSearchTest : StringSpec({
             metrics = metrics
         )
 
-        search.forText("any") shouldContainInOrder listOf(first, second, third)
+        search.invoke("any") shouldContainInOrder listOf(first, second, third)
     }
 
 })
