@@ -19,17 +19,10 @@ interface DiceMetrics {
             return map.getOrPut(dice.serialNumber.number) { InMemoryMetric() }
         }
 
-        private class InMemoryMetric private constructor(private var value: Clicks) : Metric {
+        private class InMemoryMetric private constructor(simple: Metric.Simple) : Metric by simple {
 
-            constructor() : this(0L)
+            constructor() : this(Metric.Simple(0))
 
-            override suspend fun increment() {
-                value += 1
-            }
-
-            override suspend fun clicks(): Clicks {
-                return value
-            }
         }
 
     }

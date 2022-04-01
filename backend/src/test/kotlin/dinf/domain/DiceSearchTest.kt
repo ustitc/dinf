@@ -11,9 +11,9 @@ class DiceSearchTest : StringSpec({
         val third = Dice.Stub("third")
 
         val metrics = DiceMetrics.InMemory(
-            first to Metric.Stub(10),
-            second to Metric.Stub(3),
-            third to Metric.Stub(0)
+            first to Metric.Simple(10),
+            second to Metric.Simple(3),
+            third to Metric.Simple(0)
         )
 
         val search = DiceSearch.PopularFirst(

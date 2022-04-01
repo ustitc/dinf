@@ -4,14 +4,14 @@ typealias Clicks = Long
 
 interface Metric {
 
-    suspend fun increment()
+    suspend fun addClick()
 
     suspend fun clicks(): Clicks
 
-    class Stub(private val clicks: Clicks) : Metric {
+    class Simple(private var clicks: Clicks) : Metric {
 
-        override suspend fun increment() {
-            error("Can't increment stub metric")
+        override suspend fun addClick() {
+            clicks += 1
         }
 
         override suspend fun clicks(): Clicks {

@@ -20,7 +20,7 @@ class DiceMetricsTest : StringSpec({
 
         metrics
             .forDice(dice)
-            .increment()
+            .addClick()
 
         metrics.forDice(dice).clicks() shouldBe 1L
     }
