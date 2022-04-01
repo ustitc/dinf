@@ -2,13 +2,15 @@ package dinf.domain
 
 import kotlin.random.Random
 
+typealias SN = SerialNumber
+
 interface SerialNumber {
 
     val number: Long
 
-    class Simple(override val number: Long) : SerialNumber
+    data class Simple(override val number: Long) : SerialNumber
 
-    class Rand : SerialNumber by Simple(Random.nextLong())
+    data class Rand(override val number: Long = Random.nextLong()) : SerialNumber
 
     class Empty : SerialNumber {
         override val number: Long

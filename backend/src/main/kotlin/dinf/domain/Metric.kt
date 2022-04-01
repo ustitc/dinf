@@ -6,16 +6,12 @@ interface Metric {
 
     suspend fun addClick()
 
-    suspend fun clicks(): Clicks
+    val clicks: Clicks
 
-    class Simple(private var clicks: Clicks) : Metric {
+    data class Simple(override var clicks: Clicks) : Metric {
 
         override suspend fun addClick() {
             clicks += 1
-        }
-
-        override suspend fun clicks(): Clicks {
-            return clicks
         }
     }
 }

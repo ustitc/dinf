@@ -2,7 +2,6 @@ package dinf.domain
 
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.time.delay
 import java.time.Duration
 
@@ -27,7 +26,7 @@ fun interface DiceSearch : suspend (String) -> List<Dice> {
         DiceSearch by DiceSearch({ text ->
             search.invoke(text)
                 .map { it to metrics.forDice(it) }
-                .sortedByDescending { runBlocking { it.second.clicks() } }
+                .sortedByDescending { it.second.clicks }
                 .map { it.first }
         })
 

@@ -1,22 +1,38 @@
 package dinf.domain
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+
 interface DiceMetrics {
 
     suspend fun forDice(dice: Dice): Metric
 
-    class InMemory private constructor(private val map: MutableMap<Long, Metric>) : DiceMetrics {
+    fun popularSNs(): Flow<SN>
+
+    class InMemory private constructor(private val map: MutableMap<SN, Metric>) : DiceMetrics {
 
         constructor() : this(mutableMapOf())
 
         constructor(vararg initial: Pair<Dice, Metric>) : this(
             initial
                 .toMap()
-                .mapKeys { it.key.serialNumber.number }
+                .mapKeys { it.key.serialNumber }
                 .toMutableMap()
         )
 
         override suspend fun forDice(dice: Dice): Metric {
-            return map.getOrPut(dice.serialNumber.number) { InMemoryMetric() }
+            return map.getOrPut(dice.serialNumber) { InMemoryMetric() }
+        }
+
+        override fun popularSNs(): Flow<SN> {
+            return map.entries
+                .sortedByDescending { it.value.clicks }
+                .map { it.key }
+                .asFlow()
+        }
+
+        fun clear() {
+            map.clear()
         }
 
         private class InMemoryMetric private constructor(simple: Metric.Simple) : Metric by simple {

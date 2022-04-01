@@ -3,7 +3,6 @@ package dinf.domain
 import dinf.types.PInt
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 
 typealias Count = PInt
 typealias Page = PInt
@@ -17,7 +16,7 @@ fun interface DiceGet : suspend (Page, Count) -> List<Dice> {
         dices.flow()
             .map { it to metrics.forDice(it) }
             .toList()
-            .sortedByDescending { runBlocking { it.second.clicks() } }
+            .sortedByDescending { it.second.clicks }
             .map { it.first }
             .drop(toDrop)
             .take(count.toInt())
