@@ -1,3 +1,5 @@
+Fix a(href=#) buttons that scrolls page on clicks
+Launch meilisearch population in async job
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete
 Update index in meilisearch on dice name change

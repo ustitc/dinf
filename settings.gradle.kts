@@ -12,4 +12,3 @@ rootProject.name = "dinf"
 include("backend")
 include("libs:htmx")
 include("libs:hyperscript")
-include("libs:ktor-ext")

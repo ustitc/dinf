@@ -1,6 +1,7 @@
 package dinf.config
 
 import com.sksamuel.hoplite.ConfigLoader
+import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.PropertySource
 import dev.ustits.htmx.HTMXConfiguration
 import java.io.File
@@ -19,13 +20,13 @@ fun readConfiguration(): Configuration {
 }
 
 private fun configLoader(): ConfigLoader {
-    return ConfigLoader.Builder()
+    return ConfigLoaderBuilder.default()
         .also {
             val path = System.getenv("CONFIG_PATH")
             if (path != null) {
-                it.addSource(PropertySource.file(file = File(path), optional = true))
+                it.addPropertySource(PropertySource.file(file = File(path), optional = true))
             }
         }
-        .addSource(PropertySource.resource("/application.toml"))
+        .addPropertySource(PropertySource.resource("/application.toml"))
         .build()
 }
