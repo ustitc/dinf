@@ -4,6 +4,8 @@
 
 Sample website: [dinf.ustits.dev](https://dinf.ustits.dev)
 
+If you want to help take a look in the [backlog](todo.txt)
+
 ## Configuration
 
 To overload [log configuration](backend/src/main/resources/logback.xml) pass `logback.configurationFile` 
