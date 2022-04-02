@@ -3,7 +3,7 @@ package dinf.html.templates
 import dinf.routes.DiceLocation
 import dev.ustits.htmx.HTMXConfiguration
 import dev.ustits.htmx.htmxConfiguration
-import dinf.html.components.picoInlineButton
+import dinf.html.components.picoHyperlinkAsButton
 import io.ktor.html.*
 import io.ktor.locations.*
 import kotlinx.html.FlowContent
@@ -59,7 +59,7 @@ class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMX
                         }
                     }
                     end {
-                        picoInlineButton(href = newDiceURL) {
+                        picoHyperlinkAsButton(href = newDiceURL) {
                             +"New dice"
                         }
                     }

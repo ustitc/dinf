@@ -1,8 +1,10 @@
 package dinf.html.components
 
 import kotlinx.html.A
+import kotlinx.html.DIV
 import kotlinx.html.FlowContent
 import kotlinx.html.a
+import kotlinx.html.div
 import kotlinx.html.id
 import kotlinx.html.role
 
@@ -16,8 +18,15 @@ fun FlowContent.loadingComponent(text: String, classes: String? = null, id: Stri
     }
 }
 
-fun FlowContent.picoInlineButton(href: String = "#", classes: String? = null, block: A.() -> Unit) {
+fun FlowContent.picoHyperlinkAsButton(href: String = "#", classes: String? = null, block: A.() -> Unit) {
     a(href = href, classes = classes) {
+        role = "button"
+        block()
+    }
+}
+
+fun FlowContent.picoInlineButton(classes: String? = null, block: DIV.() -> Unit) {
+    div(classes = classes) {
         role = "button"
         block()
     }

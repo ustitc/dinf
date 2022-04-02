@@ -28,7 +28,7 @@ class EditableList : Template<FlowContent> {
                     }
                 }
             }
-            picoInlineButton (classes = "secondary outline") {
+            picoInlineButton(classes = "secondary outline") {
                 id = "add-row"
                 tabIndex = "0"
                 hyperscript = """
