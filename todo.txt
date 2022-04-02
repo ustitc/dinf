@@ -1,4 +1,6 @@
+Add button to load more dices on main page
 Launch meilisearch population in async job
+Return 400 error if user passed non positive int in htmx dice endpoint
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete
 Update index in meilisearch on dice name change

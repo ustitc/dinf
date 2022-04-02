@@ -14,6 +14,7 @@ import dinf.routes.edit
 import dinf.routes.editForm
 import dinf.routes.search
 import dinf.html.templates.Layout
+import dinf.routes.htmxDices
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -80,6 +81,7 @@ fun Application.configureRouting(
             diceDelete = dependencies.diceDelete()
         )
         search(diceSearch = dependencies.diceSearch(), diceFeed = diceFeed)
+        htmxDices(diceGet = dependencies.diceGet(), diceFeed = diceFeed)
 
         static("assets") {
             resources("js")

@@ -1,7 +1,9 @@
 package dinf.routes
 
+import dinf.domain.DiceGet
 import dinf.html.components.DiceFeed
 import dinf.domain.DiceSearch
+import dinf.types.toPInt
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -20,4 +22,16 @@ fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
             }
         }
     }
+}
+
+fun Route.htmxDices(diceGet: DiceGet, diceFeed: DiceFeed) {
+    get<HTMXLocations.Dices> { loc ->
+        val diceList = diceGet.invoke(loc.page.toPInt(), loc.count.toPInt())
+        call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
+            createHTML().div {
+                diceFeed.component(this, diceList)
+            }
+        }
+    }
+
 }
