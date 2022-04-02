@@ -3,6 +3,7 @@ package dinf.html.templates
 import dinf.routes.DiceLocation
 import dev.ustits.htmx.HTMXConfiguration
 import dev.ustits.htmx.htmxConfiguration
+import dinf.html.components.picoInlineButton
 import io.ktor.html.*
 import io.ktor.locations.*
 import kotlinx.html.FlowContent
@@ -17,7 +18,6 @@ import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.p
-import kotlinx.html.role
 import kotlinx.html.script
 import kotlinx.html.small
 import kotlinx.html.style
@@ -59,8 +59,7 @@ class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMX
                         }
                     }
                     end {
-                        a(href = newDiceURL) {
-                            role = "button"
+                        picoInlineButton(href = newDiceURL) {
                             +"New dice"
                         }
                     }

@@ -1,15 +1,14 @@
 package dinf.html.templates
 
 import dev.ustits.hyperscript.hyperscript
+import dinf.html.components.picoInlineButton
 import dinf.html.text
 import dinf.types.NBString
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.a
 import kotlinx.html.id
 import kotlinx.html.li
 import kotlinx.html.ol
-import kotlinx.html.role
 import kotlinx.html.tabIndex
 import kotlinx.html.textArea
 
@@ -29,7 +28,7 @@ class EditableList : Template<FlowContent> {
                     }
                 }
             }
-            a(classes = "secondary outline") {
+            picoInlineButton (classes = "secondary outline") {
                 id = "add-row"
                 tabIndex = "0"
                 hyperscript = """
@@ -42,7 +41,6 @@ class EditableList : Template<FlowContent> {
                             then put li before target
                             then call input.focus()
                         """.trimIndent()
-                role = "button"
                 text(addButtonText)
             }
         }

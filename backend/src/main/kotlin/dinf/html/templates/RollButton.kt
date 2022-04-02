@@ -1,11 +1,10 @@
 package dinf.html.templates
 
 import dev.ustits.hyperscript.hyperscript
+import dinf.html.components.picoInlineButton
 import io.ktor.html.*
 import kotlinx.html.FlowContent
-import kotlinx.html.a
 import kotlinx.html.p
-import kotlinx.html.role
 
 class RollButton(
     private val _id: String,
@@ -16,8 +15,7 @@ class RollButton(
 
     override fun FlowContent.apply() {
         p {
-            a {
-                role = "button"
+            picoInlineButton {
                 hyperscript = "on click send $eventName to the #$_id"
                 +buttonText
             }
