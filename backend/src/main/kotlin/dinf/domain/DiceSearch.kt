@@ -25,7 +25,7 @@ fun interface DiceSearch : suspend (String) -> List<Dice> {
     class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) :
         DiceSearch by DiceSearch({ text ->
             search.invoke(text)
-                .map { it to metrics.forDice(it) }
+                .map { it to metrics.forDiceOrZero(it) }
                 .sortedByDescending { it.second.clicks }
                 .map { it.first }
         })

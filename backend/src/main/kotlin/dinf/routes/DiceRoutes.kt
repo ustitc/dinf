@@ -8,6 +8,7 @@ import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
+import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.domain.SerialNumber
 import dinf.html.components.DiceFeed
@@ -90,7 +91,12 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Di
         if (dice == null) {
             throw NotFoundException()
         } else {
-            diceMetrics.forDice(dice).addClick()
+            val metric = diceMetrics.forDice(dice)
+            if (metric == null) {
+                diceMetrics.create(dice, Metric.Simple(1))
+            } else {
+                metric.addClick()
+            }
             val shareURL = loc.url(baseURL, call)
 
             call.respondHtmlTemplate(layout) {

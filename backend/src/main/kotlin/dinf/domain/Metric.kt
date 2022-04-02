@@ -14,4 +14,12 @@ interface Metric {
             clicks += 1
         }
     }
+
+    companion object {
+
+        fun zero(): Metric {
+            return Simple(0)
+        }
+
+    }
 }

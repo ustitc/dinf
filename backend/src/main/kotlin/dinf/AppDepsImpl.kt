@@ -7,8 +7,6 @@ import dinf.adapters.DBDices
 import dinf.adapters.FailoverDiceSearch
 import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
-import dinf.adapters.MetricDiceDelete
-import dinf.adapters.MetricDiceSave
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
@@ -25,19 +23,17 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
     private val diceMetrics = DiceMetrics.InMemory()
 
     init {
-        populateMeiliAndMetrics()
+        populateMeilisearch()
     }
 
-    private fun populateMeiliAndMetrics() {
+    private fun populateMeilisearch() {
         val meili = MeiliDiceSave(meiliDeps.meiliDiceIndex())
-        val metric = MetricDiceSave(diceMetrics())
         runBlocking {
             val dices = dices().flow().toList()
             dices.forEach { dice ->
                 meili.invoke(dice)
-                metric.invoke(dice)
             }
-            logger.info("Populated meilisearch and metrics with ${dices.count()} dices")
+            logger.info("Populated meilisearch with ${dices.count()} dices")
         }
     }
 
@@ -60,7 +56,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
         return DiceDelete.Logging(
             DiceDelete.Composite(
                 DBDiceDelete(),
-                MetricDiceDelete(diceMetrics())
+                DiceDelete { dice -> diceMetrics().removeForDice(dice) }
             )
         )
     }
@@ -79,8 +75,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
         return DiceSave.Logging(
             DiceSave.Composite(
                 DBDiceSave(),
-                MeiliDiceSave(meiliDeps.meiliDiceIndex()),
-                MetricDiceSave(diceMetrics())
+                MeiliDiceSave(meiliDeps.meiliDiceIndex())
             )
         )
     }

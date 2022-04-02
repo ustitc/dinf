@@ -5,11 +5,17 @@ import kotlinx.coroutines.flow.asFlow
 
 interface DiceMetrics {
 
-    suspend fun forDice(dice: Dice): Metric
+    suspend fun forDice(dice: Dice): Metric?
+
+    suspend fun forDiceOrZero(dice: Dice): Metric {
+        return forDice(dice) ?: Metric.zero()
+    }
 
     fun popularSNs(): Flow<SN>
 
-    suspend fun remove(metric: Metric)
+    suspend fun removeForDice(dice: Dice)
+
+    suspend fun create(dice: Dice, metric: Metric)
 
     class InMemory private constructor(private val map: MutableMap<SN, Metric>) : DiceMetrics {
 
@@ -22,8 +28,8 @@ interface DiceMetrics {
                 .toMutableMap()
         )
 
-        override suspend fun forDice(dice: Dice): Metric {
-            return map.getOrPut(dice.serialNumber) { InMemoryMetric() }
+        override suspend fun forDice(dice: Dice): Metric? {
+            return map[dice.serialNumber]
         }
 
         override fun popularSNs(): Flow<SN> {
@@ -33,21 +39,16 @@ interface DiceMetrics {
                 .asFlow()
         }
 
-        override suspend fun remove(metric: Metric) {
-            val toDelete = map.filter { it.value == metric }.keys
-            toDelete.forEach {
-                map.remove(it)
-            }
+        override suspend fun removeForDice(dice: Dice) {
+            map.remove(dice.serialNumber)
+        }
+
+        override suspend fun create(dice: Dice, metric: Metric) {
+            map[dice.serialNumber] = metric
         }
 
         fun clear() {
             map.clear()
-        }
-
-        private class InMemoryMetric private constructor(simple: Metric.Simple) : Metric by simple {
-
-            constructor() : this(Metric.Simple(0))
-
         }
 
     }

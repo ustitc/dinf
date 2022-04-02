@@ -1,6 +1,7 @@
 package dinf.domain
 
 import dinf.types.PInt
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 
@@ -14,7 +15,7 @@ fun interface DiceGet : suspend (Page, Count) -> List<Dice> {
     class TopByClicks(private val dices: Dices, private val metrics: DiceMetrics) : DiceGet by DiceGet({ page, count ->
         val toDrop = (page - 1) * count.toInt()
         dices.flow()
-            .map { it to metrics.forDice(it) }
+            .map { it to metrics.forDiceOrZero(it) }
             .toList()
             .sortedByDescending { it.second.clicks }
             .map { it.first }
