@@ -5,6 +5,7 @@ import dinf.domain.Dice
 import io.ktor.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
+import kotlinx.html.button
 import kotlinx.html.form
 import kotlinx.html.hr
 import kotlinx.html.input
@@ -19,11 +20,14 @@ class DiceFeed(
             diceList.forEach { dice ->
                 item {
                     diceCard.component(this, dice)
-                    hr {  }
+                    hr { }
                 }
             }
             pagination {
-                loadingComponent("Loading more dices...")
+                button(classes = "secondary outline") {
+                    disabled = true
+                    +"Give me more!"
+                }
             }
             noContent {
                 form(action = newDiceURL) {
