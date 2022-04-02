@@ -9,6 +9,8 @@ interface DiceMetrics {
 
     fun popularSNs(): Flow<SN>
 
+    suspend fun remove(metric: Metric)
+
     class InMemory private constructor(private val map: MutableMap<SN, Metric>) : DiceMetrics {
 
         constructor() : this(mutableMapOf())
@@ -29,6 +31,13 @@ interface DiceMetrics {
                 .sortedByDescending { it.value.clicks }
                 .map { it.key }
                 .asFlow()
+        }
+
+        override suspend fun remove(metric: Metric) {
+            val toDelete = map.filter { it.value == metric }.keys
+            toDelete.forEach {
+                map.remove(it)
+            }
         }
 
         fun clear() {

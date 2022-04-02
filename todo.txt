@@ -1,2 +1,5 @@
-Composite DiceDelete
-Transactional logic for DiceSave
+Add composite DiceDelete
+Add DiceMetrics#create
+Add transactional logic for DiceSave
+Delete dice in meilisearch on DiceDelete
+Update index in meilisearch on dice name change

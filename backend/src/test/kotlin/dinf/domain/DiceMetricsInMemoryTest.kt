@@ -11,7 +11,7 @@ class DiceMetricsInMemoryTest : StringSpec({
     val metrics = DiceMetrics.InMemory()
 
     suspend fun Dice.addClicks(clicks: Clicks) {
-        for (i in 1..clicks) {
+        repeat(clicks.toInt()) {
             metrics.forDice(this).addClick()
         }
     }
@@ -62,6 +62,21 @@ class DiceMetricsInMemoryTest : StringSpec({
             third.serialNumber,
             first.serialNumber
         )
+    }
+
+    "metric deletes" {
+        val dice = Dice.Stub()
+        val metric = metrics.forDice(dice)
+
+        metrics.remove(metric)
+
+        metrics.popularSNs().toList() shouldHaveSize 0
+    }
+
+    "removing unknown metric doesn't cause and error" {
+        metrics.remove(Metric.Simple(10))
+
+        metrics.popularSNs().toList() shouldHaveSize 0
     }
 
 })

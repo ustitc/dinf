@@ -7,6 +7,7 @@ import dinf.adapters.DBDices
 import dinf.adapters.FailoverDiceSearch
 import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
+import dinf.adapters.MetricDiceDelete
 import dinf.adapters.MetricDiceSave
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
@@ -56,7 +57,12 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
     }
 
     override fun diceDelete(): DiceDelete {
-        return DBDiceDelete()
+        return DiceDelete.Logging(
+            DiceDelete.Composite(
+                DBDiceDelete(),
+                MetricDiceDelete(diceMetrics())
+            )
+        )
     }
 
     override fun diceSearch(): DiceSearch {
