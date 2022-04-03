@@ -13,29 +13,10 @@ import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-import org.slf4j.LoggerFactory
 
 class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
 
-    private val logger = LoggerFactory.getLogger(javaClass)
     private val diceMetrics = DiceMetrics.InMemory()
-
-    init {
-        populateMeilisearch()
-    }
-
-    private fun populateMeilisearch() {
-        val meili = MeiliDiceSave(meiliDeps.meiliDiceIndex())
-        runBlocking {
-            val dices = dices().flow().toList()
-            dices.forEach { dice ->
-                meili.invoke(dice)
-            }
-            logger.info("Populated meilisearch with ${dices.count()} dices")
-        }
-    }
 
     override fun dices(): Dices {
         return DBDices()
