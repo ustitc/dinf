@@ -18,7 +18,6 @@ baseURL = "http://localhost:8080"
 [search]
 url = "http://localhost:7700"
 key = "key"
-reindex = "60s"
 
 [htmx]
 timeout = "5s"
