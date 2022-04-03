@@ -1,45 +1,33 @@
 package dev.ustits.htmx
 
-import kotlinx.html.HTMLTag
+import kotlinx.html.FlowContent
 
 const val HTMX_INDICATOR: String = "htmx-indicator"
 
-var HTMLTag.hxGet: String
-    get() {
-        return attributes.getOrDefault("hx-get", "")
-    }
-    set(value) {
-        attributes["hx-get"] = value
+class HTMX(private val content: FlowContent) {
+
+    fun hxGet(value: String) {
+        content.attributes["hx-get"] = value
     }
 
-var HTMLTag.hxTarget: String
-    get() {
-        return attributes.getOrDefault("hx-target", "")
-    }
-    set(value) {
-        attributes["hx-target"] = value
+    fun hxTarget(value: String) {
+        content.attributes["hx-target"] = value
     }
 
-var HTMLTag.hxTrigger: String
-    get() {
-        return attributes.getOrDefault("hx-trigger", "")
-    }
-    set(value) {
-        attributes["hx-trigger"] = value
+    fun hxTrigger(value: String) {
+        content.attributes["hx-trigger"] = value
     }
 
-var HTMLTag.hxSwap: String
-    get() {
-        return attributes.getOrDefault("hx-swap", "")
-    }
-    set(value) {
-        attributes["hx-swap"] = value
+    fun hxSwap(value: String) {
+        content.attributes["hx-swap"] = value
     }
 
-var HTMLTag.hxIndicator: String
-    get() {
-        return attributes.getOrDefault("hx-indicator", "")
+    fun hxIndicator(value: String) {
+        content.attributes["hx-indicator"] = value
     }
-    set(value) {
-        attributes["hx-indicator"] = value
-    }
+
+}
+
+fun FlowContent.htmx(block: HTMX.() -> Unit) {
+    block(HTMX(this))
+}

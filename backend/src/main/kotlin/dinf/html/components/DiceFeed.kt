@@ -1,10 +1,7 @@
 package dinf.html.components
 
 import dev.ustits.htmx.HTMX_INDICATOR
-import dev.ustits.htmx.hxGet
-import dev.ustits.htmx.hxIndicator
-import dev.ustits.htmx.hxSwap
-import dev.ustits.htmx.hxTarget
+import dev.ustits.htmx.htmx
 import dinf.html.templates.Feed
 import dinf.domain.Dice
 import io.ktor.html.*
@@ -38,10 +35,12 @@ class DiceFeed(
                     div {
                         id = elementID
                         button(classes = "outline") {
-                            hxGet = nextPageURL
-                            hxSwap = "outerHTML"
-                            hxIndicator = "#$loadBlockID"
-                            hxTarget = "#$elementID"
+                            htmx {
+                                hxGet(nextPageURL)
+                                hxSwap("outerHTML")
+                                hxIndicator("#$loadBlockID")
+                                hxTarget("#$elementID")
+                            }
                             +"Give me more!"
                         }
                         loadingComponent(

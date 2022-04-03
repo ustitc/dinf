@@ -1,10 +1,7 @@
 package dinf.html.templates
 
 import dev.ustits.htmx.HTMX_INDICATOR
-import dev.ustits.htmx.hxGet
-import dev.ustits.htmx.hxIndicator
-import dev.ustits.htmx.hxTarget
-import dev.ustits.htmx.hxTrigger
+import dev.ustits.htmx.htmx
 import dinf.html.components.loadingComponent
 import io.ktor.html.*
 import kotlinx.html.FlowContent
@@ -23,10 +20,12 @@ class SearchBar(private val searchApiURL: String) : Template<FlowContent> {
     override fun FlowContent.apply() {
         input(type = InputType.search, name = "query") {
             placeholder = "Search dices..."
-            hxGet = searchApiURL
-            hxTarget = "#$searchResultID"
-            hxTrigger = "keyup changed delay:300ms"
-            hxIndicator = "#$loadBlockID"
+            htmx {
+                hxGet(searchApiURL)
+                hxTarget("#$searchResultID")
+                hxTrigger("keyup changed delay:300ms")
+                hxIndicator("#$loadBlockID")
+            }
         }
 
         loadingComponent(
