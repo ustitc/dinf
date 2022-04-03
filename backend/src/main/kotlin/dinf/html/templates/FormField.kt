@@ -14,11 +14,11 @@ class FormField : Template<FlowContent> {
     override fun FlowContent.apply() {
         label {
             +name
-            insert(control)
-            if (help.isNotBlank()) {
-                small {
-                    +help
-                }
+        }
+        insert(control)
+        if (help.isNotBlank()) {
+            small {
+                +help
             }
         }
     }
