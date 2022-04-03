@@ -1,6 +1,7 @@
 package dinf.html.components
 
 import dev.ustits.htmx.HTMX_INDICATOR
+import dev.ustits.htmx.HtmxSwap
 import dev.ustits.htmx.htmx
 import dinf.html.templates.Feed
 import dinf.domain.Dice
@@ -37,7 +38,7 @@ class DiceFeed(
                         button(classes = "outline") {
                             htmx {
                                 hxGet(nextPageURL)
-                                hxSwap("outerHTML")
+                                hxSwap(HtmxSwap.OUTER_HTML)
                                 hxIndicator("#$loadBlockID")
                                 hxTarget("#$elementID")
                             }

@@ -18,8 +18,8 @@ class HTMX(private val content: FlowContent) {
         content.attributes["hx-trigger"] = value
     }
 
-    fun hxSwap(value: String) {
-        content.attributes["hx-swap"] = value
+    fun hxSwap(value: HtmxSwap) {
+        content.attributes["hx-swap"] = value.htmxName
     }
 
     fun hxIndicator(value: String) {
