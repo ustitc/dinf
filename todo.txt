@@ -1,7 +1,7 @@
-Use htmx endpoint for pagination on main page
 Use htmx endpoint for pagination of search results
 Launch meilisearch population in async job
 Delete configuration for meili reindex job
+Limit hxSwap with enum https://htmx.org/docs/#swapping
 Return 400 error if user passed non positive int in htmx dice endpoint
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete

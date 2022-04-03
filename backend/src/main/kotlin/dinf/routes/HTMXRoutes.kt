@@ -26,10 +26,13 @@ fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
 
 fun Route.htmxDices(diceGet: DiceGet, diceFeed: DiceFeed) {
     get<HTMXLocations.Dices> { loc ->
-        val diceList = diceGet.invoke(loc.page.toPInt(), loc.count.toPInt())
+        val page = loc.page
+        val count = loc.count
+        val diceList = diceGet.invoke(page.toPInt(), count.toPInt())
+        val nextDicePageURL = application.locations.href(HTMXLocations.Dices(page = page + 1, count = count))
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
-                diceFeed.component(this, diceList)
+                diceFeed.component(this, diceList, nextDicePageURL)
             }
         }
     }

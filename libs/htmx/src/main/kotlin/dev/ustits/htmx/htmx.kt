@@ -28,6 +28,14 @@ var HTMLTag.hxTrigger: String
         attributes["hx-trigger"] = value
     }
 
+var HTMLTag.hxSwap: String
+    get() {
+        return attributes.getOrDefault("hx-swap", "")
+    }
+    set(value) {
+        attributes["hx-swap"] = value
+    }
+
 var HTMLTag.hxIndicator: String
     get() {
         return attributes.getOrDefault("hx-indicator", "")

@@ -36,15 +36,16 @@ private val componentDeps = ComponentDeps()
 
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val searchAPI = application.locations.href(HTMXLocations.Search())
-
     get("/") {
-        val diceList = diceGet.invoke(Page(1), Count(10))
-
+        val page = 1
+        val count = 10
+        val diceList = diceGet.invoke(Page(page), Count(count))
+        val nextDicePageURL = application.locations.href(HTMXLocations.Dices(page = page + 1, count = count))
         call.respondHtmlTemplate(layout) {
             content {
                 insert(SearchBar(searchAPI)) {
                     initialContent {
-                        diceFeed.component(this, diceList)
+                        diceFeed.component(this, diceList, nextDicePageURL)
                     }
                 }
             }
