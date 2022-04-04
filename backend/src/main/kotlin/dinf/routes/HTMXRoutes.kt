@@ -3,6 +3,7 @@ package dinf.routes
 import dinf.domain.DiceGet
 import dinf.html.components.DiceFeed
 import dinf.domain.DiceSearch
+import dinf.domain.SearchQuery
 import dinf.types.toPIntOrNull
 import io.ktor.application.*
 import io.ktor.features.*
@@ -15,11 +16,16 @@ import kotlinx.html.stream.createHTML
 
 fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
     get<HTMXLocations.Search> { loc ->
-        val dices = diceSearch.invoke(loc.query ?: "")
-
+        val query = SearchQuery(
+            text = loc.query ?: "",
+            page = loc.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
+            count = loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
+        )
+        val dices = diceSearch.invoke(query)
+        val nextPage = application.locations.href(loc.nextPage())
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
-                diceFeed.component(this, dices)
+                diceFeed.component(this, dices, nextPage)
             }
         }
     }
@@ -31,15 +37,11 @@ fun Route.htmxDices(diceGet: DiceGet, diceFeed: DiceFeed) {
             loc.page.toPIntOrNull() ?: throw BadRequestException("Page can't be less than 1"),
             loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
         )
-        val nextDicePageURL = application.locations.href(nextPageURL(loc))
+        val nextPage = application.locations.href(loc.nextPage())
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
-                diceFeed.component(this, diceList, nextDicePageURL)
+                diceFeed.component(this, diceList, nextPage)
             }
         }
     }
-}
-
-private fun nextPageURL(location: HTMXLocations.Dices): HTMXLocations.Dices {
-    return location.copy(page = location.page + 1)
 }

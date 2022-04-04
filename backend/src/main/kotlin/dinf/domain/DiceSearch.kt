@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.time.delay
 import java.time.Duration
 
-fun interface DiceSearch : suspend (String) -> List<Dice> {
+fun interface DiceSearch : suspend (SearchQuery) -> List<Dice> {
 
     class Stub(private val block: () -> List<Dice>) : DiceSearch by DiceSearch({ block() }) {
         constructor(vararg dices: Dice) : this({ dices.toList() })
@@ -18,8 +18,8 @@ fun interface DiceSearch : suspend (String) -> List<Dice> {
         main.invoke(it)
     })
 
-    class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch by DiceSearch({ text ->
-        dices.flow().filter { it.name.nbString.contains(text) }.toList()
+    class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch by DiceSearch({ query ->
+        dices.flow().filter { it.name.nbString.contains(query.text) }.toList()
     })
 
     class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) :

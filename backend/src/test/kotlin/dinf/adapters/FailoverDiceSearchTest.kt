@@ -2,6 +2,7 @@ package dinf.adapters
 
 import dinf.domain.Dice
 import dinf.domain.DiceSearch
+import dinf.domain.SearchQuery
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
@@ -16,7 +17,7 @@ class FailoverDiceSearchTest : StringSpec({
             fallback = DiceSearch.Empty()
         )
 
-        val result = search.invoke("test")
+        val result = search.invoke(SearchQuery("test"))
 
         result shouldContainExactly expected
     }
@@ -27,7 +28,7 @@ class FailoverDiceSearchTest : StringSpec({
             fallback = DiceSearch.Empty()
         )
 
-        val result = search.invoke("test")
+        val result = search.invoke(SearchQuery("test"))
 
         result shouldHaveSize 0
     }

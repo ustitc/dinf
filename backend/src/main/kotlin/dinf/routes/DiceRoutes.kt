@@ -35,10 +35,10 @@ import org.hashids.Hashids
 private val componentDeps = ComponentDeps()
 
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
-    val searchAPI = application.locations.href(HTMXLocations.Search())
+    val page = 1
+    val count = 10
+    val searchAPI = application.locations.href(HTMXLocations.Search(page = page, count = count))
     get("/") {
-        val page = 1
-        val count = 10
         val diceList = diceGet.invoke(Page(page), Count(count))
         val nextDicePageURL = application.locations.href(HTMXLocations.Dices(page = page + 1, count = count))
         call.respondHtmlTemplate(layout) {
