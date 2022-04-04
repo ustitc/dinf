@@ -1,5 +1,4 @@
 Use htmx endpoint for pagination of search results
-Return 400 error if user passed non positive int in htmx dice endpoint
 Update dice name separately of edges
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete
