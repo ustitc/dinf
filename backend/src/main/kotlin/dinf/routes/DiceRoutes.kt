@@ -15,7 +15,6 @@ import dinf.html.components.DiceFeed
 import dinf.html.templates.SearchBar
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
-import dinf.html.templates.URLBlock
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -26,8 +25,11 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
+import kotlinx.html.a
 import kotlinx.html.form
 import kotlinx.html.h2
+import kotlinx.html.h3
+import kotlinx.html.hGroup
 import kotlinx.html.input
 import kotlinx.html.p
 import org.hashids.Hashids
@@ -86,7 +88,7 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Dices, diceMetrics: DiceMetrics) {
+fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics: DiceMetrics) {
     get<DiceLocation.ID> { loc ->
         val dice = dices.diceOrNull(loc.id, shareHashids)
         if (dice == null) {
@@ -98,15 +100,10 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Di
             } else {
                 metric.addClick()
             }
-            val shareURL = loc.url(baseURL, call)
 
             call.respondHtmlTemplate(layout) {
                 content {
                     h2 { +dice.name.nbString.toString() }
-
-                    insert(URLBlock(shareURL)) {
-                        text = "Share url: "
-                    }
 
                     insert(RollBlock(dice)) {
                     }
@@ -116,25 +113,24 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, baseURL: String, dices: Di
     }
 }
 
-fun Route.editForm(layout: Layout, shareHashids: Hashids, editHashids: Hashids, baseURL: String, dices: Dices) {
+fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices: Dices) {
     get<DiceLocation.Edit> { loc ->
         val dice = dices.diceOrNull(loc.id, editHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val diceID = HashID(dice, shareHashids)
-            val shareURL = DiceLocation.ID(diceID).url(baseURL, call)
             val editURL = loc.url(baseURL, call)
             val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
             val form = componentDeps.diceForm(loc.uri(call))
 
             call.respondHtmlTemplate(layout) {
                 content {
-                    insert(URLBlock(shareURL)) {
-                        text = "Share url: "
-                    }
-                    insert(URLBlock(editURL)) {
-                        text = "Edit url: "
+                    hGroup {
+                        h2 { +dice.name.nbString.toString() }
+                        h3 {
+                            text("Save this link to edit your dice later: ")
+                            a(href = editURL) { +editURL }
+                        }
                     }
 
                     insert(RollBlock(dice)) {

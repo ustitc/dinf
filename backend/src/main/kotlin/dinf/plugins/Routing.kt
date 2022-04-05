@@ -62,14 +62,12 @@ fun Application.configureRouting(
         dice(
             layout = layout,
             shareHashids = shareHashids,
-            baseURL = baseURL,
             dices = dependencies.dices(),
             diceMetrics = dependencies.diceMetrics()
         )
         edit(layout = layout, editHashids = editHashids, dices = dependencies.dices())
         editForm(
             layout = layout,
-            shareHashids = shareHashids,
             editHashids = editHashids,
             baseURL = baseURL,
             dices = dependencies.dices()
