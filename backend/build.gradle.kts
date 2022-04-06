@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.kotlin.serialization)
     application
 }
 
@@ -53,5 +52,4 @@ dependencies {
 
     testImplementation(libs.testContainers.testcontainers)
     testImplementation(libs.testContainers.junitJupiter)
-    testImplementation(libs.testContainers.postgresql)
 }

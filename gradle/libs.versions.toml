@@ -13,19 +13,12 @@ testContainers = "1.16.2"
 [libraries]
 hoplite-core = { module = "com.sksamuel.hoplite:hoplite-core", version.ref = "hoplite" }
 hoplite-toml = { module = "com.sksamuel.hoplite:hoplite-toml", version.ref = "hoplite" }
-ktor-clientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-clientCoreJVM = { module = "io.ktor:ktor-client-core-jvm", version.ref = "ktor" }
-ktor-clientApache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor" }
-ktor-clientJS = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
-ktor-clientSerialization = { module = "io.ktor:ktor-client-serialization", version.ref = "ktor" }
 ktor-serverCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-serverHostCommon = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
-ktor-serverSessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-metricsMicrometer = { module = "io.ktor:ktor-metrics-micrometer", version.ref = "ktor" }
 ktor-serverTests = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
 ktor-locations = { module = "io.ktor:ktor-locations", version.ref = "ktor" }
-ktor-serialization = { module = "io.ktor:ktor-serialization", version.ref = "ktor" }
 ktor-webjars = { module = "io.ktor:ktor-webjars", version.ref = "ktor" }
 ktor-htmlBuilder = { module = "io.ktor:ktor-html-builder", version.ref = "ktor" }
 kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
@@ -38,8 +31,3 @@ kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-co
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 testContainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testContainers" }
 testContainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
-testContainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testContainers" }
-
-[plugins]
-kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotestGradle" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

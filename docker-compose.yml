@@ -1,33 +1,5 @@
 version: "3.8"
 services:
-  postgres:
-    container_name: dinf_postgres
-    image: postgres:13
-    environment:
-      POSTGRES_DB: dinf
-      POSTGRES_USER: dinf_admin
-      POSTGRES_PASSWORD: dinf_password
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/postgres
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-
-  pgadmin:
-    container_name: dinf_pgadmin
-    image: dpage/pgadmin4:5
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@dinf.dev
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin:/root/.pgadmin
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
-    restart: unless-stopped
-
   meilisearch:
     image: getmeili/meilisearch:v0.25.2
     command: ./meilisearch --master-key=key --no-analytics=true
