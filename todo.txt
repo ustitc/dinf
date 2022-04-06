@@ -1,6 +1,9 @@
+Edit url as modal form
+Show modal form with edit url on dice creation
 Show create button if there is no dices to show
 Update dice name separately of edges
 Rename "Create dice" button in edit form
+Show modal form before dice deletion
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete
 Update index in meilisearch on dice name change

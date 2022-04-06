@@ -26,7 +26,6 @@ dependencies {
     implementation(libs.ktor.serverHostCommon)
     implementation(libs.ktor.serverNetty)
     implementation(libs.ktor.locations)
-    implementation(libs.ktor.serialization)
     implementation(libs.ktor.webjars)
     implementation(libs.ktor.htmlBuilder)
     implementation(libs.ktor.metricsMicrometer)

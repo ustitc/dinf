@@ -6,7 +6,6 @@ import dinf.meilisearch.populateMeilisearch
 import dinf.plugins.configureCallLogging
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
-import dinf.plugins.configureSerialization
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.launch
@@ -24,7 +23,6 @@ fun main() {
             populateMeilisearch(appDeps, meiliDeps)
         }
 
-        configureSerialization()
         configureRouting(cfg, appDeps)
         configureCallLogging()
         configureMetrics()

@@ -12,9 +12,11 @@ import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.domain.SerialNumber
 import dinf.html.components.DiceFeed
+import dinf.html.components.picoInlineButton
 import dinf.html.templates.SearchBar
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
+import dinf.html.text
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -26,12 +28,18 @@ import io.ktor.routing.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.a
+import kotlinx.html.article
+import kotlinx.html.button
+import kotlinx.html.details
+import kotlinx.html.dialog
+import kotlinx.html.div
 import kotlinx.html.form
 import kotlinx.html.h2
 import kotlinx.html.h3
 import kotlinx.html.hGroup
 import kotlinx.html.input
 import kotlinx.html.p
+import kotlinx.html.summary
 import org.hashids.Hashids
 
 private val componentDeps = ComponentDeps()
@@ -125,13 +133,31 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
 
             call.respondHtmlTemplate(layout) {
                 content {
-                    hGroup {
-                        h2 { +dice.name.nbString.toString() }
-                        h3 {
-                            text("Save this link to edit your dice later: ")
-                            a(href = editURL) { +editURL }
+                    h2 { +dice.name.nbString.toString() }
+
+                    dialog {
+                        attributes["open"] = "true"
+                        article {
+                            p {
+                                +"Save this link to edit your dice later!"
+                            }
+                            div("grid") {
+                                div("container") {
+                                    input {
+                                        value = editURL
+                                        readonly = true
+                                    }
+                                }
+                                div {
+                                    picoInlineButton("contrast") {
+                                        +"Copy"
+                                    }
+                                }
+                            }
                         }
                     }
+
+
 
                     insert(RollBlock(dice)) {
                     }
