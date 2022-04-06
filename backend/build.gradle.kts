@@ -48,8 +48,4 @@ dependencies {
     testImplementation(libs.kotest.runnerJUnit5)
     testImplementation(libs.kotest.assertionsCore)
     testImplementation(libs.kotest.extensionsAssertionsKtor)
-    testImplementation(libs.kotest.extensionsTestcontainers)
-
-    testImplementation(libs.testContainers.testcontainers)
-    testImplementation(libs.testContainers.junitJupiter)
 }

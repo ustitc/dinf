@@ -8,7 +8,6 @@ kotestGradle = "5.0.0.5"
 kotlin = "1.6.10"
 kotlinx = "1.5.2"
 logback = "1.2.11"
-testContainers = "1.16.2"
 
 [libraries]
 hoplite-core = { module = "com.sksamuel.hoplite:hoplite-core", version.ref = "hoplite" }
@@ -23,11 +22,8 @@ ktor-webjars = { module = "io.ktor:ktor-webjars", version.ref = "ktor" }
 ktor-htmlBuilder = { module = "io.ktor:ktor-html-builder", version.ref = "ktor" }
 kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-extensionsAssertionsKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
-kotest-extensionsTestcontainers = { module = "io.kotest.extensions:kotest-extensions-testcontainers", version.ref = "kotestTestcontainers" }
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-testContainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testContainers" }
-testContainers-junitJupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testContainers" }
