@@ -69,10 +69,10 @@ class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMX
             main(classes = "container") {
                 insert(content)
             }
-            footer("container") {
+            footer("container-fluid") {
                 small {
                     p { +"by Ruslan Ustits" }
-                    a(href = "https://github.com/ustits") { +"Github" }
+                    a(href = "https://github.com/ustits/dinf") { +"Github" }
                 }
             }
         }
