@@ -133,10 +133,16 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
 
             call.respondHtmlTemplate(layout) {
                 content {
-                    h2 { +dice.name.nbString.toString() }
+                    hGroup {
+                        h2 { +dice.name.nbString.toString() }
+                        h3 {
+                            text("Save this link to edit your dice later: ")
+                            a(href = editURL) { +editURL }
+                        }
+                    }
 
                     dialog {
-                        attributes["open"] = "true"
+                        attributes["open"] = "false"
                         article {
                             p {
                                 +"Save this link to edit your dice later!"
@@ -156,8 +162,6 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
                             }
                         }
                     }
-
-
 
                     insert(RollBlock(dice)) {
                     }
