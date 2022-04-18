@@ -8,8 +8,5 @@ class DBDiceDelete : DiceDelete by DiceDelete({ dice ->
         prepareStatement("DELETE FROM dices WHERE id = ?").also {
             it.setLong(1, dice.serialNumber.number)
         }.use { it.execute() }
-        prepareStatement("DELETE FROM edges WHERE dice = ?").also {
-            it.setLong(1, dice.serialNumber.number)
-        }.use { it.execute() }
     }
 })
