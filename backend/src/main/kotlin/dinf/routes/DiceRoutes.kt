@@ -233,6 +233,6 @@ fun Hashids.decodeOrNull(str: String): Long? {
 
 suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
     return hashids.decodeOrNull(id)
-        ?.let { ID.Simple(it) }
+        ?.let { ID(it) }
         ?.let { oneOrNull(it) }
 }

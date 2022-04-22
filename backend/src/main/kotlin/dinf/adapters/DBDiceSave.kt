@@ -27,7 +27,7 @@ class DBDiceSave : DiceSave {
             rs.close()
             id
         }
-        return DBDices().oneOrNull(ID.Simple(id)) ?: error("Dice was not saved")
+        return DBDices().oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
     private fun Connection.saveEdge(diceID: Long, edge: String) {

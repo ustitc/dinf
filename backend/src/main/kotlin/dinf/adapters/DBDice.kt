@@ -32,7 +32,7 @@ class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
     }
 
     constructor(result: ResultSet, edgesSeparator: String) : this(
-        ID.Simple(result.getLong("id"))
+        ID(result.getLong("id"))
             .let {
                 Dice.Simple(
                     id = it,

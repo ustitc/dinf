@@ -1,5 +1,7 @@
 package dinf.domain
 
+import kotlin.random.Random
+
 interface Dice {
 
     val id: ID
@@ -11,7 +13,7 @@ interface Dice {
     fun change(name: Name, edges: Edges)
 
     class Stub(name: String = "stub") : Dice by Simple(
-        id = ID.Rand(),
+        id = ID(Random.nextLong()),
         name = Name(name),
         edges = Edges.Simple(listOf())
     )
@@ -29,7 +31,7 @@ interface Dice {
     }
 
     class New(name: Name, edges: Edges) : Dice by Simple(
-        id = ID.Empty(),
+        id = ID(-1),
         name = name,
         edges = edges
     )

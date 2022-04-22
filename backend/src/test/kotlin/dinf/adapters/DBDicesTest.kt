@@ -30,7 +30,7 @@ class DBDicesTest : StringSpec({
 
         val serialsCount = 10
         dices.list(
-            List(serialsCount) { ID.Simple(it + 1L) }
+            List(serialsCount) { ID(it + 1L) }
         ).size shouldBe serialsCount
     }
 
