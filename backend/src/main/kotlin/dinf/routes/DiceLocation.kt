@@ -18,7 +18,7 @@ object DiceLocation {
     @Location("/{id}")
     class ID(val dices: DiceLocation = DiceLocation, val id: String) {
 
-        constructor(id: dinf.domain.ID) : this(id = id.print().toString())
+        constructor(id: dinf.domain.ID) : this(id = id.print())
 
         fun url(baseURL: String, call: ApplicationCall): String {
             return buildURL(baseURL, call, this)
@@ -29,7 +29,7 @@ object DiceLocation {
     @Location("/edit/{id}")
     data class Edit(val dices: DiceLocation = DiceLocation, val id: String) {
 
-        constructor(id: dinf.domain.ID) : this(id = id.print().toString())
+        constructor(id: dinf.domain.ID) : this(id = id.print())
 
         fun url(baseURL: String, call: ApplicationCall): String {
             return buildURL(baseURL, call, this)
