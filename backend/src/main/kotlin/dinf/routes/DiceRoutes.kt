@@ -1,6 +1,6 @@
 package dinf.routes
 
-import dinf.adapters.HashID
+import dinf.adapters.HashidsHashID
 import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceDelete
@@ -77,7 +77,7 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
             ?.let { Dice.New(it.name, it.edges) }
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
-            val id = HashID(dice, editHashids)
+            val id = HashidsHashID(dice, editHashids)
             val url = call.locations.href(DiceLocation.Edit(id))
             call.respondRedirect(url)
         } else {
@@ -94,8 +94,8 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
 }
 
 fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics: DiceMetrics) {
-    get<DiceLocation.ID> { loc ->
-        val dice = dices.diceOrNull(loc.id, shareHashids)
+    get<DiceLocation.ByHashID> { loc ->
+        val dice = dices.diceOrNull(loc.hashID, shareHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -120,12 +120,12 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics:
 
 fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices: Dices) {
     get<DiceLocation.Edit> { loc ->
-        val dice = dices.diceOrNull(loc.id, editHashids)
+        val dice = dices.diceOrNull(loc.hashID, editHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {
             val editURL = loc.url(baseURL, call)
-            val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.id))
+            val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.hashID))
             val form = componentDeps.diceForm(loc.uri(call))
 
             call.respondHtmlTemplate(layout) {
@@ -182,7 +182,7 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
 fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
     post<DiceLocation.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = dices.diceOrNull(loc.id, editHashids)
+        val dice = dices.diceOrNull(loc.hashID, editHashids)
         if (dice == null) {
             throw NotFoundException()
         } else {

@@ -1,11 +1,11 @@
 package dinf.adapters
 
 import dinf.domain.Dice
-import dinf.domain.ID
+import dinf.domain.HashID
 import dinf.domain.SerialNumber
 import org.hashids.Hashids
 
-class HashID(private val value: Long, private val hashids: Hashids) : ID {
+class HashidsHashID(private val value: Long, private val hashids: Hashids) : HashID {
 
     constructor(dice: Dice, hashids: Hashids) : this(dice.serialNumber, hashids)
 

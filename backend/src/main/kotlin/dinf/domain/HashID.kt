@@ -2,11 +2,11 @@ package dinf.domain
 
 import dinf.types.NBString
 
-interface ID {
+interface HashID {
 
     fun print(): String
 
-    class Simple(private val nbString: NBString) : ID {
+    class Simple(private val nbString: NBString) : HashID {
 
         constructor(string: String) : this(NBString(string))
 

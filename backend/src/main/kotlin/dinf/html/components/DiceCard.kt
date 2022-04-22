@@ -1,6 +1,6 @@
 package dinf.html.components
 
-import dinf.adapters.HashID
+import dinf.adapters.HashidsHashID
 import dinf.routes.DiceLocation
 import dinf.html.templates.RollButton
 import dinf.domain.Dice
@@ -16,8 +16,8 @@ import org.hashids.Hashids
 class DiceCard(private val shareHashids: Hashids, private val locations: Locations) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
-        val hashID = HashID(dice.serialNumber, shareHashids)
-        val location = locations.href(DiceLocation.ID(hashID))
+        val hashID = HashidsHashID(dice.serialNumber, shareHashids)
+        val location = locations.href(DiceLocation.ByHashID(hashID))
         val id = "result-${hashID.print()}"
         val eventName = "roll"
 
