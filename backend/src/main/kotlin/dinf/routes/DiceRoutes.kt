@@ -10,7 +10,7 @@ import dinf.domain.DiceSave
 import dinf.domain.Dices
 import dinf.domain.Metric
 import dinf.domain.Page
-import dinf.domain.SerialNumber
+import dinf.domain.ID
 import dinf.html.components.DiceFeed
 import dinf.html.components.picoInlineButton
 import dinf.html.templates.SearchBar
@@ -233,6 +233,6 @@ fun Hashids.decodeOrNull(str: String): Long? {
 
 suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
     return hashids.decodeOrNull(id)
-        ?.let { SerialNumber.Simple(it) }
+        ?.let { ID.Simple(it) }
         ?.let { oneOrNull(it) }
 }

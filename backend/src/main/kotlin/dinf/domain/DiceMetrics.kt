@@ -11,28 +11,28 @@ interface DiceMetrics {
         return forDice(dice) ?: Metric.zero()
     }
 
-    fun popularSNs(): Flow<SN>
+    fun popularIDs(): Flow<ID>
 
     suspend fun removeForDice(dice: Dice)
 
     suspend fun create(dice: Dice, metric: Metric)
 
-    class InMemory private constructor(private val map: MutableMap<SN, Metric>) : DiceMetrics {
+    class InMemory private constructor(private val map: MutableMap<ID, Metric>) : DiceMetrics {
 
         constructor() : this(mutableMapOf())
 
         constructor(vararg initial: Pair<Dice, Metric>) : this(
             initial
                 .toMap()
-                .mapKeys { it.key.serialNumber }
+                .mapKeys { it.key.id }
                 .toMutableMap()
         )
 
         override suspend fun forDice(dice: Dice): Metric? {
-            return map[dice.serialNumber]
+            return map[dice.id]
         }
 
-        override fun popularSNs(): Flow<SN> {
+        override fun popularIDs(): Flow<ID> {
             return map.entries
                 .sortedByDescending { it.value.clicks }
                 .map { it.key }
@@ -40,11 +40,11 @@ interface DiceMetrics {
         }
 
         override suspend fun removeForDice(dice: Dice) {
-            map.remove(dice.serialNumber)
+            map.remove(dice.id)
         }
 
         override suspend fun create(dice: Dice, metric: Metric) {
-            map[dice.serialNumber] = metric
+            map[dice.id] = metric
         }
 
         fun clear() {

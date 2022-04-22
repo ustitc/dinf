@@ -16,7 +16,7 @@ import org.hashids.Hashids
 class DiceCard(private val shareHashids: Hashids, private val locations: Locations) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
-        val hashID = HashidsHashID(dice.serialNumber, shareHashids)
+        val hashID = HashidsHashID(dice.id, shareHashids)
         val location = locations.href(DiceLocation.ByHashID(hashID))
         val id = "result-${hashID.print()}"
         val eventName = "roll"

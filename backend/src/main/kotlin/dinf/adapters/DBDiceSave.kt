@@ -3,7 +3,7 @@ package dinf.adapters
 import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceSave
-import dinf.domain.SerialNumber
+import dinf.domain.ID
 import java.sql.Connection
 
 class DBDiceSave : DiceSave {
@@ -27,7 +27,7 @@ class DBDiceSave : DiceSave {
             rs.close()
             id
         }
-        return DBDices().oneOrNull(SerialNumber.Simple(id)) ?: error("Dice was not saved")
+        return DBDices().oneOrNull(ID.Simple(id)) ?: error("Dice was not saved")
     }
 
     private fun Connection.saveEdge(diceID: Long, edge: String) {

@@ -45,7 +45,7 @@ class DiceMetricsInMemoryTest : StringSpec({
         metrics.create(dice, Metric.zero())
         metrics.create(dice, Metric.zero())
 
-        val all = metrics.popularSNs().toList()
+        val all = metrics.popularIDs().toList()
 
         all shouldHaveSize 1
     }
@@ -59,10 +59,10 @@ class DiceMetricsInMemoryTest : StringSpec({
         metrics.create(second, Metric.Simple(10))
         metrics.create(third, Metric.Simple(4))
 
-        metrics.popularSNs().toList().shouldContainInOrder(
-            second.serialNumber,
-            third.serialNumber,
-            first.serialNumber
+        metrics.popularIDs().toList().shouldContainInOrder(
+            second.id,
+            third.id,
+            first.id
         )
     }
 
@@ -72,13 +72,13 @@ class DiceMetricsInMemoryTest : StringSpec({
 
         metrics.removeForDice(dice)
 
-        metrics.popularSNs().toList() shouldHaveSize 0
+        metrics.popularIDs().toList() shouldHaveSize 0
     }
 
     "removing unknown metric doesn't cause and error" {
         metrics.removeForDice(Dice.Stub())
 
-        metrics.popularSNs().toList() shouldHaveSize 0
+        metrics.popularIDs().toList() shouldHaveSize 0
     }
 
 })

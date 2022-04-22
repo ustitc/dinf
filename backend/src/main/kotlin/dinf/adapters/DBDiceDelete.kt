@@ -6,7 +6,7 @@ import dinf.db.transaction
 class DBDiceDelete : DiceDelete by DiceDelete({ dice ->
     transaction {
         prepareStatement("DELETE FROM dices WHERE id = ?").also {
-            it.setLong(1, dice.serialNumber.number)
+            it.setLong(1, dice.id.number)
         }.use { it.execute() }
     }
 })

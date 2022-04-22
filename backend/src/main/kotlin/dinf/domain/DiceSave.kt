@@ -15,7 +15,7 @@ fun interface DiceSave : suspend (Dice) -> Dice {
         private val logger: Logger = LoggerFactory.getLogger(Logging::class.java)
     ) : DiceSave by DiceSave({ dice ->
         val result = inner.invoke(dice)
-        logger.info("Saved dice for SN: ${result.serialNumber}")
+        logger.info("Saved dice for SN: ${result.id}")
         result
     })
 

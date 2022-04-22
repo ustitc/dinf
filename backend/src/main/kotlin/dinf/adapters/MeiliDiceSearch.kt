@@ -4,7 +4,7 @@ import com.meilisearch.sdk.Index
 import com.meilisearch.sdk.SearchRequest
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
-import dinf.domain.SerialNumber
+import dinf.domain.ID
 
 class MeiliDiceSearch(private val index: Index, private val dices: Dices) : DiceSearch by DiceSearch({ query ->
     val searchRequest = SearchRequest(
@@ -16,6 +16,6 @@ class MeiliDiceSearch(private val index: Index, private val dices: Dices) : Dice
         .hits
         .map { it[MeiliDiceCollection.idField]!! as Double }
         .map { it.toLong() }
-        .map { SerialNumber.Simple(it) }
+        .map { ID.Simple(it) }
     dices.list(serials)
 })

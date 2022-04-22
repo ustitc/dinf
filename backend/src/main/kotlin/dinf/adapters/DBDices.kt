@@ -6,7 +6,7 @@ import dinf.db.toSequence
 import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.Dices
-import dinf.domain.SerialNumber
+import dinf.domain.ID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
@@ -40,7 +40,7 @@ class DBDices : Dices {
         }
     }
 
-    override suspend fun oneOrNull(serialNumber: SerialNumber): Dice? {
+    override suspend fun oneOrNull(id: ID): Dice? {
         return transaction {
             val statement = prepareStatement(
                 """
@@ -53,7 +53,7 @@ class DBDices : Dices {
                     GROUP BY dices.id
                 """.trimIndent()
             ).also { statement ->
-                statement.setLong(1, serialNumber.number)
+                statement.setLong(1, id.number)
             }
             val dice = statement.executeQuery().firstOrNull {
                 DBDice(this, edgesSeparator)
@@ -63,7 +63,7 @@ class DBDices : Dices {
         }
     }
 
-    override suspend fun list(serials: List<SerialNumber>): List<Dice> {
+    override suspend fun list(serials: List<ID>): List<Dice> {
         return transaction {
             val statement = prepareStatement(
                 """

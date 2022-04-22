@@ -2,7 +2,7 @@ package dinf.domain
 
 interface Dice {
 
-    val serialNumber: SerialNumber
+    val id: ID
 
     val name: Name
 
@@ -11,13 +11,13 @@ interface Dice {
     fun change(name: Name, edges: Edges)
 
     class Stub(name: String = "stub") : Dice by Simple(
-        serialNumber = SerialNumber.Rand(),
+        id = ID.Rand(),
         name = Name(name),
         edges = Edges.Simple(listOf())
     )
 
     class Simple(
-        override val serialNumber: SerialNumber,
+        override val id: ID,
         override var name: Name,
         override var edges: Edges
     ) : Dice {
@@ -29,7 +29,7 @@ interface Dice {
     }
 
     class New(name: Name, edges: Edges) : Dice by Simple(
-        serialNumber = SerialNumber.Empty(),
+        id = ID.Empty(),
         name = name,
         edges = edges
     )
