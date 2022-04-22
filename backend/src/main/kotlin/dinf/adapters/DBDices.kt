@@ -31,7 +31,7 @@ class DBDices : Dices {
         val rs = statement.executeQuery()
         return flow<Dice> {
             rs.toSequence {
-                DBDice(this)
+                DBDice(this, edgesSeparator)
             }.forEach { emit(it) }
         }.onCompletion {
             rs.close()
@@ -56,7 +56,7 @@ class DBDices : Dices {
                 statement.setLong(1, serialNumber.number)
             }
             val dice = statement.executeQuery().firstOrNull {
-                DBDice(this)
+                DBDice(this, edgesSeparator)
             }
             statement.close()
             dice
@@ -81,7 +81,7 @@ class DBDices : Dices {
                 }
             }
             val list = statement.executeQuery().toSequence {
-                DBDice(this)
+                DBDice(this, edgesSeparator)
             }.toList()
             statement.close()
             list

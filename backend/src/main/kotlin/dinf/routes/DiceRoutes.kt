@@ -188,8 +188,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
         } else {
             val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
             if (htmlDice != null) {
-                dice.change(htmlDice.name)
-                dice.edges.change(htmlDice.edges)
+                dice.change(htmlDice.name, htmlDice.edges)
                 val url = call.locations.href(loc)
                 call.respondRedirect(url)
             } else {

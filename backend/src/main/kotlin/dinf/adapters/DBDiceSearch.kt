@@ -30,7 +30,7 @@ class DBDiceSearch : DiceSearch {
             }
 
             val result = statement.executeQuery().toSequence {
-                DBDice(this)
+                DBDice(this, edgesSeparator)
             }.toList()
             statement.close()
             result

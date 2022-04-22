@@ -8,7 +8,7 @@ interface Dice {
 
     val edges: Edges
 
-    fun change(name: Name)
+    fun change(name: Name, edges: Edges)
 
     class Stub(name: String = "stub") : Dice by Simple(
         serialNumber = SerialNumber.Rand(),
@@ -19,11 +19,12 @@ interface Dice {
     class Simple(
         override val serialNumber: SerialNumber,
         override var name: Name,
-        override val edges: Edges
+        override var edges: Edges
     ) : Dice {
 
-        override fun change(name: Name) {
+        override fun change(name: Name, edges: Edges) {
             this.name = name
+            this.edges = edges
         }
     }
 
