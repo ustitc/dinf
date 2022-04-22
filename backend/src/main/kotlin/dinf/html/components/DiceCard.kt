@@ -23,7 +23,7 @@ class DiceCard(private val shareHashids: Hashids, private val locations: Locatio
 
         flowContent.div {
             h3 {
-                a(href = location) { +dice.name.nbString.toString() }
+                a(href = location) { +dice.name.print() }
             }
 
             insert(RollResult(_id = id, dice = dice, eventName = eventName)) {

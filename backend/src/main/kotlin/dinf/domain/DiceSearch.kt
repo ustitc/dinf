@@ -19,7 +19,7 @@ fun interface DiceSearch : suspend (SearchQuery) -> List<Dice> {
     })
 
     class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch by DiceSearch({ query ->
-        dices.flow().filter { it.name.nbString.contains(query.text) }.toList()
+        dices.flow().filter { it.name.print().contains(query.text) }.toList()
     })
 
     class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) :

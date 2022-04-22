@@ -2,19 +2,13 @@ package dinf.domain
 
 import dinf.types.NBString
 
-interface Name {
+@JvmInline
+value class Name(private val nbString: NBString) {
 
-    suspend fun change(new: NBString)
+    constructor(str: String) : this(NBString(str))
 
-    val nbString: NBString
-
-    class Stub(override var nbString: NBString) : Name {
-
-        constructor(str: String) : this(NBString(str))
-
-        override suspend fun change(new: NBString) {
-            nbString = new
-        }
+    fun print(): String {
+        return nbString.toString()
     }
 
 }

@@ -16,7 +16,7 @@ class DBDiceSave : DiceSave {
                     VALUES (?, date('now'), date('now'))
                     RETURNING id, name
                 """.trimIndent()
-            ).also { it.setString(1, dice.name.nbString.toString()) }
+            ).also { it.setString(1, dice.name.print()) }
 
             val rs = statement.executeQuery()
             val id = rs.getLong("id")

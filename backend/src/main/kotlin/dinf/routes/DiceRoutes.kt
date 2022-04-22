@@ -16,7 +16,6 @@ import dinf.html.components.picoInlineButton
 import dinf.html.templates.SearchBar
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
-import dinf.html.text
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -29,8 +28,6 @@ import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.a
 import kotlinx.html.article
-import kotlinx.html.button
-import kotlinx.html.details
 import kotlinx.html.dialog
 import kotlinx.html.div
 import kotlinx.html.form
@@ -39,7 +36,6 @@ import kotlinx.html.h3
 import kotlinx.html.hGroup
 import kotlinx.html.input
 import kotlinx.html.p
-import kotlinx.html.summary
 import org.hashids.Hashids
 
 private val componentDeps = ComponentDeps()
@@ -78,6 +74,7 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
+            ?.let { Dice.New(it.name, it.edges) }
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
             val id = HashID(dice, editHashids)
@@ -111,7 +108,7 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics:
 
             call.respondHtmlTemplate(layout) {
                 content {
-                    h2 { +dice.name.nbString.toString() }
+                    h2 { +dice.name.print() }
 
                     insert(RollBlock(dice)) {
                     }
@@ -134,7 +131,7 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
             call.respondHtmlTemplate(layout) {
                 content {
                     hGroup {
-                        h2 { +dice.name.nbString.toString() }
+                        h2 { +dice.name.print() }
                         h3 {
                             text("Save this link to edit your dice later: ")
                             a(href = editURL) { +editURL }
@@ -167,7 +164,7 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
                     }
 
                     insert(form) {
-                        name = dice.name.nbString.toString()
+                        name = dice.name.print()
                         edges = dice.edges.stringList
                     }
 
@@ -191,7 +188,7 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
         } else {
             val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
             if (htmlDice != null) {
-                dice.name.change(htmlDice.name.nbString)
+                dice.change(htmlDice.name)
                 dice.edges.change(htmlDice.edges)
                 val url = call.locations.href(loc)
                 call.respondRedirect(url)

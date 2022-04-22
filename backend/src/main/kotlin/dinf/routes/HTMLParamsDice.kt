@@ -1,12 +1,11 @@
 package dinf.routes
 
-import dinf.domain.Dice
 import dinf.domain.Edges
-import dinf.types.NBString
+import dinf.domain.Name
 import dinf.types.toNBStringOrNull
 import io.ktor.http.*
 
-class HTMLParamsDice(name: NBString, edges: List<String>) : Dice by Dice.New(name, Edges.Simple(edges)) {
+class HTMLParamsDice(val name: Name, val edges: Edges) {
 
     companion object {
 
@@ -16,7 +15,7 @@ class HTMLParamsDice(name: NBString, edges: List<String>) : Dice by Dice.New(nam
             return if (name == null || edges == null) {
                 null
             } else {
-                HTMLParamsDice(name, edges)
+                HTMLParamsDice(Name(name), Edges.Simple(edges))
             }
         }
     }
