@@ -6,6 +6,7 @@ import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
+import dinf.domain.HashIDs
 
 interface AppDeps {
 
@@ -20,6 +21,10 @@ interface AppDeps {
     fun diceSave(): DiceSave
 
     fun diceMetrics(): DiceMetrics
+
+    fun shareHashIDs(): HashIDs
+
+    fun editHashIDs(): HashIDs
 
     class Stub : AppDeps {
 
@@ -45,6 +50,14 @@ interface AppDeps {
 
         override fun diceMetrics(): DiceMetrics {
             return DiceMetrics.InMemory()
+        }
+
+        override fun shareHashIDs(): HashIDs {
+            return HashIDs.Stub()
+        }
+
+        override fun editHashIDs(): HashIDs {
+            return HashIDs.Stub()
         }
     }
 }

@@ -1,17 +1,14 @@
 package dinf.domain
 
-import dinf.types.NBString
-
 interface HashID {
 
     fun print(): String
 
-    class Simple(private val nbString: NBString) : HashID {
+    fun toID(): ID
 
-        constructor(string: String) : this(NBString(string))
-
-        override fun print(): String {
-            return nbString.toString()
-        }
+    class Stub(private val hash: String, private val id: ID) : HashID {
+        override fun print(): String = hash
+        override fun toID(): ID = id
     }
+
 }

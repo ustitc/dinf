@@ -26,7 +26,3 @@ typealias PInt = PositiveInt
 fun Int.toPIntOrNull(): PInt? {
     return (this refinedOrNull Positive())?.let { PInt(this) }
 }
-
-fun Int.toPInt(): PInt {
-    return toPIntOrNull()!!
-}

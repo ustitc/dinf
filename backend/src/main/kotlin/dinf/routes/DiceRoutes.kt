@@ -1,6 +1,5 @@
 package dinf.routes
 
-import dinf.adapters.HashidsHashID
 import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceDelete
@@ -8,9 +7,9 @@ import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.Dices
+import dinf.domain.HashIDs
 import dinf.domain.Metric
 import dinf.domain.Page
-import dinf.domain.ID
 import dinf.html.components.DiceFeed
 import dinf.html.components.picoInlineButton
 import dinf.html.templates.SearchBar
@@ -36,7 +35,6 @@ import kotlinx.html.h3
 import kotlinx.html.hGroup
 import kotlinx.html.input
 import kotlinx.html.p
-import org.hashids.Hashids
 
 private val componentDeps = ComponentDeps()
 
@@ -70,14 +68,14 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
+fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { Dice.New(it.name, it.edges) }
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
-            val id = HashidsHashID(dice, editHashids)
+            val id = editHashids.fromID(dice.id)
             val url = call.locations.href(DiceLocation.Edit(id))
             call.respondRedirect(url)
         } else {
@@ -93,9 +91,9 @@ fun Route.create(layout: Layout, editHashids: Hashids, diceSave: DiceSave) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics: DiceMetrics) {
+fun Route.dice(layout: Layout, shareHashids: HashIDs, dices: Dices, diceMetrics: DiceMetrics) {
     get<DiceLocation.ByHashID> { loc ->
-        val dice = dices.diceOrNull(loc.hashID, shareHashids)
+        val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -118,9 +116,9 @@ fun Route.dice(layout: Layout, shareHashids: Hashids, dices: Dices, diceMetrics:
     }
 }
 
-fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices: Dices) {
+fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices: Dices) {
     get<DiceLocation.Edit> { loc ->
-        val dice = dices.diceOrNull(loc.hashID, editHashids)
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -179,10 +177,10 @@ fun Route.editForm(layout: Layout, editHashids: Hashids, baseURL: String, dices:
     }
 }
 
-fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
+fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
     post<DiceLocation.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = dices.diceOrNull(loc.hashID, editHashids)
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -206,9 +204,9 @@ fun Route.edit(layout: Layout, editHashids: Hashids, dices: Dices) {
 }
 
 
-fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices, diceDelete: DiceDelete) {
+fun Route.delete(layout: Layout, editHashids: HashIDs, dices: Dices, diceDelete: DiceDelete) {
     post<DiceLocation.Delete> { loc ->
-        val dice = dices.diceOrNull(loc.id, editHashids)
+        val dice = editHashids.fromStringOrNull(loc.id)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -220,19 +218,4 @@ fun Route.delete(layout: Layout, editHashids: Hashids, dices: Dices, diceDelete:
             }
         }
     }
-}
-
-fun Hashids.decodeOrNull(str: String): Long? {
-    val array = decode(str)
-    return if (array.isEmpty()) {
-        null
-    } else {
-        array[0]
-    }
-}
-
-suspend fun Dices.diceOrNull(id: String, hashids: Hashids): Dice? {
-    return hashids.decodeOrNull(id)
-        ?.let { ID(it) }
-        ?.let { oneOrNull(it) }
 }

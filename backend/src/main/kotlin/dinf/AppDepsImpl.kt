@@ -5,16 +5,21 @@ import dinf.adapters.DBDiceSave
 import dinf.adapters.DBDiceSearch
 import dinf.adapters.DBDices
 import dinf.adapters.FailoverDiceSearch
+import dinf.adapters.HashIDsImpl
 import dinf.adapters.MeiliDiceSave
 import dinf.adapters.MeiliDiceSearch
+import dinf.config.Configuration
+import dinf.config.URL
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
 import dinf.domain.DiceSave
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
+import dinf.domain.HashIDs
+import org.hashids.Hashids
 
-class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
+class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configuration) : AppDeps {
 
     private val diceMetrics = DiceMetrics.InMemory()
 
@@ -61,4 +66,17 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps) : AppDeps {
         )
     }
 
+    override fun shareHashIDs(): HashIDs {
+        val hashids = hashids(cfg.urls.share)
+        return HashIDsImpl(hashids)
+    }
+
+    override fun editHashIDs(): HashIDs {
+        val hashids = hashids(cfg.urls.edit)
+        return HashIDsImpl(hashids)
+    }
+
+    private fun hashids(url: URL): Hashids {
+        return Hashids(url.salt, url.length)
+    }
 }

@@ -17,7 +17,7 @@ fun main() {
         configureDatabase(cfg.database)
 
         val meiliDeps = MeiliDeps(cfg.search)
-        val appDeps = AppDepsImpl(meiliDeps)
+        val appDeps = AppDepsImpl(meiliDeps, cfg)
 
         launch {
             populateMeilisearch(appDeps, meiliDeps)
