@@ -15,7 +15,7 @@ class HTMLParamsDice(val name: Name, val edges: Edges) {
             return if (name == null || edges == null) {
                 null
             } else {
-                HTMLParamsDice(Name(name), Edges.Simple(edges))
+                HTMLParamsDice(Name(name), Edges(edges))
             }
         }
     }

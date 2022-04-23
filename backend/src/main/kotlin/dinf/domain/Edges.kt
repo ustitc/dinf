@@ -1,14 +1,12 @@
 package dinf.domain
 
-interface Edges {
+@JvmInline
+value class Edges(private val list: List<String>) {
 
-    val stringList: List<String>
+    constructor() : this(listOf())
 
-    class Simple(override var stringList: List<String>) : Edges {
-
-        constructor(vararg ints: Int) : this(ints.map { it.toString() })
-
-        constructor(vararg strings: String) : this(strings.toList())
+    fun toStringList(): List<String> {
+        return list
     }
 
 }

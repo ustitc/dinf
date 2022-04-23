@@ -8,7 +8,7 @@ suspend fun createDiceEntity(name: String = "test"): Dice {
     return DBDiceSave().invoke(
         Dice.New(
             name = Name(name),
-            edges = Edges.Simple(listOf("1", "2", "3"))
+            edges = Edges(listOf("1", "2", "3"))
         )
     )
 }

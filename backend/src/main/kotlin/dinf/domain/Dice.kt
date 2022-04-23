@@ -15,7 +15,7 @@ interface Dice {
     class Stub(name: String = "stub") : Dice by Simple(
         id = ID(Random.nextLong()),
         name = Name(name),
-        edges = Edges.Simple(listOf())
+        edges = Edges()
     )
 
     class Simple(

@@ -20,7 +20,7 @@ class DBDiceSave : DiceSave {
 
             val rs = statement.executeQuery()
             val id = rs.getLong("id")
-            dice.edges.stringList.forEach { edge ->
+            dice.edges.toStringList().forEach { edge ->
                 saveEdge(id, edge)
             }
             statement.close()

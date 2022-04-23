@@ -9,6 +9,17 @@ import java.sql.ResultSet
 
 class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
 
+    constructor(result: ResultSet, edgesSeparator: String) : this(
+        ID(result.getLong("id"))
+            .let {
+                Dice.Simple(
+                    id = it,
+                    name = Name(result.getString("name")),
+                    edges = Edges(result.getString("edges").split(edgesSeparator))
+                )
+            }
+    )
+
     override fun change(name: Name, edges: Edges) {
         transaction {
             prepareStatement("UPDATE dices SET name = ? WHERE id = ?")
@@ -21,7 +32,7 @@ class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
                 .also { it.setLong(1, id.number) }
                 .use { it.execute() }
 
-            edges.stringList.forEach { value ->
+            edges.toStringList().forEach { value ->
                 prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?)")
                     .also {
                         it.setString(1, value)
@@ -30,15 +41,4 @@ class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
             }
         }
     }
-
-    constructor(result: ResultSet, edgesSeparator: String) : this(
-        ID(result.getLong("id"))
-            .let {
-                Dice.Simple(
-                    id = it,
-                    name = Name(result.getString("name")),
-                    edges = Edges.Simple(result.getString("edges").split(edgesSeparator))
-                )
-            }
-    )
 }

@@ -46,7 +46,7 @@ class RollResult(
     private value class EdgesAttr(private val edges: Edges) : HtmlContent {
         override fun print(): String {
             return JSStringArray(
-                edges.stringList.map {
+                edges.toStringList().map {
                     HTMLTextWithNewLines(
                         EscapedString(it)
                     )

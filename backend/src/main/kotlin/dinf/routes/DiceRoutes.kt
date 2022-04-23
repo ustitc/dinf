@@ -163,7 +163,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
 
                     insert(form) {
                         name = dice.name.print()
-                        edges = dice.edges.stringList
+                        edges = dice.edges.toStringList()
                     }
 
                     form(action = deleteURL, method = FormMethod.post) {
