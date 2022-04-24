@@ -4,14 +4,14 @@ import dinf.db.getPLong
 import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
-import dinf.domain.DiceSave
+import dinf.domain.DiceFactory
 import dinf.domain.ID
 import dinf.types.PLong
 import java.sql.Connection
 
-class DBDiceSave : DiceSave {
+class DBDiceFactory : DiceFactory {
 
-    override suspend fun invoke(dice: Dice): Dice {
+    override suspend fun create(dice: Dice): Dice {
         val id = transaction {
             val statement = prepareStatement(
                 """

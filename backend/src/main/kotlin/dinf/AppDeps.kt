@@ -3,7 +3,7 @@ package dinf
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
-import dinf.domain.DiceSave
+import dinf.domain.DiceFactory
 import dinf.domain.DiceSearch
 import dinf.domain.Dices
 import dinf.domain.HashIDs
@@ -18,7 +18,7 @@ interface AppDeps {
 
     fun diceSearch(): DiceSearch
 
-    fun diceSave(): DiceSave
+    fun diceFactory(): DiceFactory
 
     fun diceMetrics(): DiceMetrics
 
@@ -44,8 +44,8 @@ interface AppDeps {
             return DiceSearch.Stub()
         }
 
-        override fun diceSave(): DiceSave {
-            return DiceSave.Stub()
+        override fun diceFactory(): DiceFactory {
+            return DiceFactory.Stub()
         }
 
         override fun diceMetrics(): DiceMetrics {

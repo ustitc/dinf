@@ -5,7 +5,7 @@ import dinf.domain.Dice
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetrics
-import dinf.domain.DiceSave
+import dinf.domain.DiceFactory
 import dinf.domain.Dices
 import dinf.domain.HashIDs
 import dinf.domain.Metric
@@ -61,13 +61,13 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
+fun Route.create(layout: Layout, editHashids: HashIDs, diceFactory: DiceFactory) {
     val url = application.href(DiceResource.New())
     post<DiceResource.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { Dice.New(it.name, it.edges) }
-            ?.let { diceSave.invoke(it) }
+            ?.let { diceFactory.create(it) }
         if (dice != null) {
             val id = editHashids.fromID(dice.id)
             val diceURL = href(ResourcesFormat(), DiceResource.Edit(hashID = id, firstTime = true))

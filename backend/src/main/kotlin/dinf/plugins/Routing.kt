@@ -65,7 +65,7 @@ fun Application.configureRouting(
         create(
             layout = layout,
             editHashids = dependencies.editHashIDs(),
-            diceSave = dependencies.diceSave()
+            diceFactory = dependencies.diceFactory()
         )
         createForm(layout = layout)
         dice(
