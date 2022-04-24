@@ -7,7 +7,7 @@ import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
-import dinf.domain.HashIDs
+import dinf.domain.HashIDFactory
 import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
@@ -61,7 +61,7 @@ fun Route.createForm(layout: Layout) {
     }
 }
 
-fun Route.create(layout: Layout, editHashids: HashIDs, diceFactory: DiceFactory) {
+fun Route.create(layout: Layout, editHashids: HashIDFactory, diceFactory: DiceFactory) {
     val url = application.href(DiceResource.New())
     post<DiceResource.New> { loc ->
         val params = call.receiveParameters()
@@ -85,7 +85,7 @@ fun Route.create(layout: Layout, editHashids: HashIDs, diceFactory: DiceFactory)
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: HashIDs, diceRepository: DiceRepository, diceMetricRepository: DiceMetricRepository) {
+fun Route.dice(layout: Layout, shareHashids: HashIDFactory, diceRepository: DiceRepository, diceMetricRepository: DiceMetricRepository) {
     get<DiceResource.ByHashID> { loc ->
         val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
@@ -110,7 +110,7 @@ fun Route.dice(layout: Layout, shareHashids: HashIDs, diceRepository: DiceReposi
     }
 }
 
-fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, diceRepository: DiceRepository) {
+fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { loc ->
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
@@ -128,7 +128,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, diceRe
     }
 }
 
-fun Route.edit(layout: Layout, editHashids: HashIDs, diceRepository: DiceRepository) {
+fun Route.edit(layout: Layout, editHashids: HashIDFactory, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
         val url = application.href(loc)
         val params = call.receiveParameters()
@@ -155,7 +155,7 @@ fun Route.edit(layout: Layout, editHashids: HashIDs, diceRepository: DiceReposit
 }
 
 
-fun Route.delete(layout: Layout, editHashids: HashIDs, diceRepository: DiceRepository, diceDelete: DiceDelete) {
+fun Route.delete(layout: Layout, editHashids: HashIDFactory, diceRepository: DiceRepository, diceDelete: DiceDelete) {
     post<DiceResource.Delete> { loc ->
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {

@@ -5,7 +5,7 @@ import dinf.adapters.DBDiceFactory
 import dinf.adapters.DBDiceSearch
 import dinf.adapters.DBDiceRepository
 import dinf.adapters.FailoverDiceSearch
-import dinf.adapters.HashIDsImpl
+import dinf.adapters.HashIDFactoryImpl
 import dinf.adapters.MeiliDiceFactory
 import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
@@ -16,7 +16,7 @@ import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceSearch
 import dinf.domain.DiceRepository
-import dinf.domain.HashIDs
+import dinf.domain.HashIDFactory
 import org.hashids.Hashids
 
 class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configuration) : AppDeps {
@@ -66,14 +66,14 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
         )
     }
 
-    override fun shareHashIDs(): HashIDs {
+    override fun shareHashIDFactory(): HashIDFactory {
         val hashids = hashids(cfg.urls.share)
-        return HashIDsImpl(hashids)
+        return HashIDFactoryImpl(hashids)
     }
 
-    override fun editHashIDs(): HashIDs {
+    override fun editHashIDFactory(): HashIDFactory {
         val hashids = hashids(cfg.urls.edit)
-        return HashIDsImpl(hashids)
+        return HashIDFactoryImpl(hashids)
     }
 
     private fun hashids(url: URL): Hashids {

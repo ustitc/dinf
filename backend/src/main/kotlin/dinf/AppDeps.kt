@@ -6,7 +6,7 @@ import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceSearch
 import dinf.domain.DiceRepository
-import dinf.domain.HashIDs
+import dinf.domain.HashIDFactory
 
 interface AppDeps {
 
@@ -22,9 +22,9 @@ interface AppDeps {
 
     fun diceMetricRepository(): DiceMetricRepository
 
-    fun shareHashIDs(): HashIDs
+    fun shareHashIDFactory(): HashIDFactory
 
-    fun editHashIDs(): HashIDs
+    fun editHashIDFactory(): HashIDFactory
 
     class Stub : AppDeps {
 
@@ -52,12 +52,12 @@ interface AppDeps {
             return DiceMetricRepository.InMemory()
         }
 
-        override fun shareHashIDs(): HashIDs {
-            return HashIDs.Stub()
+        override fun shareHashIDFactory(): HashIDFactory {
+            return HashIDFactory.Stub()
         }
 
-        override fun editHashIDs(): HashIDs {
-            return HashIDs.Stub()
+        override fun editHashIDFactory(): HashIDFactory {
+            return HashIDFactory.Stub()
         }
     }
 }

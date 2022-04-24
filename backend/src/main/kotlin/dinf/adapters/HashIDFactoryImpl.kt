@@ -1,12 +1,12 @@
 package dinf.adapters
 
 import dinf.domain.HashID
-import dinf.domain.HashIDs
+import dinf.domain.HashIDFactory
 import dinf.domain.ID
 import dinf.types.toPLongOrNull
 import org.hashids.Hashids
 
-class HashIDsImpl(private val hashids: Hashids) : HashIDs {
+class HashIDFactoryImpl(private val hashids: Hashids) : HashIDFactory {
 
     override fun fromStringOrNull(str: String): HashID? {
         return decodeOrNull(str)?.toPLongOrNull()?.let {

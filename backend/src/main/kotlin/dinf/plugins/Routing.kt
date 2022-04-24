@@ -37,7 +37,7 @@ fun Application.configureRouting(
 
     val newDiceURL = href(DiceResource.New())
 
-    val diceCard = DiceCard(shareHashids = dependencies.shareHashIDs())
+    val diceCard = DiceCard(shareHashids = dependencies.shareHashIDFactory())
     val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
 
     install(StatusPages) {
@@ -64,30 +64,30 @@ fun Application.configureRouting(
         )
         create(
             layout = layout,
-            editHashids = dependencies.editHashIDs(),
+            editHashids = dependencies.editHashIDFactory(),
             diceFactory = dependencies.diceFactory()
         )
         createForm(layout = layout)
         dice(
             layout = layout,
-            shareHashids = dependencies.shareHashIDs(),
+            shareHashids = dependencies.shareHashIDFactory(),
             diceRepository = dependencies.diceRepository(),
             diceMetricRepository = dependencies.diceMetricRepository()
         )
         edit(
             layout = layout,
-            editHashids = dependencies.editHashIDs(),
+            editHashids = dependencies.editHashIDFactory(),
             diceRepository = dependencies.diceRepository()
         )
         editForm(
             layout = layout,
-            editHashids = dependencies.editHashIDs(),
+            editHashids = dependencies.editHashIDFactory(),
             baseURL = baseURL,
             diceRepository = dependencies.diceRepository()
         )
         delete(
             layout = layout,
-            editHashids = dependencies.editHashIDs(),
+            editHashids = dependencies.editHashIDFactory(),
             diceRepository = dependencies.diceRepository(),
             diceDelete = dependencies.diceDelete()
         )

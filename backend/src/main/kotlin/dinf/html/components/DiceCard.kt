@@ -3,7 +3,7 @@ package dinf.html.components
 import dinf.routes.DiceResource
 import dinf.html.templates.RollButton
 import dinf.domain.Dice
-import dinf.domain.HashIDs
+import dinf.domain.HashIDFactory
 import dinf.html.templates.RollResult
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
@@ -13,7 +13,7 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.h3
 
-class DiceCard(private val shareHashids: HashIDs) {
+class DiceCard(private val shareHashids: HashIDFactory) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
         val hashID = shareHashids.fromID(dice.id)
