@@ -1,7 +1,6 @@
 Add PositiveLong
 Make ID typealias of PositiveLong
 Make dinf not dependent of meili
-Show create button if there is no dices to show
 Update dice name separately of edges
 Rename "Create dice" button in edit form
 Show modal form before dice deletion

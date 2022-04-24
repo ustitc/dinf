@@ -33,10 +33,10 @@ private val componentDeps = ComponentDeps()
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val page = 1
     val count = 10
-    val searchAPI = href(ResourcesFormat(), HTMXLocations.Search(page = page, count = count))
+    val searchAPI = href(ResourcesFormat(), HTMXResource.Search(page = page, count = count))
     get("/") {
         val diceList = diceGet.invoke(Page(page), Count(count))
-        val nextDicePageURL = href(ResourcesFormat(), HTMXLocations.Dices(page = page + 1, count = count))
+        val nextDicePageURL = href(ResourcesFormat(), HTMXResource.Dices(page = page + 1, count = count))
         call.respondHtmlTemplate(layout) {
             content {
                 insert(SearchBar(searchAPI)) {
@@ -50,8 +50,8 @@ fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
 }
 
 fun Route.createForm(layout: Layout) {
-    val url = application.href(DiceLocation.New())
-    get<DiceLocation.New> { loc ->
+    val url = application.href(DiceResource.New())
+    get<DiceResource.New> { loc ->
         call.respondHtmlTemplate(layout) {
             content {
                 val form = componentDeps.diceForm(url)
@@ -62,15 +62,15 @@ fun Route.createForm(layout: Layout) {
 }
 
 fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
-    val url = application.href(DiceLocation.New())
-    post<DiceLocation.New> { loc ->
+    val url = application.href(DiceResource.New())
+    post<DiceResource.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { Dice.New(it.name, it.edges) }
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
             val id = editHashids.fromID(dice.id)
-            val diceURL = href(ResourcesFormat(), DiceLocation.Edit(hashID = id, firstTime = true))
+            val diceURL = href(ResourcesFormat(), DiceResource.Edit(hashID = id, firstTime = true))
             call.respondRedirect(diceURL)
         } else {
             call.respondHtmlTemplate(layout) {
@@ -86,7 +86,7 @@ fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
 }
 
 fun Route.dice(layout: Layout, shareHashids: HashIDs, dices: Dices, diceMetrics: DiceMetrics) {
-    get<DiceLocation.ByHashID> { loc ->
+    get<DiceResource.ByHashID> { loc ->
         val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
@@ -111,13 +111,13 @@ fun Route.dice(layout: Layout, shareHashids: HashIDs, dices: Dices, diceMetrics:
 }
 
 fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices: Dices) {
-    get<DiceLocation.Edit> { loc ->
+    get<DiceResource.Edit> { loc ->
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL =application.href(DiceLocation.Edit(hashID = loc.hashID))
-            val deleteURL = application.href(DiceLocation.Delete(id = loc.hashID))
+            val editURL =application.href(DiceResource.Edit(hashID = loc.hashID))
+            val deleteURL = application.href(DiceResource.Delete(hashID = loc.hashID))
             val isOpenDialog = loc.firstTime ?: false
             call.respondHtmlTemplate(layout) {
                 insert(componentDeps.diceEditPage(dice, "$baseURL$editURL", deleteURL)) {
@@ -129,7 +129,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
 }
 
 fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
-    post<DiceLocation.Edit> { loc ->
+    post<DiceResource.Edit> { loc ->
         val url = application.href(loc)
         val params = call.receiveParameters()
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
@@ -156,8 +156,8 @@ fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
 
 
 fun Route.delete(layout: Layout, editHashids: HashIDs, dices: Dices, diceDelete: DiceDelete) {
-    post<DiceLocation.Delete> { loc ->
-        val dice = editHashids.fromStringOrNull(loc.id)?.let { dices.oneOrNull(it) }
+    post<DiceResource.Delete> { loc ->
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {

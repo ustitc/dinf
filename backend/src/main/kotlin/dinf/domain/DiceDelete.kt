@@ -12,7 +12,7 @@ fun interface DiceDelete : suspend (Dice) -> Unit {
         private val logger: Logger = LoggerFactory.getLogger(Logging::class.java)
     ) : DiceDelete by DiceDelete({ dice ->
         inner.invoke(dice)
-        logger.info("Deleted dice for SN: ${dice.id}")
+        logger.info("Deleted dice for id: ${dice.id}")
     })
 
     class Composite(private val list: List<DiceDelete>) : DiceDelete by DiceDelete({ dice ->

@@ -5,15 +5,15 @@ import kotlinx.serialization.Serializable
 
 @Resource("/dices")
 @Serializable
-object DiceLocation {
+object DiceResource {
 
     @Serializable
     @Resource("/new")
-    class New(val dices: DiceLocation = DiceLocation)
+    class New(val dices: DiceResource = DiceResource)
 
     @Serializable
     @Resource("/{hashID}")
-    class ByHashID(val dices: DiceLocation = DiceLocation, val hashID: String) {
+    class ByHashID(val dices: DiceResource = DiceResource, val hashID: String) {
 
         constructor(hashID: dinf.domain.HashID) : this(hashID = hashID.print())
 
@@ -21,7 +21,7 @@ object DiceLocation {
 
     @Serializable
     @Resource("/edit/{hashID}")
-    data class Edit(val dices: DiceLocation = DiceLocation, val hashID: String, val firstTime: Boolean? = null) {
+    data class Edit(val dices: DiceResource = DiceResource, val hashID: String, val firstTime: Boolean? = null) {
 
         constructor(hashID: dinf.domain.HashID, firstTime: Boolean? = null) : this(
             hashID = hashID.print(),
@@ -31,7 +31,7 @@ object DiceLocation {
     }
 
     @Serializable
-    @Resource("/delete/{id}")
-    data class Delete(val dices: DiceLocation = DiceLocation, val id: String)
+    @Resource("/delete/{hashID}")
+    data class Delete(val dices: DiceResource = DiceResource, val hashID: String)
 
 }

@@ -1,6 +1,6 @@
 package dinf.html.templates
 
-import dinf.routes.DiceLocation
+import dinf.routes.DiceResource
 import dev.ustits.htmx.HTMXConfiguration
 import dev.ustits.htmx.htmxConfiguration
 import dinf.html.components.picoHyperlinkAsButton
@@ -27,7 +27,7 @@ import kotlinx.html.title
 class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMXConfiguration) : Template<HTML> {
 
     constructor(htmxConfiguration: HTMXConfiguration) : this(
-        newDiceURL = href(ResourcesFormat(), DiceLocation.New()),
+        newDiceURL = href(ResourcesFormat(), DiceResource.New()),
         htmxConfiguration = htmxConfiguration
     )
 

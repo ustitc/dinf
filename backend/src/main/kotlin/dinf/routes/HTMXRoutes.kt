@@ -15,7 +15,7 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
-    get<HTMXLocations.Search> { loc ->
+    get<HTMXResource.Search> { loc ->
         val query = SearchQuery(
             text = loc.query ?: "",
             page = loc.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
@@ -32,7 +32,7 @@ fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
 }
 
 fun Route.htmxDices(diceGet: DiceGet, diceFeed: DiceFeed) {
-    get<HTMXLocations.Dices> { loc ->
+    get<HTMXResource.Dices> { loc ->
         val diceList = diceGet.invoke(
             loc.page.toPIntOrNull() ?: throw BadRequestException("Page can't be less than 1"),
             loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")

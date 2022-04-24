@@ -4,7 +4,7 @@ import dinf.AppDeps
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
-import dinf.routes.DiceLocation
+import dinf.routes.DiceResource
 import dinf.routes.create
 import dinf.routes.createForm
 import dinf.routes.dice
@@ -35,7 +35,7 @@ fun Application.configureRouting(
     val layout = Layout(htmxConfiguration = config.htmx)
     val baseURL = config.server.baseURL
 
-    val newDiceURL = href(DiceLocation.New())
+    val newDiceURL = href(DiceResource.New())
 
     val diceCard = DiceCard(shareHashids = dependencies.shareHashIDs())
     val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)

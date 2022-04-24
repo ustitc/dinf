@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Resource("/api/htmx")
-object HTMXLocations {
+object HTMXResource {
 
     @Serializable
     @Resource("/search")
     data class Search(
-        val api: HTMXLocations = HTMXLocations,
+        val api: HTMXResource = HTMXResource,
         val query: String? = null,
         val page: Int,
         val count: Int
@@ -22,7 +22,7 @@ object HTMXLocations {
 
     @Serializable
     @Resource("/dices")
-    data class Dices(val api: HTMXLocations = HTMXLocations, val page: Int, val count: Int) {
+    data class Dices(val api: HTMXResource = HTMXResource, val page: Int, val count: Int) {
 
         fun nextPage(): Dices {
             return copy(page = page + 1)
