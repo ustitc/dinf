@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 suspend fun populateMeilisearch(appDeps: AppDeps, meiliDeps: MeiliDeps) {
     val logger = LoggerFactory.getLogger("dinf.meilisearch")
     val meili = MeiliDiceFactory(meiliDeps.meiliDiceIndex())
-    val dices = appDeps.dices().flow().toList()
+    val dices = appDeps.diceRepository().flow().toList()
     dices.forEach { dice ->
         meili.create(dice)
     }

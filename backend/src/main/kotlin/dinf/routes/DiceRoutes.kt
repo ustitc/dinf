@@ -4,9 +4,9 @@ import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
-import dinf.domain.DiceMetrics
+import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
-import dinf.domain.Dices
+import dinf.domain.DiceRepository
 import dinf.domain.HashIDs
 import dinf.domain.Metric
 import dinf.domain.Page
@@ -85,15 +85,15 @@ fun Route.create(layout: Layout, editHashids: HashIDs, diceFactory: DiceFactory)
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: HashIDs, dices: Dices, diceMetrics: DiceMetrics) {
+fun Route.dice(layout: Layout, shareHashids: HashIDs, diceRepository: DiceRepository, diceMetricRepository: DiceMetricRepository) {
     get<DiceResource.ByHashID> { loc ->
-        val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
+        val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val metric = diceMetrics.forDice(dice)
+            val metric = diceMetricRepository.forDice(dice)
             if (metric == null) {
-                diceMetrics.create(dice, Metric.Simple(1))
+                diceMetricRepository.create(dice, Metric.Simple(1))
             } else {
                 metric.addClick()
             }
@@ -110,9 +110,9 @@ fun Route.dice(layout: Layout, shareHashids: HashIDs, dices: Dices, diceMetrics:
     }
 }
 
-fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices: Dices) {
+fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { loc ->
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -128,11 +128,11 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
     }
 }
 
-fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
+fun Route.edit(layout: Layout, editHashids: HashIDs, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
         val url = application.href(loc)
         val params = call.receiveParameters()
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -155,9 +155,9 @@ fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
 }
 
 
-fun Route.delete(layout: Layout, editHashids: HashIDs, dices: Dices, diceDelete: DiceDelete) {
+fun Route.delete(layout: Layout, editHashids: HashIDs, diceRepository: DiceRepository, diceDelete: DiceDelete) {
     post<DiceResource.Delete> { loc ->
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
+        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {

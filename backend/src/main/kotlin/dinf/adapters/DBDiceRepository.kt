@@ -6,13 +6,13 @@ import dinf.db.setPLong
 import dinf.db.toSequence
 import dinf.db.transaction
 import dinf.domain.Dice
-import dinf.domain.Dices
+import dinf.domain.DiceRepository
 import dinf.domain.ID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 
-class DBDices : Dices {
+class DBDiceRepository : DiceRepository {
 
     private val edgesSeparator = ";"
 

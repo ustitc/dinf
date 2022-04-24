@@ -2,15 +2,15 @@ package dinf
 
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
-import dinf.domain.DiceMetrics
+import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceSearch
-import dinf.domain.Dices
+import dinf.domain.DiceRepository
 import dinf.domain.HashIDs
 
 interface AppDeps {
 
-    fun dices(): Dices
+    fun diceRepository(): DiceRepository
 
     fun diceGet(): DiceGet
 
@@ -20,7 +20,7 @@ interface AppDeps {
 
     fun diceFactory(): DiceFactory
 
-    fun diceMetrics(): DiceMetrics
+    fun diceMetricRepository(): DiceMetricRepository
 
     fun shareHashIDs(): HashIDs
 
@@ -28,8 +28,8 @@ interface AppDeps {
 
     class Stub : AppDeps {
 
-        override fun dices(): Dices {
-            return Dices.Stub()
+        override fun diceRepository(): DiceRepository {
+            return DiceRepository.Stub()
         }
 
         override fun diceGet(): DiceGet {
@@ -48,8 +48,8 @@ interface AppDeps {
             return DiceFactory.Stub()
         }
 
-        override fun diceMetrics(): DiceMetrics {
-            return DiceMetrics.InMemory()
+        override fun diceMetricRepository(): DiceMetricRepository {
+            return DiceMetricRepository.InMemory()
         }
 
         override fun shareHashIDs(): HashIDs {

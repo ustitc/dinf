@@ -6,6 +6,7 @@ import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceFactory
 import dinf.domain.ID
+import dinf.domain.Name
 import dinf.types.PLong
 import java.sql.Connection
 
@@ -23,6 +24,7 @@ class DBDiceFactory : DiceFactory {
 
             val rs = statement.executeQuery()
             val id = rs.getPLong("id")!!
+            val name = rs.getString("name")
             dice.edges.toStringList().forEach { edge ->
                 saveEdge(id, edge)
             }
@@ -30,7 +32,7 @@ class DBDiceFactory : DiceFactory {
             rs.close()
             id
         }
-        return DBDices().oneOrNull(ID(id)) ?: error("Dice was not saved")
+        return DBDiceRepository().oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
     private fun Connection.saveEdge(diceID: PLong, edge: String) {

@@ -10,7 +10,7 @@ class DiceSearchTest : StringSpec({
         val second = Dice.Stub("second")
         val third = Dice.Stub("third")
 
-        val metrics = DiceMetrics.InMemory(
+        val metrics = DiceMetricRepository.InMemory(
             first to Metric.Simple(10),
             second to Metric.Simple(3),
             third to Metric.Simple(0)

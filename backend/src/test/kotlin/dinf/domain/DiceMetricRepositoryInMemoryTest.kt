@@ -7,9 +7,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import kotlinx.coroutines.flow.toList
 
-class DiceMetricsInMemoryTest : StringSpec({
+class DiceMetricRepositoryInMemoryTest : StringSpec({
 
-    val metrics = DiceMetrics.InMemory()
+    val metrics = DiceMetricRepository.InMemory()
 
     beforeTest {
         metrics.clear()

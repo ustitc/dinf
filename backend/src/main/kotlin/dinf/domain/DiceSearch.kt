@@ -18,11 +18,11 @@ fun interface DiceSearch : suspend (SearchQuery) -> List<Dice> {
         main.invoke(it)
     })
 
-    class Simple(private val dices: Dices = Dices.Stub()) : DiceSearch by DiceSearch({ query ->
-        dices.flow().filter { it.name.print().contains(query.text) }.toList()
+    class Simple(private val diceRepository: DiceRepository = DiceRepository.Stub()) : DiceSearch by DiceSearch({ query ->
+        diceRepository.flow().filter { it.name.print().contains(query.text) }.toList()
     })
 
-    class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetrics) :
+    class PopularFirst(private val search: DiceSearch, private val metrics: DiceMetricRepository) :
         DiceSearch by DiceSearch({ text ->
             search.invoke(text)
                 .map { it to metrics.forDiceOrZero(it) }

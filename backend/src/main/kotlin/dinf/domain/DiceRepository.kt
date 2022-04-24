@@ -3,7 +3,7 @@ package dinf.domain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 
-interface Dices {
+interface DiceRepository {
 
     fun flow(): Flow<Dice>
 
@@ -15,7 +15,7 @@ interface Dices {
 
     suspend fun list(serials: List<ID>): List<Dice>
 
-    class Stub(private val list: MutableList<Dice> = mutableListOf()) : Dices {
+    class Stub(private val list: MutableList<Dice> = mutableListOf()) : DiceRepository {
 
         override fun flow(): Flow<Dice> {
             return list.asFlow()

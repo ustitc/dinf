@@ -14,7 +14,7 @@ class DBDiceDeleteTest : StringSpec({
 
         deleteDice.invoke(dice)
 
-        DBDices().flow().count() shouldBe 0
+        DBDiceRepository().flow().count() shouldBe 0
     }
 
 })

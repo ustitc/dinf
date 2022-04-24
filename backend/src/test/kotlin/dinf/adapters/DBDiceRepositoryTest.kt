@@ -6,7 +6,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
 
-class DBDicesTest : StringSpec({
+class DBDiceRepositoryTest : StringSpec({
 
     listeners(DBListener())
 
@@ -16,7 +16,7 @@ class DBDicesTest : StringSpec({
             createDiceEntity()
         }
 
-        val dices = DBDices()
+        val dices = DBDiceRepository()
 
         dices.flow().toList().size shouldBe count
     }
@@ -27,7 +27,7 @@ class DBDicesTest : StringSpec({
             createDiceEntity()
         }
 
-        val dices = DBDices()
+        val dices = DBDiceRepository()
 
         val serialsCount = 10
         dices.list(

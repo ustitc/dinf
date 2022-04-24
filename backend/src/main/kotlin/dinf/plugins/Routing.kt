@@ -71,24 +71,24 @@ fun Application.configureRouting(
         dice(
             layout = layout,
             shareHashids = dependencies.shareHashIDs(),
-            dices = dependencies.dices(),
-            diceMetrics = dependencies.diceMetrics()
+            diceRepository = dependencies.diceRepository(),
+            diceMetricRepository = dependencies.diceMetricRepository()
         )
         edit(
             layout = layout,
             editHashids = dependencies.editHashIDs(),
-            dices = dependencies.dices()
+            diceRepository = dependencies.diceRepository()
         )
         editForm(
             layout = layout,
             editHashids = dependencies.editHashIDs(),
             baseURL = baseURL,
-            dices = dependencies.dices()
+            diceRepository = dependencies.diceRepository()
         )
         delete(
             layout = layout,
             editHashids = dependencies.editHashIDs(),
-            dices = dependencies.dices(),
+            diceRepository = dependencies.diceRepository(),
             diceDelete = dependencies.diceDelete()
         )
         search(diceSearch = dependencies.diceSearch(), diceFeed = diceFeed)

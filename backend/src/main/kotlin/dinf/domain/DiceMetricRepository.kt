@@ -3,7 +3,7 @@ package dinf.domain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 
-interface DiceMetrics {
+interface DiceMetricRepository {
 
     suspend fun forDice(dice: Dice): Metric?
 
@@ -17,7 +17,7 @@ interface DiceMetrics {
 
     suspend fun create(dice: Dice, metric: Metric)
 
-    class InMemory private constructor(private val map: MutableMap<ID, Metric>) : DiceMetrics {
+    class InMemory private constructor(private val map: MutableMap<ID, Metric>) : DiceMetricRepository {
 
         constructor() : this(mutableMapOf())
 
