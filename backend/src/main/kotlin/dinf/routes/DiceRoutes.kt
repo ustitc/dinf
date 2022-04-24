@@ -12,6 +12,8 @@ import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
 import dinf.html.pages.DiceEditPage
+import dinf.html.templates.DiceFormWithLists
+import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
 import dinf.html.templates.SearchBar
@@ -28,8 +30,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.html.h2
 import kotlinx.html.p
-
-private val componentDeps = ComponentDeps()
 
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val page = 1
@@ -55,8 +55,7 @@ fun Route.createForm(layout: Layout) {
     get<DiceResource.New> { loc ->
         call.respondHtmlTemplate(layout) {
             content {
-                val form = componentDeps.diceForm(url)
-                insert(form) {
+                insert(DiceFormWithLists(Form(url))) {
                     failed = loc.isFailed ?: false
                 }
             }
