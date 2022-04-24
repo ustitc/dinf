@@ -1,11 +1,14 @@
 package dinf.routes
 
-import io.ktor.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/api/htmx")
+@Serializable
+@Resource("/api/htmx")
 object HTMXLocations {
 
-    @Location("/search")
+    @Serializable
+    @Resource("/search")
     data class Search(
         val api: HTMXLocations = HTMXLocations,
         val query: String? = null,
@@ -17,7 +20,8 @@ object HTMXLocations {
         }
     }
 
-    @Location("/dices")
+    @Serializable
+    @Resource("/dices")
     data class Dices(val api: HTMXLocations = HTMXLocations, val page: Int, val count: Int) {
 
         fun nextPage(): Dices {

@@ -1,32 +1,26 @@
 package dinf.routes
 
-import io.ktor.application.*
-import io.ktor.locations.*
+import io.ktor.resources.*
+import kotlinx.serialization.Serializable
 
-@Location("/dices")
+@Resource("/dices")
+@Serializable
 object DiceLocation {
 
-    @Location("/new")
-    class New(val dices: DiceLocation = DiceLocation) {
+    @Serializable
+    @Resource("/new")
+    class New(val dices: DiceLocation = DiceLocation)
 
-        fun uri(call: ApplicationCall): String {
-            return buildURI(call, this)
-        }
-
-    }
-
-    @Location("/{hashID}")
+    @Serializable
+    @Resource("/{hashID}")
     class ByHashID(val dices: DiceLocation = DiceLocation, val hashID: String) {
 
         constructor(hashID: dinf.domain.HashID) : this(hashID = hashID.print())
 
-        fun url(baseURL: String, call: ApplicationCall): String {
-            return buildURL(baseURL, call, this)
-        }
-
     }
 
-    @Location("/edit/{hashID}")
+    @Serializable
+    @Resource("/edit/{hashID}")
     data class Edit(val dices: DiceLocation = DiceLocation, val hashID: String, val firstTime: Boolean? = null) {
 
         constructor(hashID: dinf.domain.HashID, firstTime: Boolean? = null) : this(
@@ -34,26 +28,10 @@ object DiceLocation {
             firstTime = firstTime
         )
 
-        fun url(baseURL: String, call: ApplicationCall): String {
-            return buildURL(baseURL, call, this)
-        }
-
-        fun uri(call: ApplicationCall): String {
-            return buildURI(call, this)
-        }
-
     }
 
-    @Location("/delete/{id}")
+    @Serializable
+    @Resource("/delete/{id}")
     data class Delete(val dices: DiceLocation = DiceLocation, val id: String)
-
-    private fun buildURI(call: ApplicationCall, location: Any): String {
-        return call.locations.href(location)
-    }
-
-    private fun buildURL(baseURL: String, call: ApplicationCall, location: Any): String {
-        val uri = buildURI(call, location)
-        return "$baseURL$uri"
-    }
 
 }

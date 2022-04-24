@@ -4,7 +4,7 @@ import dev.ustits.hyperscript.hyperscript
 import dinf.html.components.picoInlineButton
 import dinf.html.text
 import dinf.types.NBString
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.id
 import kotlinx.html.li

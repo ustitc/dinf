@@ -5,7 +5,7 @@ import dev.ustits.htmx.HtmxSwap
 import dev.ustits.htmx.htmx
 import dinf.html.templates.Feed
 import dinf.domain.Dice
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.button

@@ -2,7 +2,7 @@ package dinf.html.templates
 
 import dev.ustits.hyperscript.hyperscript
 import dinf.html.components.picoInlineButton
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.p
 

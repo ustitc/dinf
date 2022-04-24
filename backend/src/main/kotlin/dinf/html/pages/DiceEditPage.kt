@@ -7,7 +7,7 @@ import dinf.html.components.picoModal
 import dinf.html.templates.DiceForm
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.a

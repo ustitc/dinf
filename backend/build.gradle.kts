@@ -1,5 +1,6 @@
 plugins {
     application
+    alias(libs.plugins.kotlin.serialization)
 }
 
 application {
@@ -24,12 +25,17 @@ dependencies {
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverHostCommon)
     implementation(libs.ktor.serverNetty)
-    implementation(libs.ktor.locations)
-    implementation(libs.ktor.webjars)
-    implementation(libs.ktor.htmlBuilder)
-    implementation(libs.ktor.metricsMicrometer)
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.serverResources)
+    implementation(libs.ktor.serverWebjars)
+    implementation(libs.ktor.serverHtmlBuilder)
+    implementation(libs.ktor.serverStatusPages)
+    implementation(libs.ktor.serverCallLogging)
+    implementation(libs.ktor.serverMetricsMicrometer)
 
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.4")
+
+    implementation("org.json:json:20220320")
 
     implementation("org.webjars.bowergithub.picocss:pico:1.5.0")
     implementation("org.webjars.npm:htmx.org:1.7.0")

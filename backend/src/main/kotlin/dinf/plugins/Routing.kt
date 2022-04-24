@@ -15,33 +15,33 @@ import dinf.routes.editForm
 import dinf.routes.search
 import dinf.html.templates.Layout
 import dinf.routes.htmxDices
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.html.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
 import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.locations.*
-import io.ktor.routing.*
-import io.ktor.webjars.*
+import io.ktor.server.http.content.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.resources.*
+import io.ktor.server.resources.href
+import io.ktor.server.routing.*
+import io.ktor.server.webjars.*
 import kotlinx.html.p
 
 fun Application.configureRouting(
     config: Configuration,
     dependencies: AppDeps
 ) {
-    install(Locations) {
-    }
+    install(Resources)
 
-    val layout = Layout(locations = locations, htmxConfiguration = config.htmx)
+    val layout = Layout(htmxConfiguration = config.htmx)
     val baseURL = config.server.baseURL
 
-    val newDiceURL = locations.href(DiceLocation.New())
+    val newDiceURL = href(DiceLocation.New())
 
-    val diceCard = DiceCard(shareHashids = dependencies.shareHashIDs(), locations = locations)
+    val diceCard = DiceCard(shareHashids = dependencies.shareHashIDs())
     val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
 
     install(StatusPages) {
-        status(HttpStatusCode.NotFound) {
+        status(HttpStatusCode.NotFound) { call, status ->
             call.respondHtmlTemplate(layout) {
                 content {
                     p {
@@ -50,6 +50,10 @@ fun Application.configureRouting(
                 }
             }
         }
+    }
+
+    install(Webjars) {
+        path = "assets"
     }
 
     routing {
@@ -94,9 +98,6 @@ fun Application.configureRouting(
             resources("js")
             resources("css")
             resources("img")
-        }
-        install(Webjars) {
-            path = "assets"
         }
     }
 }

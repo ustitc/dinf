@@ -8,7 +8,7 @@ import dinf.html.HTMLTextWithNewLines
 import dinf.html.HtmlContent
 import dinf.html.JSStringArray
 import dinf.html.dataAttribute
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.P
 import kotlinx.html.id

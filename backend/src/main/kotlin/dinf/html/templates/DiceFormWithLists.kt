@@ -1,7 +1,7 @@
 package dinf.html.templates
 
 import dinf.types.NBString
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.input

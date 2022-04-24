@@ -14,14 +14,17 @@ import dinf.html.components.DiceFeed
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
 import dinf.html.templates.SearchBar
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.html.*
-import io.ktor.locations.*
-import io.ktor.locations.post
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.resources.*
+import io.ktor.resources.serialization.*
+import io.ktor.server.application.*
+import io.ktor.server.html.*
+import io.ktor.server.plugins.*
+import io.ktor.server.request.*
+import io.ktor.server.resources.*
+import io.ktor.server.resources.post
+import io.ktor.server.resources.get
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import kotlinx.html.h2
 import kotlinx.html.p
 
@@ -30,10 +33,10 @@ private val componentDeps = ComponentDeps()
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val page = 1
     val count = 10
-    val searchAPI = application.locations.href(HTMXLocations.Search(page = page, count = count))
+    val searchAPI = href(ResourcesFormat(), HTMXLocations.Search(page = page, count = count))
     get("/") {
         val diceList = diceGet.invoke(Page(page), Count(count))
-        val nextDicePageURL = application.locations.href(HTMXLocations.Dices(page = page + 1, count = count))
+        val nextDicePageURL = href(ResourcesFormat(), HTMXLocations.Dices(page = page + 1, count = count))
         call.respondHtmlTemplate(layout) {
             content {
                 insert(SearchBar(searchAPI)) {
@@ -47,10 +50,11 @@ fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
 }
 
 fun Route.createForm(layout: Layout) {
+    val url = application.href(DiceLocation.New())
     get<DiceLocation.New> { loc ->
         call.respondHtmlTemplate(layout) {
             content {
-                val form = componentDeps.diceForm(loc.uri(call))
+                val form = componentDeps.diceForm(url)
                 insert(form) {}
             }
         }
@@ -58,6 +62,7 @@ fun Route.createForm(layout: Layout) {
 }
 
 fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
+    val url = application.href(DiceLocation.New())
     post<DiceLocation.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
@@ -65,12 +70,12 @@ fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
             val id = editHashids.fromID(dice.id)
-            val url = call.locations.href(DiceLocation.Edit(hashID = id, firstTime = true))
-            call.respondRedirect(url)
+            val diceURL = href(ResourcesFormat(), DiceLocation.Edit(hashID = id, firstTime = true))
+            call.respondRedirect(diceURL)
         } else {
             call.respondHtmlTemplate(layout) {
                 content {
-                    val form = componentDeps.diceForm(loc.uri(call))
+                    val form = componentDeps.diceForm(url)
                     insert(form) {
                         failed = true
                     }
@@ -111,11 +116,11 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL = DiceLocation.Edit(hashID = loc.hashID).url(baseURL, call)
-            val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.hashID))
+            val editURL =application.href(DiceLocation.Edit(hashID = loc.hashID))
+            val deleteURL = application.href(DiceLocation.Delete(id = loc.hashID))
             val isOpenDialog = loc.firstTime ?: false
             call.respondHtmlTemplate(layout) {
-                insert(componentDeps.diceEditPage(dice, editURL, deleteURL)) {
+                insert(componentDeps.diceEditPage(dice, "$baseURL$editURL", deleteURL)) {
                     dialogOpen = isOpenDialog
                 }
             }
@@ -125,6 +130,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
 
 fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
     post<DiceLocation.Edit> { loc ->
+        val url = application.href(loc)
         val params = call.receiveParameters()
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { dices.oneOrNull(it) }
         if (dice == null) {
@@ -133,12 +139,11 @@ fun Route.edit(layout: Layout, editHashids: HashIDs, dices: Dices) {
             val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
             if (htmlDice != null) {
                 dice.change(htmlDice.name, htmlDice.edges)
-                val url = call.locations.href(loc)
                 call.respondRedirect(url)
             } else {
                 call.respondHtmlTemplate(layout) {
                     content {
-                        val form = componentDeps.diceForm(loc.uri(call))
+                        val form = componentDeps.diceForm(url)
                         insert(form) {
                             failed = true
                         }

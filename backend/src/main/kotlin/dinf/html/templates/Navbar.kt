@@ -1,6 +1,6 @@
 package dinf.html.templates
 
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.li
 import kotlinx.html.nav

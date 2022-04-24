@@ -1,6 +1,6 @@
 [versions]
 hoplite = "2.0.4"
-ktor = "1.6.8"
+ktor = "2.0.0"
 kotest = "5.0.3"
 kotestKtor = "1.0.3"
 kotestTestcontainers = "1.0.1"
@@ -15,11 +15,14 @@ hoplite-toml = { module = "com.sksamuel.hoplite:hoplite-toml", version.ref = "ho
 ktor-serverCore = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-serverHostCommon = { module = "io.ktor:ktor-server-host-common", version.ref = "ktor" }
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
-ktor-metricsMicrometer = { module = "io.ktor:ktor-metrics-micrometer", version.ref = "ktor" }
+ktor-serverResources = { module = "io.ktor:ktor-server-resources", version.ref = "ktor" }
+ktor-serialization = { module = "io.ktor:ktor-serialization", version.ref = "ktor" }
+ktor-serverMetricsMicrometer = { module = "io.ktor:ktor-server-metrics-micrometer", version.ref = "ktor" }
 ktor-serverTests = { module = "io.ktor:ktor-server-tests", version.ref = "ktor" }
-ktor-locations = { module = "io.ktor:ktor-locations", version.ref = "ktor" }
-ktor-webjars = { module = "io.ktor:ktor-webjars", version.ref = "ktor" }
-ktor-htmlBuilder = { module = "io.ktor:ktor-html-builder", version.ref = "ktor" }
+ktor-serverWebjars = { module = "io.ktor:ktor-server-webjars", version.ref = "ktor" }
+ktor-serverHtmlBuilder = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor" }
+ktor-serverStatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
+ktor-serverCallLogging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
 kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-extensionsAssertionsKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
@@ -27,3 +30,6 @@ kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest"
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+[plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

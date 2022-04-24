@@ -1,3 +1,3 @@
 dependencies {
-    implementation(libs.ktor.htmlBuilder)
+    implementation(libs.ktor.serverHtmlBuilder)
 }

@@ -3,7 +3,7 @@ package dinf.html.templates
 import dev.ustits.htmx.HTMX_INDICATOR
 import dev.ustits.htmx.htmx
 import dinf.html.components.loadingComponent
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
 import kotlinx.html.div

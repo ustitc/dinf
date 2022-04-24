@@ -1,7 +1,7 @@
 package dinf.html.templates
 
 import dinf.domain.Dice
-import io.ktor.html.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 
 @Suppress("MemberVisibilityCanBePrivate")

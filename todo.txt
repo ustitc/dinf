@@ -1,4 +1,3 @@
-Bump ktor version
 Add PositiveLong
 Make ID typealias of PositiveLong
 Make dinf not dependent of meili

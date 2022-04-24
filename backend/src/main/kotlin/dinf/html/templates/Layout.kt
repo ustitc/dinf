@@ -4,8 +4,9 @@ import dinf.routes.DiceLocation
 import dev.ustits.htmx.HTMXConfiguration
 import dev.ustits.htmx.htmxConfiguration
 import dinf.html.components.picoHyperlinkAsButton
-import io.ktor.html.*
-import io.ktor.locations.*
+import io.ktor.resources.*
+import io.ktor.resources.serialization.*
+import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
 import kotlinx.html.a
@@ -25,8 +26,8 @@ import kotlinx.html.title
 
 class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMXConfiguration) : Template<HTML> {
 
-    constructor(locations: Locations, htmxConfiguration: HTMXConfiguration) : this(
-        newDiceURL = locations.href(DiceLocation.New()),
+    constructor(htmxConfiguration: HTMXConfiguration) : this(
+        newDiceURL = href(ResourcesFormat(), DiceLocation.New()),
         htmxConfiguration = htmxConfiguration
     )
 
