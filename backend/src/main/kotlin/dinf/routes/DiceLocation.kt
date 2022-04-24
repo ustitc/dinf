@@ -27,9 +27,12 @@ object DiceLocation {
     }
 
     @Location("/edit/{hashID}")
-    data class Edit(val dices: DiceLocation = DiceLocation, val hashID: String) {
+    data class Edit(val dices: DiceLocation = DiceLocation, val hashID: String, val firstTime: Boolean? = null) {
 
-        constructor(hashID: dinf.domain.HashID) : this(hashID = hashID.print())
+        constructor(hashID: dinf.domain.HashID, firstTime: Boolean? = null) : this(
+            hashID = hashID.print(),
+            firstTime = firstTime
+        )
 
         fun url(baseURL: String, call: ApplicationCall): String {
             return buildURL(baseURL, call, this)

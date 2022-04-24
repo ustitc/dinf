@@ -65,7 +65,7 @@ fun Route.create(layout: Layout, editHashids: HashIDs, diceSave: DiceSave) {
             ?.let { diceSave.invoke(it) }
         if (dice != null) {
             val id = editHashids.fromID(dice.id)
-            val url = call.locations.href(DiceLocation.Edit(id))
+            val url = call.locations.href(DiceLocation.Edit(hashID = id, firstTime = true))
             call.respondRedirect(url)
         } else {
             call.respondHtmlTemplate(layout) {
@@ -111,11 +111,12 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL = loc.url(baseURL, call)
+            val editURL = DiceLocation.Edit(hashID = loc.hashID).url(baseURL, call)
             val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.hashID))
+            val isOpenDialog = loc.firstTime ?: false
             call.respondHtmlTemplate(layout) {
                 insert(componentDeps.diceEditPage(dice, editURL, deleteURL)) {
-                    dialogOpen = true
+                    dialogOpen = isOpenDialog
                 }
             }
         }
