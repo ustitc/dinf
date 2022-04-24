@@ -33,7 +33,6 @@ fun Application.configureRouting(
     }
 
     val layout = Layout(locations = locations, htmxConfiguration = config.htmx)
-    val urls = config.urls
     val baseURL = config.server.baseURL
 
     val newDiceURL = locations.href(DiceLocation.New())
@@ -54,8 +53,16 @@ fun Application.configureRouting(
     }
 
     routing {
-        index(layout = layout, diceGet = dependencies.diceGet(), diceFeed = diceFeed)
-        create(layout = layout, editHashids = dependencies.editHashIDs(), diceSave = dependencies.diceSave())
+        index(
+            layout = layout,
+            diceGet = dependencies.diceGet(),
+            diceFeed = diceFeed
+        )
+        create(
+            layout = layout,
+            editHashids = dependencies.editHashIDs(),
+            diceSave = dependencies.diceSave()
+        )
         createForm(layout = layout)
         dice(
             layout = layout,
@@ -63,7 +70,11 @@ fun Application.configureRouting(
             dices = dependencies.dices(),
             diceMetrics = dependencies.diceMetrics()
         )
-        edit(layout = layout, editHashids = dependencies.editHashIDs(), dices = dependencies.dices())
+        edit(
+            layout = layout,
+            editHashids = dependencies.editHashIDs(),
+            dices = dependencies.dices()
+        )
         editForm(
             layout = layout,
             editHashids = dependencies.editHashIDs(),

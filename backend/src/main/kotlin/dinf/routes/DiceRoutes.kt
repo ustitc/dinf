@@ -11,10 +11,9 @@ import dinf.domain.HashIDs
 import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
-import dinf.html.components.picoInlineButton
-import dinf.html.templates.SearchBar
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
+import dinf.html.templates.SearchBar
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -23,17 +22,7 @@ import io.ktor.locations.post
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.html.FormMethod
-import kotlinx.html.InputType
-import kotlinx.html.a
-import kotlinx.html.article
-import kotlinx.html.dialog
-import kotlinx.html.div
-import kotlinx.html.form
 import kotlinx.html.h2
-import kotlinx.html.h3
-import kotlinx.html.hGroup
-import kotlinx.html.input
 import kotlinx.html.p
 
 private val componentDeps = ComponentDeps()
@@ -124,53 +113,9 @@ fun Route.editForm(layout: Layout, editHashids: HashIDs, baseURL: String, dices:
         } else {
             val editURL = loc.url(baseURL, call)
             val deleteURL = call.locations.href(DiceLocation.Delete(id = loc.hashID))
-            val form = componentDeps.diceForm(loc.uri(call))
-
             call.respondHtmlTemplate(layout) {
-                content {
-                    hGroup {
-                        h2 { +dice.name.print() }
-                        h3 {
-                            text("Save this link to edit your dice later: ")
-                            a(href = editURL) { +editURL }
-                        }
-                    }
-
-                    dialog {
-                        attributes["open"] = "false"
-                        article {
-                            p {
-                                +"Save this link to edit your dice later!"
-                            }
-                            div("grid") {
-                                div("container") {
-                                    input {
-                                        value = editURL
-                                        readonly = true
-                                    }
-                                }
-                                div {
-                                    picoInlineButton("contrast") {
-                                        +"Copy"
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    insert(RollBlock(dice)) {
-                    }
-
-                    insert(form) {
-                        name = dice.name.print()
-                        edges = dice.edges.toStringList()
-                    }
-
-                    form(action = deleteURL, method = FormMethod.post) {
-                        input(type = InputType.submit, classes = "delete") {
-                            value = "Delete"
-                        }
-                    }
+                insert(componentDeps.diceEditPage(dice, editURL, deleteURL)) {
+                    dialogOpen = true
                 }
             }
         }
