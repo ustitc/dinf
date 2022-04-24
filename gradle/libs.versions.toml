@@ -7,6 +7,7 @@ kotestTestcontainers = "1.0.1"
 kotestGradle = "5.0.0.5"
 kotlin = "1.6.10"
 kotlinx = "1.5.2"
+kotlinxHtml = "0.7.5"
 logback = "1.2.11"
 
 [libraries]
@@ -29,6 +30,7 @@ kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 kotest-runnerJUnit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotlinx-coroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx" }
+kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html", version.ref = "kotlinxHtml" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 [plugins]

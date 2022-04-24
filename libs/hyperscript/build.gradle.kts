@@ -1,3 +1,3 @@
 dependencies {
-    implementation(libs.ktor.serverHtmlBuilder)
+    implementation(libs.kotlinx.html)
 }
