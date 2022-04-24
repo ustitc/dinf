@@ -1,3 +1,4 @@
+Create dice without edges
 Make dinf not dependent of meili
 Update dice name separately of edges
 Show modal form before dice deletion

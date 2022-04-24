@@ -63,7 +63,6 @@ fun Application.configureRouting(
             diceFeed = diceFeed
         )
         create(
-            layout = layout,
             editHashids = dependencies.editHashIDFactory(),
             diceFactory = dependencies.diceFactory()
         )
@@ -75,7 +74,6 @@ fun Application.configureRouting(
             diceMetricRepository = dependencies.diceMetricRepository()
         )
         edit(
-            layout = layout,
             editHashids = dependencies.editHashIDFactory(),
             diceRepository = dependencies.diceRepository()
         )

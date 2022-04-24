@@ -26,6 +26,7 @@ class DiceEditPage(
     private val deleteURL: String
 ) : Page {
 
+    val form = TemplatePlaceholder<DiceFormWithLists>()
     var dialogOpen: Boolean = true
 
     override fun Layout.apply() {
@@ -59,13 +60,13 @@ class DiceEditPage(
             insert(RollBlock(dice)) {
             }
 
-            insert(DiceFormWithLists(Form(editURL))) {
-                name = dice.name.print()
-                edges = dice.edges.toStringList()
-                submit {
-                    value = "Save changes"
-                }
+            val diceForm = DiceFormWithLists(Form(editURL))
+            diceForm.name = dice.name.print()
+            diceForm.edges = dice.edges.toStringList()
+            diceForm.submit {
+                value = "Save changes"
             }
+            insert(diceForm, form)
 
             form(action = deleteURL, method = FormMethod.post) {
                 input(type = InputType.submit, classes = "delete") {

@@ -56,33 +56,27 @@ fun Route.createForm(layout: Layout) {
         call.respondHtmlTemplate(layout) {
             content {
                 val form = componentDeps.diceForm(url)
-                insert(form) {}
+                insert(form) {
+                    failed = loc.isFailed ?: false
+                }
             }
         }
     }
 }
 
-fun Route.create(layout: Layout, editHashids: HashIDFactory, diceFactory: DiceFactory) {
-    val url = application.href(DiceResource.New())
+fun Route.create(editHashids: HashIDFactory, diceFactory: DiceFactory) {
     post<DiceResource.New> { loc ->
         val params = call.receiveParameters()
         val dice = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { Dice.New(it.name, it.edges) }
             ?.let { diceFactory.create(it) }
-        if (dice != null) {
+        val redirectURL = if (dice != null) {
             val id = editHashids.fromID(dice.id)
-            val diceURL = href(ResourcesFormat(), DiceResource.Edit(hashID = id, firstTime = true))
-            call.respondRedirect(diceURL)
+            application.href(DiceResource.Edit(hashID = id, firstTime = true))
         } else {
-            call.respondHtmlTemplate(layout) {
-                content {
-                    val form = componentDeps.diceForm(url)
-                    insert(form) {
-                        failed = true
-                    }
-                }
-            }
+            application.href(DiceResource.New(isFailed = true))
         }
+        call.respondRedirect(redirectURL)
     }
 }
 
@@ -119,9 +113,12 @@ fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, 
         } else {
             val editURL =application.href(DiceResource.Edit(hashID = loc.hashID))
             val deleteURL = application.href(DiceResource.Delete(hashID = loc.hashID))
-            val isOpenDialog = loc.firstTime ?: false
+            val isOpenDialog = loc.isFirstTime ?: false
             call.respondHtmlTemplate(layout) {
                 insert(DiceEditPage(dice, "$baseURL$editURL", deleteURL)) {
+                    form {
+                        failed = loc.isFailed ?: false
+                    }
                     dialogOpen = isOpenDialog
                 }
             }
@@ -129,28 +126,21 @@ fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, 
     }
 }
 
-fun Route.edit(layout: Layout, editHashids: HashIDFactory, diceRepository: DiceRepository) {
+fun Route.edit(editHashids: HashIDFactory, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
-        val url = application.href(loc)
         val params = call.receiveParameters()
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
             val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
-            if (htmlDice != null) {
+            val redirectURL = if (htmlDice != null) {
                 dice.change(htmlDice.name, htmlDice.edges)
-                call.respondRedirect(url)
+                application.href(loc)
             } else {
-                call.respondHtmlTemplate(layout) {
-                    content {
-                        val form = componentDeps.diceForm(url)
-                        insert(form) {
-                            failed = true
-                        }
-                    }
-                }
+                application.href(loc.copy(isFailed = true))
             }
+            call.respondRedirect(redirectURL)
         }
     }
 }

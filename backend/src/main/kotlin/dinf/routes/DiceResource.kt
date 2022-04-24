@@ -9,7 +9,10 @@ object DiceResource {
 
     @Serializable
     @Resource("/new")
-    class New(val dices: DiceResource = DiceResource)
+    class New(
+        val dices: DiceResource = DiceResource,
+        val isFailed: Boolean? = null
+    )
 
     @Serializable
     @Resource("/{hashID}")
@@ -21,11 +24,16 @@ object DiceResource {
 
     @Serializable
     @Resource("/edit/{hashID}")
-    data class Edit(val dices: DiceResource = DiceResource, val hashID: String, val firstTime: Boolean? = null) {
+    data class Edit(
+        val dices: DiceResource = DiceResource,
+        val hashID: String,
+        val isFirstTime: Boolean? = null,
+        val isFailed: Boolean? = null
+    ) {
 
         constructor(hashID: dinf.domain.HashID, firstTime: Boolean? = null) : this(
             hashID = hashID.print(),
-            firstTime = firstTime
+            isFirstTime = firstTime
         )
 
     }
