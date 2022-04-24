@@ -2,6 +2,7 @@ package dinf.adapters
 
 import dinf.db.connection
 import dinf.db.firstOrNull
+import dinf.db.setPLong
 import dinf.db.toSequence
 import dinf.db.transaction
 import dinf.domain.Dice
@@ -53,7 +54,7 @@ class DBDices : Dices {
                     GROUP BY dices.id
                 """.trimIndent()
             ).also { statement ->
-                statement.setLong(1, id.number)
+                statement.setPLong(1, id.number)
             }
             val dice = statement.executeQuery().firstOrNull {
                 DBDice(this, edgesSeparator)
@@ -77,7 +78,7 @@ class DBDices : Dices {
             """.trimIndent()
             ).also { statement ->
                 serials.forEachIndexed { i, d ->
-                    statement.setLong(i + 1, d.number)
+                    statement.setPLong(i + 1, d.number)
                 }
             }
             val list = statement.executeQuery().toSequence {

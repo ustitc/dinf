@@ -1,9 +1,12 @@
 package dinf.adapters
 
+import dinf.db.getPLong
+import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceSave
 import dinf.domain.ID
+import dinf.types.PLong
 import java.sql.Connection
 
 class DBDiceSave : DiceSave {
@@ -19,7 +22,7 @@ class DBDiceSave : DiceSave {
             ).also { it.setString(1, dice.name.print()) }
 
             val rs = statement.executeQuery()
-            val id = rs.getLong("id")
+            val id = rs.getPLong("id")!!
             dice.edges.toStringList().forEach { edge ->
                 saveEdge(id, edge)
             }
@@ -30,7 +33,7 @@ class DBDiceSave : DiceSave {
         return DBDices().oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
-    private fun Connection.saveEdge(diceID: Long, edge: String) {
+    private fun Connection.saveEdge(diceID: PLong, edge: String) {
         val statement = prepareStatement(
             """
                 INSERT INTO edges (value, dice)
@@ -38,7 +41,7 @@ class DBDiceSave : DiceSave {
             """.trimIndent()
         ).also {
             it.setString(1, edge)
-            it.setLong(2, diceID)
+            it.setPLong(2, diceID)
         }
         statement.execute()
         statement.close()

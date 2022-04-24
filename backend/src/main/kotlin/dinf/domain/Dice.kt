@@ -1,5 +1,7 @@
 package dinf.domain
 
+import dinf.types.PLong
+import dinf.types.toPLongOrNull
 import kotlin.random.Random
 
 interface Dice {
@@ -13,7 +15,7 @@ interface Dice {
     fun change(name: Name, edges: Edges)
 
     class Stub(name: String = "stub") : Dice by Simple(
-        id = ID(Random.nextLong()),
+        id = ID(Random.nextLong(1, 100).toPLongOrNull()!!),
         name = Name(name),
         edges = Edges()
     )
@@ -31,7 +33,7 @@ interface Dice {
     }
 
     class New(name: Name, edges: Edges) : Dice by Simple(
-        id = ID(-1),
+        id = ID(PLong.fromLongOrNull(10)!!),
         name = name,
         edges = edges
     )

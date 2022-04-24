@@ -1,6 +1,7 @@
 package dinf.adapters
 
 import dinf.domain.ID
+import dinf.types.toPLongOrNull
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.toList
@@ -30,7 +31,10 @@ class DBDicesTest : StringSpec({
 
         val serialsCount = 10
         dices.list(
-            List(serialsCount) { ID(it + 1L) }
+            List(serialsCount) {
+                val number = it + 1L
+                ID(number.toPLongOrNull()!!)
+            }
         ).size shouldBe serialsCount
     }
 
