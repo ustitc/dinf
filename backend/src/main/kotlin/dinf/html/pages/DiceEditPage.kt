@@ -4,7 +4,7 @@ import dev.ustits.hyperscript.hyperscript
 import dinf.domain.Dice
 import dinf.html.components.picoInlineButton
 import dinf.html.components.picoModal
-import dinf.html.templates.DiceFormWithLists
+import dinf.html.templates.DiceForm
 import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
@@ -61,14 +61,12 @@ class DiceEditPage(
             insert(RollBlock(dice)) {
             }
 
-            insert(DiceFormWithLists(Form(editURL))) {
+            insert(DiceForm(Form(editURL))) {
                 name = dice.name.print()
                 edges = dice.edges.toStringList()
-                form {
-                    failed = resource.isFailed ?: false
-                    submit {
-                        value = "Save changes"
-                    }
+                failed = resource.isFailed ?: false
+                submit {
+                    value = "Save changes"
                 }
             }
 

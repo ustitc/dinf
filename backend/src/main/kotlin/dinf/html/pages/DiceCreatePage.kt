@@ -1,6 +1,6 @@
 package dinf.html.pages
 
-import dinf.html.templates.DiceFormWithLists
+import dinf.html.templates.DiceForm
 import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.routes.DiceResource
@@ -13,7 +13,7 @@ class DiceCreatePage(
 
     override fun Layout.apply() {
         content {
-            insert(DiceFormWithLists(Form(url))) {
+            insert(DiceForm(Form(url))) {
                 failed = resource.isFailed ?: false
             }
         }
