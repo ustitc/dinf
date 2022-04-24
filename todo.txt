@@ -1,6 +1,5 @@
 Make dinf not dependent of meili
 Update dice name separately of edges
-Rename "Create dice" button in edit form
 Show modal form before dice deletion
 Add transactional logic for DiceSave
 Delete dice in meilisearch on DiceDelete

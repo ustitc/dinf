@@ -11,6 +11,7 @@ import dinf.domain.HashIDFactory
 import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
+import dinf.html.pages.DiceEditPage
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
 import dinf.html.templates.SearchBar
@@ -120,7 +121,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, 
             val deleteURL = application.href(DiceResource.Delete(hashID = loc.hashID))
             val isOpenDialog = loc.firstTime ?: false
             call.respondHtmlTemplate(layout) {
-                insert(componentDeps.diceEditPage(dice, "$baseURL$editURL", deleteURL)) {
+                insert(DiceEditPage(dice, "$baseURL$editURL", deleteURL)) {
                     dialogOpen = isOpenDialog
                 }
             }

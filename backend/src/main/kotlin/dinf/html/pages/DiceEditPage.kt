@@ -4,7 +4,8 @@ import dev.ustits.hyperscript.hyperscript
 import dinf.domain.Dice
 import dinf.html.components.picoInlineButton
 import dinf.html.components.picoModal
-import dinf.html.templates.DiceForm
+import dinf.html.templates.DiceFormWithLists
+import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
 import io.ktor.server.html.*
@@ -20,7 +21,6 @@ import kotlinx.html.input
 import kotlinx.html.p
 
 class DiceEditPage(
-    private val form: DiceForm,
     private val dice: Dice,
     private val editURL: String,
     private val deleteURL: String
@@ -59,9 +59,12 @@ class DiceEditPage(
             insert(RollBlock(dice)) {
             }
 
-            insert(form) {
+            insert(DiceFormWithLists(Form(editURL))) {
                 name = dice.name.print()
                 edges = dice.edges.toStringList()
+                submit {
+                    value = "Save changes"
+                }
             }
 
             form(action = deleteURL, method = FormMethod.post) {

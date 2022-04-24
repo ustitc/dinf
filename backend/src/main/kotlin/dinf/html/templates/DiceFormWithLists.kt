@@ -3,6 +3,7 @@ package dinf.html.templates
 import dinf.types.NBString
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
+import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.input
 
@@ -11,6 +12,8 @@ class DiceFormWithLists(private val form: Form) : DiceForm {
     override var name: String = ""
     override var edges: List<String> = emptyList()
     override var failed: Boolean = false
+
+    val submit = Placeholder<INPUT>()
 
     override fun FlowContent.apply() {
         insert(form) {
@@ -38,7 +41,7 @@ class DiceFormWithLists(private val form: Form) : DiceForm {
                 }
             }
             submit {
-                value = "Create Dice"
+                insert(this@DiceFormWithLists.submit)
             }
         }
     }
