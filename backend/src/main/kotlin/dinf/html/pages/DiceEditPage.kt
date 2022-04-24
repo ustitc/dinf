@@ -8,6 +8,7 @@ import dinf.html.templates.DiceFormWithLists
 import dinf.html.templates.Form
 import dinf.html.templates.Layout
 import dinf.html.templates.RollBlock
+import dinf.routes.DiceResource
 import io.ktor.server.html.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
@@ -23,13 +24,13 @@ import kotlinx.html.p
 class DiceEditPage(
     private val dice: Dice,
     private val editURL: String,
-    private val deleteURL: String
+    private val deleteURL: String,
+    private val resource: DiceResource.Edit
 ) : Page {
 
-    val form = TemplatePlaceholder<DiceFormWithLists>()
-    var dialogOpen: Boolean = true
-
     override fun Layout.apply() {
+        val isOpenDialog = resource.isFirstTime ?: false
+
         content {
             hGroup {
                 h2 { +dice.name.print() }
@@ -39,7 +40,7 @@ class DiceEditPage(
                 }
             }
 
-            picoModal(dialogOpen) {
+            picoModal(isOpenDialog) {
                 h3 { +"Beware!" }
                 p {
                     +"Save this link to edit your dice later: "
@@ -60,13 +61,16 @@ class DiceEditPage(
             insert(RollBlock(dice)) {
             }
 
-            val diceForm = DiceFormWithLists(Form(editURL))
-            diceForm.name = dice.name.print()
-            diceForm.edges = dice.edges.toStringList()
-            diceForm.submit {
-                value = "Save changes"
+            insert(DiceFormWithLists(Form(editURL))) {
+                name = dice.name.print()
+                edges = dice.edges.toStringList()
+                form {
+                    failed = resource.isFailed ?: false
+                    submit {
+                        value = "Save changes"
+                    }
+                }
             }
-            insert(diceForm, form)
 
             form(action = deleteURL, method = FormMethod.post) {
                 input(type = InputType.submit, classes = "delete") {

@@ -11,12 +11,12 @@ import dinf.domain.HashIDFactory
 import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
+import dinf.html.pages.DiceCreatePage
+import dinf.html.pages.DiceDeletedPage
 import dinf.html.pages.DiceEditPage
-import dinf.html.templates.DiceFormWithLists
-import dinf.html.templates.Form
+import dinf.html.pages.DicePage
+import dinf.html.pages.MainPage
 import dinf.html.templates.Layout
-import dinf.html.templates.RollBlock
-import dinf.html.templates.SearchBar
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
 import io.ktor.server.application.*
@@ -28,8 +28,6 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.get
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.html.h2
-import kotlinx.html.p
 
 fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
     val page = 1
@@ -39,12 +37,14 @@ fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
         val diceList = diceGet.invoke(Page(page), Count(count))
         val nextDicePageURL = href(ResourcesFormat(), HTMXResource.Dices(page = page + 1, count = count))
         call.respondHtmlTemplate(layout) {
-            content {
-                insert(SearchBar(searchAPI)) {
-                    initialContent {
-                        diceFeed.component(this, diceList, nextDicePageURL)
-                    }
-                }
+            insert(
+                MainPage(
+                    searchURL = searchAPI,
+                    nextDicePageURL = nextDicePageURL,
+                    diceList = diceList,
+                    diceFeed = diceFeed
+                )
+            ) {
             }
         }
     }
@@ -52,12 +52,9 @@ fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
 
 fun Route.createForm(layout: Layout) {
     val url = application.href(DiceResource.New())
-    get<DiceResource.New> { loc ->
+    get<DiceResource.New> { resource ->
         call.respondHtmlTemplate(layout) {
-            content {
-                insert(DiceFormWithLists(Form(url))) {
-                    failed = loc.isFailed ?: false
-                }
+            insert(DiceCreatePage(url, resource)) {
             }
         }
     }
@@ -79,7 +76,12 @@ fun Route.create(editHashids: HashIDFactory, diceFactory: DiceFactory) {
     }
 }
 
-fun Route.dice(layout: Layout, shareHashids: HashIDFactory, diceRepository: DiceRepository, diceMetricRepository: DiceMetricRepository) {
+fun Route.dice(
+    layout: Layout,
+    shareHashids: HashIDFactory,
+    diceRepository: DiceRepository,
+    diceMetricRepository: DiceMetricRepository
+) {
     get<DiceResource.ByHashID> { loc ->
         val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
@@ -93,11 +95,7 @@ fun Route.dice(layout: Layout, shareHashids: HashIDFactory, diceRepository: Dice
             }
 
             call.respondHtmlTemplate(layout) {
-                content {
-                    h2 { +dice.name.print() }
-
-                    insert(RollBlock(dice)) {
-                    }
+                insert(DicePage(dice)) {
                 }
             }
         }
@@ -105,20 +103,15 @@ fun Route.dice(layout: Layout, shareHashids: HashIDFactory, diceRepository: Dice
 }
 
 fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, diceRepository: DiceRepository) {
-    get<DiceResource.Edit> { loc ->
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
+    get<DiceResource.Edit> { resource ->
+        val dice = editHashids.fromStringOrNull(resource.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL =application.href(DiceResource.Edit(hashID = loc.hashID))
-            val deleteURL = application.href(DiceResource.Delete(hashID = loc.hashID))
-            val isOpenDialog = loc.isFirstTime ?: false
+            val editURL = application.href(DiceResource.Edit(hashID = resource.hashID))
+            val deleteURL = application.href(DiceResource.Delete(hashID = resource.hashID))
             call.respondHtmlTemplate(layout) {
-                insert(DiceEditPage(dice, "$baseURL$editURL", deleteURL)) {
-                    form {
-                        failed = loc.isFailed ?: false
-                    }
-                    dialogOpen = isOpenDialog
+                insert(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource)) {
                 }
             }
         }
@@ -153,8 +146,7 @@ fun Route.delete(layout: Layout, editHashids: HashIDFactory, diceRepository: Dic
         } else {
             diceDelete.invoke(dice)
             call.respondHtmlTemplate(layout) {
-                content {
-                    p { +"Dice deleted" }
+                insert(DiceDeletedPage()) {
                 }
             }
         }
