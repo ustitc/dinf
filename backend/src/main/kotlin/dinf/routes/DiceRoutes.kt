@@ -16,11 +16,10 @@ import dinf.html.pages.DiceDeletedPage
 import dinf.html.pages.DiceEditPage
 import dinf.html.pages.DicePage
 import dinf.html.pages.MainPage
-import dinf.html.templates.Layout
+import dinf.plugins.respondPage
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
 import io.ktor.server.application.*
-import io.ktor.server.html.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
@@ -29,34 +28,28 @@ import io.ktor.server.resources.get
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.index(layout: Layout, diceGet: DiceGet, diceFeed: DiceFeed) {
+fun Route.index(diceGet: DiceGet, diceFeed: DiceFeed) {
     val page = 1
     val count = 10
     val searchAPI = href(ResourcesFormat(), HTMXResource.Search(page = page, count = count))
     get("/") {
         val diceList = diceGet.invoke(Page(page), Count(count))
         val nextDicePageURL = href(ResourcesFormat(), HTMXResource.Dices(page = page + 1, count = count))
-        call.respondHtmlTemplate(layout) {
-            insert(
-                MainPage(
-                    searchURL = searchAPI,
-                    nextDicePageURL = nextDicePageURL,
-                    diceList = diceList,
-                    diceFeed = diceFeed
-                )
-            ) {
-            }
-        }
+        call.respondPage(
+            MainPage(
+                searchURL = searchAPI,
+                nextDicePageURL = nextDicePageURL,
+                diceList = diceList,
+                diceFeed = diceFeed
+            )
+        )
     }
 }
 
-fun Route.createForm(layout: Layout) {
+fun Route.createForm() {
     val url = application.href(DiceResource.New())
     get<DiceResource.New> { resource ->
-        call.respondHtmlTemplate(layout) {
-            insert(DiceCreatePage(url, resource)) {
-            }
-        }
+        call.respondPage(DiceCreatePage(url, resource))
     }
 }
 
@@ -77,7 +70,6 @@ fun Route.create(editHashids: HashIDFactory, diceFactory: DiceFactory) {
 }
 
 fun Route.dice(
-    layout: Layout,
     shareHashids: HashIDFactory,
     diceRepository: DiceRepository,
     diceMetricRepository: DiceMetricRepository
@@ -94,15 +86,12 @@ fun Route.dice(
                 metric.addClick()
             }
 
-            call.respondHtmlTemplate(layout) {
-                insert(DicePage(dice)) {
-                }
-            }
+            call.respondPage(DicePage(dice))
         }
     }
 }
 
-fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, diceRepository: DiceRepository) {
+fun Route.editForm(editHashids: HashIDFactory, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { resource ->
         val dice = editHashids.fromStringOrNull(resource.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
@@ -110,10 +99,7 @@ fun Route.editForm(layout: Layout, editHashids: HashIDFactory, baseURL: String, 
         } else {
             val editURL = application.href(DiceResource.Edit(hashID = resource.hashID))
             val deleteURL = application.href(DiceResource.Delete(hashID = resource.hashID))
-            call.respondHtmlTemplate(layout) {
-                insert(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource)) {
-                }
-            }
+            call.respondPage(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource))
         }
     }
 }
@@ -138,17 +124,14 @@ fun Route.edit(editHashids: HashIDFactory, diceRepository: DiceRepository) {
 }
 
 
-fun Route.delete(layout: Layout, editHashids: HashIDFactory, diceRepository: DiceRepository, diceDelete: DiceDelete) {
+fun Route.delete(editHashids: HashIDFactory, diceRepository: DiceRepository, diceDelete: DiceDelete) {
     post<DiceResource.Delete> { loc ->
         val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
             diceDelete.invoke(dice)
-            call.respondHtmlTemplate(layout) {
-                insert(DiceDeletedPage()) {
-                }
-            }
+            call.respondPage(DiceDeletedPage())
         }
     }
 }

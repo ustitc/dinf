@@ -1,9 +1,11 @@
 package dinf.plugins
 
+import dev.ustits.htmx.HTMXConfiguration
 import dinf.AppDeps
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
+import dinf.html.pages.Page
 import dinf.routes.DiceResource
 import dinf.routes.create
 import dinf.routes.createForm
@@ -26,13 +28,21 @@ import io.ktor.server.routing.*
 import io.ktor.server.webjars.*
 import kotlinx.html.p
 
+private lateinit var layout: Layout
+
+suspend fun ApplicationCall.respondPage(page: Page) {
+    respondHtmlTemplate(layout) {
+        insert(page) {}
+    }
+}
+
 fun Application.configureRouting(
     config: Configuration,
     dependencies: AppDeps
 ) {
     install(Resources)
 
-    val layout = Layout(htmxConfiguration = config.htmx)
+    layout = Layout(htmxConfiguration = config.htmx)
     val baseURL = config.server.baseURL
 
     val newDiceURL = href(DiceResource.New())
@@ -58,7 +68,6 @@ fun Application.configureRouting(
 
     routing {
         index(
-            layout = layout,
             diceGet = dependencies.diceGet(),
             diceFeed = diceFeed
         )
@@ -66,9 +75,8 @@ fun Application.configureRouting(
             editHashids = dependencies.editHashIDFactory(),
             diceFactory = dependencies.diceFactory()
         )
-        createForm(layout = layout)
+        createForm()
         dice(
-            layout = layout,
             shareHashids = dependencies.shareHashIDFactory(),
             diceRepository = dependencies.diceRepository(),
             diceMetricRepository = dependencies.diceMetricRepository()
@@ -78,13 +86,11 @@ fun Application.configureRouting(
             diceRepository = dependencies.diceRepository()
         )
         editForm(
-            layout = layout,
             editHashids = dependencies.editHashIDFactory(),
             baseURL = baseURL,
             diceRepository = dependencies.diceRepository()
         )
         delete(
-            layout = layout,
             editHashids = dependencies.editHashIDFactory(),
             diceRepository = dependencies.diceRepository(),
             diceDelete = dependencies.diceDelete()
