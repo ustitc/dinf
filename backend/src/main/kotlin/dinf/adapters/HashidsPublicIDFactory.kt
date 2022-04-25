@@ -4,7 +4,6 @@ import dinf.domain.EditID
 import dinf.domain.PublicIDFactory
 import dinf.domain.ID
 import dinf.domain.ShareID
-import dinf.types.PLong
 import dinf.types.toPLongOrNull
 import org.hashids.Hashids
 
@@ -13,49 +12,35 @@ class HashidsPublicIDFactory(
     private val editHashids: Hashids,
 ) : PublicIDFactory {
 
+    private class HashidsID(private val hash: String, private val id: ID) : ShareID, EditID {
+        override fun print(): String = hash
+        override fun toID(): ID = id
+    }
+
     override fun shareIDFromStringOrNull(str: String): ShareID? {
-        return shareHashids.decodePLongOrNull(str)?.let {
-            object : ShareID {
-                override fun print(): String = str
-                override fun toID(): ID = ID(it)
-            }
-        }
+        return shareHashids.decodeHashidsIDOrNull(str)
     }
 
     override fun editIDFromStringOrNull(str: String): EditID? {
-        return editHashids.decodePLongOrNull(str)?.let {
-            object : EditID {
-                override fun print(): String = str
-                override fun toID(): ID = ID(it)
-            }
-        }
+        return editHashids.decodeHashidsIDOrNull(str)
     }
 
     override fun shareIDFromID(id: ID): ShareID {
-        return object : ShareID {
-            override fun print(): String {
-                return shareHashids.encode(id.number)
-            }
-
-            override fun toID(): ID = id
-        }
+        return shareHashids.encodeToHashidsID(id)
     }
 
     override fun editIDFromID(id: ID): EditID {
-        return object : EditID {
-            override fun print(): String {
-                return shareHashids.encode(id.number)
-            }
+        return editHashids.encodeToHashidsID(id)
+    }
 
-            override fun toID(): ID = id
+    private fun Hashids.encodeToHashidsID(id: ID): HashidsID {
+        val hash = encode(id.number.toLong())
+        return HashidsID(hash, id)
+    }
+
+    private fun Hashids.decodeHashidsIDOrNull(str: String): HashidsID? {
+        return decodeOneOrNull(str)?.toPLongOrNull()?.let {
+            HashidsID(str, ID(it))
         }
-    }
-
-    private fun Hashids.encode(pLong: PLong): String {
-        return encode(pLong.toLong())
-    }
-
-    private fun Hashids.decodePLongOrNull(str: String): PLong? {
-        return decodeOneOrNull(str)?.toPLongOrNull()
     }
 }
