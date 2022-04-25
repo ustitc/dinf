@@ -67,7 +67,7 @@ fun Application.configureRouting(
 
     routing {
         index(
-            diceGet = dependencies.diceGet(),
+            diceService = dependencies.diceService(),
             diceFeed = diceFeed
         )
         create(
@@ -96,7 +96,7 @@ fun Application.configureRouting(
             diceFeed = diceFeed
         )
         htmxDices(
-            diceGet = dependencies.diceGet(),
+            diceService = dependencies.diceService(),
             diceFeed = diceFeed
         )
 

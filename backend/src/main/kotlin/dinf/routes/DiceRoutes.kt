@@ -1,7 +1,6 @@
 package dinf.routes
 
 import dinf.domain.Count
-import dinf.domain.DiceGet
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.PublicIDFactory
@@ -13,8 +12,6 @@ import dinf.html.pages.DiceEditPage
 import dinf.html.pages.DicePage
 import dinf.html.pages.MainPage
 import dinf.plugins.respondPage
-import io.ktor.resources.*
-import io.ktor.resources.serialization.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -24,13 +21,13 @@ import io.ktor.server.resources.get
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.index(diceGet: DiceGet, diceFeed: DiceFeed) {
+fun Route.index(diceService: DiceService, diceFeed: DiceFeed) {
     val page = 1
     val count = 10
-    val searchAPI = href(ResourcesFormat(), HTMXResource.Search(page = page, count = count))
+    val searchAPI = application.href(HTMXResource.Search(page = page, count = count))
+    val nextDicePageURL = application.href(HTMXResource.Dices(page = page + 1, count = count))
     get("/") {
-        val diceList = diceGet.invoke(Page(page), Count(count))
-        val nextDicePageURL = href(ResourcesFormat(), HTMXResource.Dices(page = page + 1, count = count))
+        val diceList = diceService.find(Page(page), Count(count))
         call.respondPage(
             MainPage(
                 searchURL = searchAPI,

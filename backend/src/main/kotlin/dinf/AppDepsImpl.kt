@@ -8,7 +8,6 @@ import dinf.adapters.HashidsPublicIDFactory
 import dinf.adapters.MeiliSearchIndexRepository
 import dinf.config.Configuration
 import dinf.config.URL
-import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
@@ -27,13 +26,6 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
 
     override fun diceMetricRepository(): DiceMetricRepository {
         return diceMetricRepository
-    }
-
-    override fun diceGet(): DiceGet {
-        return DiceGet.TopByClicks(
-            diceRepository = diceRepository(),
-            metrics = diceMetricRepository
-        )
     }
 
     override fun diceFactory(): DiceFactory {

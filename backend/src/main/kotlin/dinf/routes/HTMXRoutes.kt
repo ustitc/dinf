@@ -1,6 +1,5 @@
 package dinf.routes
 
-import dinf.domain.DiceGet
 import dinf.html.components.DiceFeed
 import dinf.domain.DiceService
 import dinf.domain.SearchQuery
@@ -15,14 +14,14 @@ import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
 fun Route.search(diceService: DiceService, diceFeed: DiceFeed) {
-    get<HTMXResource.Search> { loc ->
+    get<HTMXResource.Search> { resource ->
         val query = SearchQuery(
-            text = loc.query ?: "",
-            page = loc.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
-            count = loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
+            text = resource.query ?: "",
+            page = resource.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
+            count = resource.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
         )
         val dices = diceService.search(query)
-        val nextPage = application.href(loc.nextPage())
+        val nextPage = application.href(resource.nextPage())
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
                 diceFeed.component(this, dices, nextPage)
@@ -31,13 +30,13 @@ fun Route.search(diceService: DiceService, diceFeed: DiceFeed) {
     }
 }
 
-fun Route.htmxDices(diceGet: DiceGet, diceFeed: DiceFeed) {
-    get<HTMXResource.Dices> { loc ->
-        val diceList = diceGet.invoke(
-            loc.page.toPIntOrNull() ?: throw BadRequestException("Page can't be less than 1"),
-            loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
+fun Route.htmxDices(diceService: DiceService, diceFeed: DiceFeed) {
+    get<HTMXResource.Dices> { resource ->
+        val diceList = diceService.find(
+            resource.page.toPIntOrNull() ?: throw BadRequestException("Page can't be less than 1"),
+            resource.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
         )
-        val nextPage = application.href(loc.nextPage())
+        val nextPage = application.href(resource.nextPage())
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
                 diceFeed.component(this, diceList, nextPage)
