@@ -3,7 +3,7 @@ package dinf.html.components
 import dinf.routes.DiceResource
 import dinf.html.templates.RollButton
 import dinf.domain.Dice
-import dinf.domain.HashIDFactory
+import dinf.domain.PublicIDFactory
 import dinf.html.templates.RollResult
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
@@ -13,11 +13,11 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.h3
 
-class DiceCard(private val shareHashids: HashIDFactory) {
+class DiceCard(private val shareHashids: PublicIDFactory) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
         val hashID = shareHashids.fromID(dice.id)
-        val location = href(ResourcesFormat(), DiceResource.ByHashID(hashID))
+        val location = href(ResourcesFormat(), DiceResource.ByShareID(hashID))
         val id = "result-${hashID.print()}"
         val eventName = "roll"
 

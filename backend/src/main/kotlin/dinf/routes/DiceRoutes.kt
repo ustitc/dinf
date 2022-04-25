@@ -5,7 +5,7 @@ import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
-import dinf.domain.HashIDFactory
+import dinf.domain.PublicIDFactory
 import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
@@ -57,7 +57,7 @@ fun Route.create(diceService: DiceService) {
         val hashID = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { diceService.saveDice(it.name, it.edges) }
         val redirectURL = if (hashID != null) {
-            application.href(DiceResource.Edit(hashID = hashID, firstTime = true))
+            application.href(DiceResource.Edit(editID = hashID, firstTime = true))
         } else {
             application.href(resource.copy(isFailed = true))
         }
@@ -66,12 +66,12 @@ fun Route.create(diceService: DiceService) {
 }
 
 fun Route.dice(
-    shareHashids: HashIDFactory,
+    shareHashids: PublicIDFactory,
     diceRepository: DiceRepository,
     diceMetricRepository: DiceMetricRepository
 ) {
-    get<DiceResource.ByHashID> { loc ->
-        val dice = shareHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
+    get<DiceResource.ByShareID> { loc ->
+        val dice = shareHashids.fromStringOrNull(loc.shareID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -87,23 +87,23 @@ fun Route.dice(
     }
 }
 
-fun Route.editForm(editHashids: HashIDFactory, baseURL: String, diceRepository: DiceRepository) {
+fun Route.editForm(editHashids: PublicIDFactory, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { resource ->
-        val dice = editHashids.fromStringOrNull(resource.hashID)?.let { diceRepository.oneOrNull(it) }
+        val dice = editHashids.fromStringOrNull(resource.editID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL = application.href(DiceResource.Edit(hashID = resource.hashID))
-            val deleteURL = application.href(DiceResource.Delete(hashID = resource.hashID))
+            val editURL = application.href(DiceResource.Edit(editID = resource.editID))
+            val deleteURL = application.href(DiceResource.Delete(editID = resource.editID))
             call.respondPage(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource))
         }
     }
 }
 
-fun Route.edit(editHashids: HashIDFactory, diceRepository: DiceRepository) {
+fun Route.edit(editHashids: PublicIDFactory, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
+        val dice = editHashids.fromStringOrNull(loc.editID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -120,9 +120,9 @@ fun Route.edit(editHashids: HashIDFactory, diceRepository: DiceRepository) {
 }
 
 
-fun Route.delete(editHashids: HashIDFactory, diceService: DiceService) {
+fun Route.delete(editHashids: PublicIDFactory, diceService: DiceService) {
     post<DiceResource.Delete> { loc ->
-        editHashids.fromStringOrNull(loc.hashID)?.let { diceService.deleteByHashID(it) }
+        editHashids.fromStringOrNull(loc.editID)?.let { diceService.deleteByPublicID(it) }
         call.respondPage(DiceDeletedPage())
     }
 }

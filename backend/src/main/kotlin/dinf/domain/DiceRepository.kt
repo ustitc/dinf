@@ -7,8 +7,8 @@ interface DiceRepository {
 
     fun flow(): Flow<Dice>
 
-    suspend fun oneOrNull(hashID: HashID): Dice? {
-        return oneOrNull(hashID.toID())
+    suspend fun oneOrNull(publicID: PublicID): Dice? {
+        return oneOrNull(publicID.toID())
     }
 
     suspend fun oneOrNull(id: ID): Dice?

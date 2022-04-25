@@ -20,7 +20,7 @@ class DiceServiceTest : StringSpec({
             diceFactory = DiceFactory.Stub(),
             diceRepository = DiceRepository.Stub(listOf(first, second, third).toMutableList()),
             searchIndexRepository = SearchIndexRepository.Stub(listOf(first.id, second.id, third.id)),
-            hashIDFactory = HashIDFactory.Stub(),
+            publicIDFactory = PublicIDFactory.Stub(),
             diceMetricRepository = metrics
         )
 

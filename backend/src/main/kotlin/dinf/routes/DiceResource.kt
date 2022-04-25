@@ -15,31 +15,31 @@ object DiceResource {
     )
 
     @Serializable
-    @Resource("/{hashID}")
-    data class ByHashID(val dices: DiceResource = DiceResource, val hashID: String) {
+    @Resource("/{shareID}")
+    data class ByShareID(val dices: DiceResource = DiceResource, val shareID: String) {
 
-        constructor(hashID: dinf.domain.HashID) : this(hashID = hashID.print())
+        constructor(shareID: dinf.domain.PublicID) : this(shareID = shareID.print())
 
     }
 
     @Serializable
-    @Resource("/edit/{hashID}")
+    @Resource("/edit/{editID}")
     data class Edit(
         val dices: DiceResource = DiceResource,
-        val hashID: String,
+        val editID: String,
         val isFirstTime: Boolean? = null,
         val isFailed: Boolean? = null
     ) {
 
-        constructor(hashID: dinf.domain.HashID, firstTime: Boolean? = null) : this(
-            hashID = hashID.print(),
+        constructor(editID: dinf.domain.PublicID, firstTime: Boolean? = null) : this(
+            editID = editID.print(),
             isFirstTime = firstTime
         )
 
     }
 
     @Serializable
-    @Resource("/delete/{hashID}")
-    data class Delete(val dices: DiceResource = DiceResource, val hashID: String)
+    @Resource("/delete/{editID}")
+    data class Delete(val dices: DiceResource = DiceResource, val editID: String)
 
 }
