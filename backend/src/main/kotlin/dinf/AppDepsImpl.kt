@@ -48,9 +48,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     }
 
     override fun diceFactory(): DiceFactory {
-        return DiceFactory.Logging(
-            DBDiceFactory()
-        )
+        return DBDiceFactory()
     }
 
     override fun shareHashIDFactory(): HashIDFactory {
@@ -71,12 +69,14 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     }
 
     override fun diceService(): DiceService {
-        return DiceService.Impl(
-            diceFactory = diceFactory(),
-            diceRepository = diceRepository(),
-            searchIndexRepository = searchIndexRepository(),
-            hashIDFactory = editHashIDFactory(),
-            diceMetricRepository = diceMetricRepository()
+        return DiceService.Logging(
+            DiceService.Impl(
+                diceFactory = diceFactory(),
+                diceRepository = diceRepository(),
+                searchIndexRepository = searchIndexRepository(),
+                hashIDFactory = editHashIDFactory(),
+                diceMetricRepository = diceMetricRepository()
+            )
         )
     }
 

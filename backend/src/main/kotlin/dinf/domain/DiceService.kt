@@ -1,5 +1,8 @@
 package dinf.domain
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 interface DiceService {
 
     suspend fun saveDice(name: Name, edges: Edges): HashID
@@ -28,6 +31,25 @@ interface DiceService {
                 .drop(query.offset)
                 .take(query.limit)
             return diceRepository.list(ids)
+        }
+    }
+
+    class Logging(
+        private val service: DiceService
+    ) : DiceService {
+
+        private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
+
+        override suspend fun saveDice(name: Name, edges: Edges): HashID {
+            val hashID = service.saveDice(name, edges)
+            logger.info("Saved dice for id: ${hashID.toID()}")
+            return hashID
+        }
+
+        override suspend fun search(query: SearchQuery): List<Dice> {
+            val dices = service.search(query)
+            logger.info("Found ${dices.size} dices for query: $query")
+            return dices
         }
     }
 
