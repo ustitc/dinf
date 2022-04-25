@@ -1,6 +1,5 @@
 package dinf
 
-import dinf.adapters.DBDiceDelete
 import dinf.adapters.DBDiceFactory
 import dinf.adapters.DBSearchIndexRepository
 import dinf.adapters.DBDiceRepository
@@ -9,7 +8,6 @@ import dinf.adapters.HashIDFactoryImpl
 import dinf.adapters.MeiliSearchIndexRepository
 import dinf.config.Configuration
 import dinf.config.URL
-import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
@@ -35,15 +33,6 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
         return DiceGet.TopByClicks(
             diceRepository = diceRepository(),
             metrics = diceMetricRepository
-        )
-    }
-
-    override fun diceDelete(): DiceDelete {
-        return DiceDelete.Logging(
-            DiceDelete.Composite(
-                DBDiceDelete(),
-                DiceDelete { dice -> diceMetricRepository().removeForID(dice.id) }
-            )
         )
     }
 

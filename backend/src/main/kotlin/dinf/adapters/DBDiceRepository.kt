@@ -88,4 +88,12 @@ class DBDiceRepository : DiceRepository {
             list
         }
     }
+
+    override suspend fun remove(dice: Dice) {
+        transaction {
+            prepareStatement("DELETE FROM dices WHERE id = ?").also {
+                it.setPLong(1, dice.id.number)
+            }.use { it.execute() }
+        }
+    }
 }

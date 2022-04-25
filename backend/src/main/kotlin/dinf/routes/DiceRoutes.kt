@@ -1,7 +1,6 @@
 package dinf.routes
 
 import dinf.domain.Count
-import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
@@ -121,14 +120,9 @@ fun Route.edit(editHashids: HashIDFactory, diceRepository: DiceRepository) {
 }
 
 
-fun Route.delete(editHashids: HashIDFactory, diceRepository: DiceRepository, diceDelete: DiceDelete) {
+fun Route.delete(editHashids: HashIDFactory, diceService: DiceService) {
     post<DiceResource.Delete> { loc ->
-        val dice = editHashids.fromStringOrNull(loc.hashID)?.let { diceRepository.oneOrNull(it) }
-        if (dice == null) {
-            throw NotFoundException()
-        } else {
-            diceDelete.invoke(dice)
-            call.respondPage(DiceDeletedPage())
-        }
+        editHashids.fromStringOrNull(loc.hashID)?.let { diceService.deleteByHashID(it) }
+        call.respondPage(DiceDeletedPage())
     }
 }

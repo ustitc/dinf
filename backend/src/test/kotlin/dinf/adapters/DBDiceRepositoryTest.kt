@@ -4,38 +4,48 @@ import dinf.domain.ID
 import dinf.types.toPLongOrNull
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
 
 class DBDiceRepositoryTest : StringSpec({
 
     listeners(DBListener())
 
-    "lists all dices" {
+    "lists all repository" {
         val count = 40
         repeat(count) {
             createDiceEntity()
         }
 
-        val dices = DBDiceRepository()
+        val repository = DBDiceRepository()
 
-        dices.flow().toList().size shouldBe count
+        repository.flow().toList().size shouldBe count
     }
 
-    "lists only specified dices" {
+    "lists only specified repository" {
         val count = 40
         repeat(count) {
             createDiceEntity()
         }
 
-        val dices = DBDiceRepository()
+        val repository = DBDiceRepository()
 
         val serialsCount = 10
-        dices.list(
+        repository.list(
             List(serialsCount) {
                 val number = it + 1L
                 ID(number.toPLongOrNull()!!)
             }
         ).size shouldBe serialsCount
+    }
+
+    "dice is deleted" {
+        val dice = createDiceEntity()
+        val repository = DBDiceRepository()
+
+        repository.remove(dice)
+
+        DBDiceRepository().flow().count() shouldBe 0
     }
 
 })

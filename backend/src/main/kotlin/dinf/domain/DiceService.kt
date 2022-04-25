@@ -9,6 +9,8 @@ interface DiceService {
 
     suspend fun search(query: SearchQuery): List<Dice>
 
+    suspend fun deleteByHashID(hashID: HashID)
+
     class Impl(
         private val diceFactory: DiceFactory,
         private val diceRepository: DiceRepository,
@@ -32,6 +34,14 @@ interface DiceService {
                 .take(query.limit)
             return diceRepository.list(ids)
         }
+
+        override suspend fun deleteByHashID(hashID: HashID) {
+            val toDelete = diceRepository.oneOrNull(hashID)
+            if (toDelete != null) {
+                diceRepository.remove(toDelete)
+                diceMetricRepository.removeForID(toDelete.id)
+            }
+        }
     }
 
     class Logging(
@@ -51,13 +61,17 @@ interface DiceService {
             logger.info("Found ${dices.size} dices for query: $query")
             return dices
         }
+
+        override suspend fun deleteByHashID(hashID: HashID) {
+            service.deleteByHashID(hashID)
+            logger.info("Deleted dice for id: ${hashID.toID()}")
+        }
     }
 
     class Stub : DiceService {
-        override suspend fun saveDice(name: Name, edges: Edges): HashID {
-            return HashID.Stub()
-        }
+        override suspend fun saveDice(name: Name, edges: Edges): HashID = HashID.Stub()
         override suspend fun search(query: SearchQuery): List<Dice> = emptyList()
+        override suspend fun deleteByHashID(hashID: HashID) {}
     }
 
 }

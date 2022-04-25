@@ -15,6 +15,8 @@ interface DiceRepository {
 
     suspend fun list(ids: List<ID>): List<Dice>
 
+    suspend fun remove(dice: Dice)
+
     class Stub(private val list: MutableList<Dice> = mutableListOf()) : DiceRepository {
 
         override fun flow(): Flow<Dice> {
@@ -28,6 +30,8 @@ interface DiceRepository {
         override suspend fun list(ids: List<ID>): List<Dice> {
             return ids.mapNotNull { oneOrNull(it) }
         }
+
+        override suspend fun remove(dice: Dice) {}
     }
 
 }

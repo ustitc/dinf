@@ -1,3 +1,4 @@
+Delete dice in meilisearch on DiceService#delete
 Create dice without edges
 Divide share and edit hashIDs in domain
 Divide deps for domain and service layers
@@ -5,6 +6,5 @@ Add NotEmptyList type and use it in DiceFactory.Composite
 Update dice name separately of edges
 Show modal form before dice deletion
 Add transactional logic for DiceSave
-Delete dice in meilisearch on DiceDelete
 Update index in meilisearch on dice name change
 Think how to solve dice order in pagination if dice popularity is always changing

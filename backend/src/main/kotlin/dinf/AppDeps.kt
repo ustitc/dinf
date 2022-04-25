@@ -1,6 +1,5 @@
 package dinf
 
-import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
@@ -14,8 +13,6 @@ interface AppDeps {
     fun diceRepository(): DiceRepository
 
     fun diceGet(): DiceGet
-
-    fun diceDelete(): DiceDelete
 
     fun diceFactory(): DiceFactory
 
@@ -37,10 +34,6 @@ interface AppDeps {
 
         override fun diceGet(): DiceGet {
             return DiceGet.Empty()
-        }
-
-        override fun diceDelete(): DiceDelete {
-            return DiceDelete.Stub()
         }
 
         override fun diceFactory(): DiceFactory {

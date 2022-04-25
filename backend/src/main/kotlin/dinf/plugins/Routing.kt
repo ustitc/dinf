@@ -90,8 +90,7 @@ fun Application.configureRouting(
         )
         delete(
             editHashids = dependencies.editHashIDFactory(),
-            diceRepository = dependencies.diceRepository(),
-            diceDelete = dependencies.diceDelete()
+            diceService = dependencies.diceService()
         )
         search(
             diceService = dependencies.diceService(),
