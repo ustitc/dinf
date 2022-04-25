@@ -14,7 +14,7 @@ class HashidsPublicIDFactory(
 ) : PublicIDFactory {
 
     override fun shareIDFromStringOrNull(str: String): ShareID? {
-        return shareHashids.decodeOrNull(str)?.let {
+        return shareHashids.decodePLongOrNull(str)?.let {
             object : ShareID {
                 override fun print(): String = str
                 override fun toID(): ID = ID(it)
@@ -23,7 +23,7 @@ class HashidsPublicIDFactory(
     }
 
     override fun editIDFromStringOrNull(str: String): EditID? {
-        return editHashids.decodeOrNull(str)?.let {
+        return editHashids.decodePLongOrNull(str)?.let {
             object : EditID {
                 override fun print(): String = str
                 override fun toID(): ID = ID(it)
@@ -55,12 +55,7 @@ class HashidsPublicIDFactory(
         return encode(pLong.toLong())
     }
 
-    private fun Hashids.decodeOrNull(str: String): PLong? {
-        val array = decode(str)
-        return if (array.isEmpty()) {
-            null
-        } else {
-            array[0]
-        }?.toPLongOrNull()
+    private fun Hashids.decodePLongOrNull(str: String): PLong? {
+        return decodeOneOrNull(str)?.toPLongOrNull()
     }
 }
