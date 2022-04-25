@@ -14,7 +14,7 @@ fun interface DiceGet : suspend (Page, Count) -> List<Dice> {
     class TopByClicks(private val diceRepository: DiceRepository, private val metrics: DiceMetricRepository) : DiceGet by DiceGet({ page, count ->
         val toDrop = (page - 1) * count.toInt()
         diceRepository.flow()
-            .map { it to metrics.forDiceOrZero(it) }
+            .map { it to metrics.forIDOrZero(it.id) }
             .toList()
             .sortedByDescending { it.second.clicks }
             .map { it.first }

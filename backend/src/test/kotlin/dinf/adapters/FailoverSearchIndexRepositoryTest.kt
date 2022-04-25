@@ -2,7 +2,6 @@ package dinf.adapters
 
 import dinf.domain.ID
 import dinf.domain.SearchIndexRepository
-import dinf.domain.SearchQuery
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
@@ -17,7 +16,7 @@ class FailoverSearchIndexRepositoryTest : StringSpec({
             fallback = SearchIndexRepository.Empty()
         )
 
-        val result = repository.search(SearchQuery("test"))
+        val result = repository.search("test")
 
         result shouldContainExactly expected
     }
@@ -28,7 +27,7 @@ class FailoverSearchIndexRepositoryTest : StringSpec({
             fallback = SearchIndexRepository.Empty()
         )
 
-        val result = repository.search(SearchQuery("test"))
+        val result = repository.search("test")
 
         result shouldHaveSize 0
     }

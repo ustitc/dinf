@@ -5,17 +5,17 @@ import kotlinx.coroutines.flow.asFlow
 
 interface DiceMetricRepository {
 
-    suspend fun forDice(dice: Dice): Metric?
+    suspend fun forID(id: ID): Metric?
 
-    suspend fun forDiceOrZero(dice: Dice): Metric {
-        return forDice(dice) ?: Metric.zero()
+    suspend fun forIDOrZero(id: ID): Metric {
+        return forID(id) ?: Metric.zero()
     }
 
     fun popularIDs(): Flow<ID>
 
-    suspend fun removeForDice(dice: Dice)
+    suspend fun removeForID(id: ID)
 
-    suspend fun create(dice: Dice, metric: Metric)
+    suspend fun create(id: ID, metric: Metric)
 
     class InMemory private constructor(private val map: MutableMap<ID, Metric>) : DiceMetricRepository {
 
@@ -28,8 +28,8 @@ interface DiceMetricRepository {
                 .toMutableMap()
         )
 
-        override suspend fun forDice(dice: Dice): Metric? {
-            return map[dice.id]
+        override suspend fun forID(id: ID): Metric? {
+            return map[id]
         }
 
         override fun popularIDs(): Flow<ID> {
@@ -39,12 +39,12 @@ interface DiceMetricRepository {
                 .asFlow()
         }
 
-        override suspend fun removeForDice(dice: Dice) {
-            map.remove(dice.id)
+        override suspend fun removeForID(id: ID) {
+            map.remove(id)
         }
 
-        override suspend fun create(dice: Dice, metric: Metric) {
-            map[dice.id] = metric
+        override suspend fun create(id: ID, metric: Metric) {
+            map[id] = metric
         }
 
         fun clear() {

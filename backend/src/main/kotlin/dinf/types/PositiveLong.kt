@@ -28,3 +28,5 @@ typealias PLong = PositiveLong
 fun Long.toPLongOrNull(): PLong? {
     return PositiveLong.fromLongOrNull(this)
 }
+
+fun Long.toPLong(): PLong = toPLongOrNull()!!

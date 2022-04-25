@@ -4,12 +4,12 @@ interface SearchIndexRepository {
 
     fun add(dice: Dice)
 
-    fun search(query: SearchQuery): List<ID>
+    fun search(text: String): List<ID>
 
     class Stub(private val ids: List<ID> = emptyList()) : SearchIndexRepository {
         override fun add(dice: Dice) {
         }
-        override fun search(query: SearchQuery): List<ID> = ids
+        override fun search(text: String): List<ID> = ids
     }
 
     class Empty : SearchIndexRepository by Stub(emptyList())
@@ -18,7 +18,7 @@ interface SearchIndexRepository {
         override fun add(dice: Dice) {
             error("")
         }
-        override fun search(query: SearchQuery): List<ID> {
+        override fun search(text: String): List<ID> {
             error("")
         }
     }

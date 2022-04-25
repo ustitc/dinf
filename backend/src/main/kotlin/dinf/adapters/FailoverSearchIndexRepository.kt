@@ -3,7 +3,6 @@ package dinf.adapters
 import dinf.domain.Dice
 import dinf.domain.ID
 import dinf.domain.SearchIndexRepository
-import dinf.domain.SearchQuery
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -22,12 +21,12 @@ class FailoverSearchIndexRepository(
         }
     }
 
-    override fun search(query: SearchQuery): List<ID> {
+    override fun search(text: String): List<ID> {
         return try {
-            main.search(query)
+            main.search(text)
         } catch (e: Exception) {
             logger.error("Failed search. Switching to fallback method", e)
-            fallback.search(query)
+            fallback.search(text)
         }
     }
 

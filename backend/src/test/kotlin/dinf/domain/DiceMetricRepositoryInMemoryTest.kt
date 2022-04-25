@@ -15,35 +15,33 @@ class DiceMetricRepositoryInMemoryTest : StringSpec({
         metrics.clear()
     }
 
-    "no metric for unknown dice" {
-        val dice = Dice.Stub()
-
-        val metric = metrics.forDice(dice)
+    "no metric for unknown id" {
+        val metric = metrics.forID(ID.first())
 
         metric shouldBe null
     }
 
-    "return metric for existing dice" {
-        val dice = Dice.Stub()
-        metrics.create(dice, Metric.zero())
+    "return metric for existing id" {
+        val id = ID.first()
+        metrics.create(id, Metric.zero())
 
-        val metric = metrics.forDice(dice)
+        val metric = metrics.forID(id)
 
         metric shouldNotBe null
     }
 
-    "return zero metric for unknown dice" {
-        val dice = Dice.Stub()
+    "return zero metric for unknown id" {
+        val id = ID.first()
 
-        val metric = metrics.forDiceOrZero(dice)
+        val metric = metrics.forIDOrZero(id)
 
         metric.clicks shouldBe 0L
     }
 
     "no duplicates" {
-        val dice = Dice.Stub()
-        metrics.create(dice, Metric.zero())
-        metrics.create(dice, Metric.zero())
+        val id = ID.first()
+        metrics.create(id, Metric.zero())
+        metrics.create(id, Metric.zero())
 
         val all = metrics.popularIDs().toList()
 
@@ -51,32 +49,32 @@ class DiceMetricRepositoryInMemoryTest : StringSpec({
     }
 
     "serials with highest metric first" {
-        val first = Dice.Stub()
-        val second = Dice.Stub()
-        val third = Dice.Stub()
+        val first = ID.fromLong(1)
+        val second = ID.fromLong(2)
+        val third = ID.fromLong(3)
 
         metrics.create(first, Metric.Simple(2))
         metrics.create(second, Metric.Simple(10))
         metrics.create(third, Metric.Simple(4))
 
         metrics.popularIDs().toList().shouldContainInOrder(
-            second.id,
-            third.id,
-            first.id
+            second,
+            third,
+            first
         )
     }
 
     "metric deletes" {
-        val dice = Dice.Stub()
-        metrics.create(dice, Metric.zero())
+        val id = ID.first()
+        metrics.create(id, Metric.zero())
 
-        metrics.removeForDice(dice)
+        metrics.removeForID(id)
 
         metrics.popularIDs().toList() shouldHaveSize 0
     }
 
     "removing unknown metric doesn't cause and error" {
-        metrics.removeForDice(Dice.Stub())
+        metrics.removeForID(ID.first())
 
         metrics.popularIDs().toList() shouldHaveSize 0
     }

@@ -76,9 +76,9 @@ fun Route.dice(
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val metric = diceMetricRepository.forDice(dice)
+            val metric = diceMetricRepository.forID(dice.id)
             if (metric == null) {
-                diceMetricRepository.create(dice, Metric.Simple(1))
+                diceMetricRepository.create(dice.id, Metric.Simple(1))
             } else {
                 metric.addClick()
             }

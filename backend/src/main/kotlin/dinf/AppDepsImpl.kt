@@ -42,7 +42,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
         return DiceDelete.Logging(
             DiceDelete.Composite(
                 DBDiceDelete(),
-                DiceDelete { dice -> diceMetricRepository().removeForDice(dice) }
+                DiceDelete { dice -> diceMetricRepository().removeForID(dice.id) }
             )
         )
     }

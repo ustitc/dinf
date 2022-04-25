@@ -21,11 +21,13 @@ interface DiceService {
         }
 
         override suspend fun search(query: SearchQuery): List<Dice> {
-            val ids = searchIndexRepository.search(query)
-            return diceRepository.list(ids)
-                .map { it to diceMetricRepository.forDiceOrZero(it) }
+            val ids = searchIndexRepository.search(query.text)
+                .map { it to diceMetricRepository.forIDOrZero(it) }
                 .sortedByDescending { it.second.clicks }
                 .map { it.first }
+                .drop(query.offset)
+                .take(query.limit)
+            return diceRepository.list(ids)
         }
     }
 
