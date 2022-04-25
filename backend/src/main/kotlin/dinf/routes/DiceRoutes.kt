@@ -2,11 +2,9 @@ package dinf.routes
 
 import dinf.domain.Count
 import dinf.domain.DiceGet
-import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.PublicIDFactory
-import dinf.domain.Metric
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
 import dinf.html.pages.DiceCreatePage
@@ -65,23 +63,12 @@ fun Route.create(diceService: DiceService) {
     }
 }
 
-fun Route.dice(
-    publicIDFactory: PublicIDFactory,
-    diceRepository: DiceRepository,
-    diceMetricRepository: DiceMetricRepository
-) {
-    get<DiceResource.ByShareID> { loc ->
-        val dice = publicIDFactory.shareIDFromStringOrNull(loc.shareID)?.let { diceRepository.oneOrNull(it) }
+fun Route.dice(publicIDFactory: PublicIDFactory, diceService: DiceService) {
+    get<DiceResource.ByShareID> { resource ->
+        val dice = publicIDFactory.shareIDFromStringOrNull(resource.shareID)?.let { diceService.findDiceByShareID(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val metric = diceMetricRepository.forID(dice.id)
-            if (metric == null) {
-                diceMetricRepository.create(dice.id, Metric.Simple(1))
-            } else {
-                metric.addClick()
-            }
-
             call.respondPage(DicePage(dice))
         }
     }

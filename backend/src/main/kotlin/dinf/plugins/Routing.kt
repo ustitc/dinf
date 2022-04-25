@@ -76,8 +76,7 @@ fun Application.configureRouting(
         createForm()
         dice(
             publicIDFactory = dependencies.publicIDFactory(),
-            diceRepository = dependencies.diceRepository(),
-            diceMetricRepository = dependencies.diceMetricRepository()
+            diceService = dependencies.diceService()
         )
         edit(
             publicIDFactory = dependencies.publicIDFactory(),

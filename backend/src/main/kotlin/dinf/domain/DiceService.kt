@@ -7,6 +7,8 @@ interface DiceService {
 
     suspend fun saveDice(name: Name, edges: Edges): EditID
 
+    suspend fun findDiceByShareID(shareID: ShareID): Dice?
+
     suspend fun search(query: SearchQuery): List<Dice>
 
     suspend fun deleteByEditID(editID: EditID)
@@ -23,6 +25,17 @@ interface DiceService {
             val dice = diceFactory.create(name, edges)
             searchIndexRepository.add(dice)
             return publicIDFactory.editIDFromID(dice.id)
+        }
+
+        override suspend fun findDiceByShareID(shareID: ShareID): Dice? {
+            val id = shareID.toID()
+            val metric = diceMetricRepository.forID(id)
+            if (metric == null) {
+                diceMetricRepository.create(id, Metric.Simple(1))
+            } else {
+                metric.addClick()
+            }
+            return diceRepository.oneOrNull(id)
         }
 
         override suspend fun search(query: SearchQuery): List<Dice> {
@@ -56,6 +69,16 @@ interface DiceService {
             return hashID
         }
 
+        override suspend fun findDiceByShareID(shareID: ShareID): Dice? {
+            val dice = service.findDiceByShareID(shareID)
+            if (dice == null) {
+                logger.warn("Found no dice for shareID: ${shareID.print()}")
+            } else {
+                logger.info("Found dice with id ${dice.id} for shareID: ${shareID.print()}")
+            }
+            return dice
+        }
+
         override suspend fun search(query: SearchQuery): List<Dice> {
             val dices = service.search(query)
             logger.info("Found ${dices.size} dices for query: $query")
@@ -70,6 +93,7 @@ interface DiceService {
 
     class Stub : DiceService {
         override suspend fun saveDice(name: Name, edges: Edges): EditID = EditID.Stub()
+        override suspend fun findDiceByShareID(shareID: ShareID): Dice? = null
         override suspend fun search(query: SearchQuery): List<Dice> = emptyList()
         override suspend fun deleteByEditID(editID: EditID) {}
     }

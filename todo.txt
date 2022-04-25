@@ -1,5 +1,6 @@
 Delete dice in meilisearch on DiceService#delete
 Create dice without edges
+Add IDFactory interface and remove PublicID#toID
 Divide deps for domain and service layers
 Add NotEmptyList type and use it in DiceFactory.Composite
 Update dice name separately of edges
