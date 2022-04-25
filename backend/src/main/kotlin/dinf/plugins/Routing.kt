@@ -93,8 +93,14 @@ fun Application.configureRouting(
             diceRepository = dependencies.diceRepository(),
             diceDelete = dependencies.diceDelete()
         )
-        search(diceSearch = dependencies.diceSearch(), diceFeed = diceFeed)
-        htmxDices(diceGet = dependencies.diceGet(), diceFeed = diceFeed)
+        search(
+            diceService = dependencies.diceService(),
+            diceFeed = diceFeed
+        )
+        htmxDices(
+            diceGet = dependencies.diceGet(),
+            diceFeed = diceFeed
+        )
 
         static("assets") {
             resources("js")

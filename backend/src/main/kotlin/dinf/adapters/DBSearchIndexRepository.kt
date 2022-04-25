@@ -1,26 +1,25 @@
 package dinf.adapters
 
+import dinf.db.getPLong
 import dinf.domain.Dice
-import dinf.domain.DiceSearch
 import dinf.db.toSequence
 import dinf.db.transaction
+import dinf.domain.ID
+import dinf.domain.SearchIndexRepository
 import dinf.domain.SearchQuery
 
-class DBDiceSearch : DiceSearch {
+class DBSearchIndexRepository : SearchIndexRepository {
 
-    private val edgesSeparator = ";"
+    override fun add(dice: Dice) {
+    }
 
-    override suspend fun invoke(query: SearchQuery): List<Dice> {
+    override fun search(query: SearchQuery): List<ID> {
         return transaction {
             val statement = prepareStatement(
                 """
-                    SELECT 
-                        dices.id AS id, 
-                        dices.name AS name, 
-                        group_concat(edges.value, '$edgesSeparator') AS edges
-                    FROM dices, edges
-                    WHERE dices.name LIKE ? AND dices.id = edges.dice
-                    GROUP BY dices.id
+                    SELECT dices.id AS id 
+                    FROM dices
+                    WHERE dices.name LIKE ?
                     LIMIT ? OFFSET ?
                 """.trimIndent()
             ).also {
@@ -30,8 +29,8 @@ class DBDiceSearch : DiceSearch {
             }
 
             val result = statement.executeQuery().toSequence {
-                DBDice(this, edgesSeparator)
-            }.toList()
+                getPLong("id")!!
+            }.toList().map { ID(it) }
             statement.close()
             result
         }

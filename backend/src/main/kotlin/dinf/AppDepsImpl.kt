@@ -2,19 +2,17 @@ package dinf
 
 import dinf.adapters.DBDiceDelete
 import dinf.adapters.DBDiceFactory
-import dinf.adapters.DBDiceSearch
+import dinf.adapters.DBSearchIndexRepository
 import dinf.adapters.DBDiceRepository
-import dinf.adapters.FailoverDiceSearch
+import dinf.adapters.FailoverSearchIndexRepository
 import dinf.adapters.HashIDFactoryImpl
 import dinf.adapters.MeiliSearchIndexRepository
-import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
 import dinf.config.URL
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
-import dinf.domain.DiceSearch
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.HashIDFactory
@@ -49,16 +47,6 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
         )
     }
 
-    override fun diceSearch(): DiceSearch {
-        return DiceSearch.PopularFirst(
-            search = FailoverDiceSearch(
-                main = MeiliDiceSearch(meiliDeps.meiliDiceIndex(), diceRepository()),
-                fallback = DBDiceSearch()
-            ),
-            metrics = diceMetricRepository()
-        )
-    }
-
     override fun diceFactory(): DiceFactory {
         return DiceFactory.Logging(
             DBDiceFactory()
@@ -76,11 +64,20 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     }
 
     override fun searchIndexRepository(): SearchIndexRepository {
-        return MeiliSearchIndexRepository(meiliDeps.meiliDiceIndex())
+        return FailoverSearchIndexRepository(
+            main = MeiliSearchIndexRepository(meiliDeps.meiliDiceIndex()),
+            fallback = DBSearchIndexRepository()
+        )
     }
 
     override fun diceService(): DiceService {
-        return DiceService.Impl(diceFactory(), searchIndexRepository(), editHashIDFactory())
+        return DiceService.Impl(
+            diceFactory = diceFactory(),
+            diceRepository = diceRepository(),
+            searchIndexRepository = searchIndexRepository(),
+            hashIDFactory = editHashIDFactory(),
+            diceMetricRepository = diceMetricRepository()
+        )
     }
 
     private fun hashids(url: URL): Hashids {

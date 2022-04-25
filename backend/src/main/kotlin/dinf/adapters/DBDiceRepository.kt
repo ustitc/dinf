@@ -64,7 +64,7 @@ class DBDiceRepository : DiceRepository {
         }
     }
 
-    override suspend fun list(serials: List<ID>): List<Dice> {
+    override suspend fun list(ids: List<ID>): List<Dice> {
         return transaction {
             val statement = prepareStatement(
                 """
@@ -73,11 +73,11 @@ class DBDiceRepository : DiceRepository {
                     dices.name AS name, 
                     group_concat(edges.value, '$edgesSeparator') AS edges
                 FROM dices, edges 
-                WHERE dices.id IN (${serials.joinToString(separator = ",") { "?" }}) AND dices.id = edges.dice
+                WHERE dices.id IN (${ids.joinToString(separator = ",") { "?" }}) AND dices.id = edges.dice
                 GROUP BY dices.id
             """.trimIndent()
             ).also { statement ->
-                serials.forEachIndexed { i, d ->
+                ids.forEachIndexed { i, d ->
                     statement.setPLong(i + 1, d.number)
                 }
             }

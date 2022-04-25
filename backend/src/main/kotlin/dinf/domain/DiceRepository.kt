@@ -13,7 +13,7 @@ interface DiceRepository {
 
     suspend fun oneOrNull(id: ID): Dice?
 
-    suspend fun list(serials: List<ID>): List<Dice>
+    suspend fun list(ids: List<ID>): List<Dice>
 
     class Stub(private val list: MutableList<Dice> = mutableListOf()) : DiceRepository {
 
@@ -25,8 +25,8 @@ interface DiceRepository {
             return list.firstOrNull { it.id.number == id.number }
         }
 
-        override suspend fun list(serials: List<ID>): List<Dice> {
-            return serials.mapNotNull { oneOrNull(it) }
+        override suspend fun list(ids: List<ID>): List<Dice> {
+            return ids.mapNotNull { oneOrNull(it) }
         }
     }
 

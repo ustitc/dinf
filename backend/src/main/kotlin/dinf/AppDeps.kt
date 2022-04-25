@@ -4,7 +4,6 @@ import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
-import dinf.domain.DiceSearch
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.HashIDFactory
@@ -17,8 +16,6 @@ interface AppDeps {
     fun diceGet(): DiceGet
 
     fun diceDelete(): DiceDelete
-
-    fun diceSearch(): DiceSearch
 
     fun diceFactory(): DiceFactory
 
@@ -44,10 +41,6 @@ interface AppDeps {
 
         override fun diceDelete(): DiceDelete {
             return DiceDelete.Stub()
-        }
-
-        override fun diceSearch(): DiceSearch {
-            return DiceSearch.Stub()
         }
 
         override fun diceFactory(): DiceFactory {

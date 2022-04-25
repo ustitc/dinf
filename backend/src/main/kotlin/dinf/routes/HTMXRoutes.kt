@@ -2,7 +2,7 @@ package dinf.routes
 
 import dinf.domain.DiceGet
 import dinf.html.components.DiceFeed
-import dinf.domain.DiceSearch
+import dinf.domain.DiceService
 import dinf.domain.SearchQuery
 import dinf.types.toPIntOrNull
 import io.ktor.server.application.*
@@ -14,14 +14,14 @@ import io.ktor.server.routing.*
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
-fun Route.search(diceSearch: DiceSearch, diceFeed: DiceFeed) {
+fun Route.search(diceService: DiceService, diceFeed: DiceFeed) {
     get<HTMXResource.Search> { loc ->
         val query = SearchQuery(
             text = loc.query ?: "",
             page = loc.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
             count = loc.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
         )
-        val dices = diceSearch.invoke(query)
+        val dices = diceService.search(query)
         val nextPage = application.href(loc.nextPage())
         call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
             createHTML().div {
