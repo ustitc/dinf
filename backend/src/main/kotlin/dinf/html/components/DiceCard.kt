@@ -13,10 +13,10 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.h3
 
-class DiceCard(private val shareHashids: PublicIDFactory) {
+class DiceCard(private val publicIDFactory: PublicIDFactory) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
-        val hashID = shareHashids.fromID(dice.id)
+        val hashID = publicIDFactory.shareIDFromID(dice.id)
         val location = href(ResourcesFormat(), DiceResource.ByShareID(hashID))
         val id = "result-${hashID.print()}"
         val eventName = "roll"

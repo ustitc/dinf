@@ -1,18 +1,23 @@
 package dinf.domain
 
-import dinf.types.PLong
-
 interface PublicIDFactory {
 
-    fun fromStringOrNull(str: String): PublicID?
+    fun shareIDFromStringOrNull(str: String): ShareID?
 
-    fun fromID(id: ID): PublicID
+    fun editIDFromStringOrNull(str: String): EditID?
+
+    fun shareIDFromID(id: ID): ShareID
+
+    fun editIDFromID(id: ID): EditID
 
     class Stub(
-        private val publicID: PublicID = PublicID.Stub("stub", ID(PLong.fromLongOrNull(10)!!))
+        private val shareID: ShareID? = null,
+        private val editID: EditID? = null,
     ) : PublicIDFactory {
-        override fun fromStringOrNull(str: String): PublicID = publicID
-        override fun fromID(id: ID): PublicID = publicID
+        override fun shareIDFromStringOrNull(str: String): ShareID? = shareID
+        override fun editIDFromStringOrNull(str: String): EditID? = editID
+        override fun shareIDFromID(id: ID): ShareID = shareID!!
+        override fun editIDFromID(id: ID): EditID = editID!!
     }
 
 }

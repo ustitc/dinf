@@ -66,12 +66,12 @@ fun Route.create(diceService: DiceService) {
 }
 
 fun Route.dice(
-    shareHashids: PublicIDFactory,
+    publicIDFactory: PublicIDFactory,
     diceRepository: DiceRepository,
     diceMetricRepository: DiceMetricRepository
 ) {
     get<DiceResource.ByShareID> { loc ->
-        val dice = shareHashids.fromStringOrNull(loc.shareID)?.let { diceRepository.oneOrNull(it) }
+        val dice = publicIDFactory.shareIDFromStringOrNull(loc.shareID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -87,9 +87,9 @@ fun Route.dice(
     }
 }
 
-fun Route.editForm(editHashids: PublicIDFactory, baseURL: String, diceRepository: DiceRepository) {
+fun Route.editForm(publicIDFactory: PublicIDFactory, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { resource ->
-        val dice = editHashids.fromStringOrNull(resource.editID)?.let { diceRepository.oneOrNull(it) }
+        val dice = publicIDFactory.editIDFromStringOrNull(resource.editID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -100,10 +100,10 @@ fun Route.editForm(editHashids: PublicIDFactory, baseURL: String, diceRepository
     }
 }
 
-fun Route.edit(editHashids: PublicIDFactory, diceRepository: DiceRepository) {
+fun Route.edit(publicIDFactory: PublicIDFactory, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = editHashids.fromStringOrNull(loc.editID)?.let { diceRepository.oneOrNull(it) }
+        val dice = publicIDFactory.editIDFromStringOrNull(loc.editID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -122,7 +122,7 @@ fun Route.edit(editHashids: PublicIDFactory, diceRepository: DiceRepository) {
 
 fun Route.delete(editHashids: PublicIDFactory, diceService: DiceService) {
     post<DiceResource.Delete> { loc ->
-        editHashids.fromStringOrNull(loc.editID)?.let { diceService.deleteByPublicID(it) }
+        editHashids.editIDFromStringOrNull(loc.editID)?.let { diceService.deleteByEditID(it) }
         call.respondPage(DiceDeletedPage())
     }
 }

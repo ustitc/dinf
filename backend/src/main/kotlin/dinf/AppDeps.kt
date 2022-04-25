@@ -18,9 +18,7 @@ interface AppDeps {
 
     fun diceMetricRepository(): DiceMetricRepository
 
-    fun shareHashIDFactory(): PublicIDFactory
-
-    fun editHashIDFactory(): PublicIDFactory
+    fun publicIDFactory(): PublicIDFactory
 
     fun searchIndexRepository(): SearchIndexRepository
 
@@ -44,11 +42,7 @@ interface AppDeps {
             return DiceMetricRepository.InMemory()
         }
 
-        override fun shareHashIDFactory(): PublicIDFactory {
-            return PublicIDFactory.Stub()
-        }
-
-        override fun editHashIDFactory(): PublicIDFactory {
+        override fun publicIDFactory(): PublicIDFactory {
             return PublicIDFactory.Stub()
         }
 

@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory
 
 interface DiceService {
 
-    suspend fun saveDice(name: Name, edges: Edges): PublicID
+    suspend fun saveDice(name: Name, edges: Edges): EditID
 
     suspend fun search(query: SearchQuery): List<Dice>
 
-    suspend fun deleteByPublicID(publicID: PublicID)
+    suspend fun deleteByEditID(editID: EditID)
 
     class Impl(
         private val diceFactory: DiceFactory,
@@ -19,10 +19,10 @@ interface DiceService {
         private val diceMetricRepository: DiceMetricRepository
     ) : DiceService {
 
-        override suspend fun saveDice(name: Name, edges: Edges): PublicID {
+        override suspend fun saveDice(name: Name, edges: Edges): EditID {
             val dice = diceFactory.create(name, edges)
             searchIndexRepository.add(dice)
-            return publicIDFactory.fromID(dice.id)
+            return publicIDFactory.editIDFromID(dice.id)
         }
 
         override suspend fun search(query: SearchQuery): List<Dice> {
@@ -35,8 +35,8 @@ interface DiceService {
             return diceRepository.list(ids)
         }
 
-        override suspend fun deleteByPublicID(publicID: PublicID) {
-            val toDelete = diceRepository.oneOrNull(publicID)
+        override suspend fun deleteByEditID(editID: EditID) {
+            val toDelete = diceRepository.oneOrNull(editID)
             if (toDelete != null) {
                 diceRepository.remove(toDelete)
                 diceMetricRepository.removeForID(toDelete.id)
@@ -50,7 +50,7 @@ interface DiceService {
 
         private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
-        override suspend fun saveDice(name: Name, edges: Edges): PublicID {
+        override suspend fun saveDice(name: Name, edges: Edges): EditID {
             val hashID = service.saveDice(name, edges)
             logger.info("Saved dice for id: ${hashID.toID()}")
             return hashID
@@ -62,16 +62,16 @@ interface DiceService {
             return dices
         }
 
-        override suspend fun deleteByPublicID(publicID: PublicID) {
-            service.deleteByPublicID(publicID)
-            logger.info("Deleted dice for id: ${publicID.toID()}")
+        override suspend fun deleteByEditID(editID: EditID) {
+            service.deleteByEditID(editID)
+            logger.info("Deleted dice for id: ${editID.toID()}")
         }
     }
 
     class Stub : DiceService {
-        override suspend fun saveDice(name: Name, edges: Edges): PublicID = PublicID.Stub()
+        override suspend fun saveDice(name: Name, edges: Edges): EditID = EditID.Stub()
         override suspend fun search(query: SearchQuery): List<Dice> = emptyList()
-        override suspend fun deleteByPublicID(publicID: PublicID) {}
+        override suspend fun deleteByEditID(editID: EditID) {}
     }
 
 }

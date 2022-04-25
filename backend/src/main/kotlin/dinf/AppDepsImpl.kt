@@ -40,14 +40,11 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
         return DBDiceFactory()
     }
 
-    override fun shareHashIDFactory(): PublicIDFactory {
-        val hashids = hashids(cfg.urls.share)
-        return HashidsPublicIDFactory(hashids)
-    }
-
-    override fun editHashIDFactory(): PublicIDFactory {
-        val hashids = hashids(cfg.urls.edit)
-        return HashidsPublicIDFactory(hashids)
+    override fun publicIDFactory(): PublicIDFactory {
+        return HashidsPublicIDFactory(
+            shareHashids = hashids(cfg.urls.share),
+            editHashids = hashids(cfg.urls.edit)
+        )
     }
 
     override fun searchIndexRepository(): SearchIndexRepository {
@@ -63,7 +60,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
                 diceFactory = diceFactory(),
                 diceRepository = diceRepository(),
                 searchIndexRepository = searchIndexRepository(),
-                publicIDFactory = editHashIDFactory(),
+                publicIDFactory = publicIDFactory(),
                 diceMetricRepository = diceMetricRepository()
             )
         )
