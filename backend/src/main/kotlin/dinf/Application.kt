@@ -2,7 +2,6 @@ package dinf
 
 import dinf.config.readConfiguration
 import dinf.db.configureDatabase
-import dinf.meilisearch.populateMeilisearch
 import dinf.plugins.configureCallLogging
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
@@ -20,7 +19,7 @@ fun main() {
         val appDeps = AppDepsImpl(meiliDeps, cfg)
 
         launch {
-            populateMeilisearch(appDeps, meiliDeps)
+            populateSearchIndex(appDeps)
         }
 
         configureRouting(cfg, appDeps)

@@ -1,5 +1,8 @@
 Create dice without edges
 Make dinf not dependent of meili
+Divide share and edit hashIDs in domain
+Divide deps for domain and service layers
+Add NotEmptyList type and use it in DiceFactory.Composite
 Update dice name separately of edges
 Show modal form before dice deletion
 Add transactional logic for DiceSave

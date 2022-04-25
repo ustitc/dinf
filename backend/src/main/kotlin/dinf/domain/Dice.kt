@@ -1,6 +1,5 @@
 package dinf.domain
 
-import dinf.types.PLong
 import dinf.types.toPLongOrNull
 import kotlin.random.Random
 
@@ -31,11 +30,5 @@ interface Dice {
             this.edges = edges
         }
     }
-
-    class New(name: Name, edges: Edges) : Dice by Simple(
-        id = ID(PLong.fromLongOrNull(10)!!),
-        name = name,
-        edges = edges
-    )
 
 }

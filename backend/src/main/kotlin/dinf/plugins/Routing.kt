@@ -1,6 +1,5 @@
 package dinf.plugins
 
-import dev.ustits.htmx.HTMXConfiguration
 import dinf.AppDeps
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
@@ -72,8 +71,7 @@ fun Application.configureRouting(
             diceFeed = diceFeed
         )
         create(
-            editHashids = dependencies.editHashIDFactory(),
-            diceFactory = dependencies.diceFactory()
+            diceService = dependencies.diceService()
         )
         createForm()
         dice(

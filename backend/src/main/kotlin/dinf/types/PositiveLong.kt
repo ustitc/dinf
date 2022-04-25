@@ -17,6 +17,8 @@ value class PositiveLong private constructor(private val number: Long) {
             }
         }
 
+        fun fromLong(long: Long): PositiveLong = fromLongOrNull(long)!!
+
     }
 
 }

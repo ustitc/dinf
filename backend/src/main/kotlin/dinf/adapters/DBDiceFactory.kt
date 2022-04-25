@@ -5,6 +5,7 @@ import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceFactory
+import dinf.domain.Edges
 import dinf.domain.ID
 import dinf.domain.Name
 import dinf.types.PLong
@@ -12,20 +13,19 @@ import java.sql.Connection
 
 class DBDiceFactory : DiceFactory {
 
-    override suspend fun create(dice: Dice): Dice {
+    override suspend fun create(name: Name, edges: Edges): Dice {
         val id = transaction {
             val statement = prepareStatement(
                 """
                     INSERT INTO dices (name, created_at, updated_at) 
                     VALUES (?, date('now'), date('now'))
-                    RETURNING id, name
+                    RETURNING id
                 """.trimIndent()
-            ).also { it.setString(1, dice.name.print()) }
+            ).also { it.setString(1, name.print()) }
 
             val rs = statement.executeQuery()
             val id = rs.getPLong("id")!!
-            val name = rs.getString("name")
-            dice.edges.toStringList().forEach { edge ->
+            edges.toStringList().forEach { edge ->
                 saveEdge(id, edge)
             }
             statement.close()

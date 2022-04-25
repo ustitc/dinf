@@ -1,12 +1,11 @@
 package dinf.routes
 
 import dinf.domain.Count
-import dinf.domain.Dice
 import dinf.domain.DiceDelete
 import dinf.domain.DiceGet
 import dinf.domain.DiceMetricRepository
-import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
+import dinf.domain.DiceService
 import dinf.domain.HashIDFactory
 import dinf.domain.Metric
 import dinf.domain.Page
@@ -53,17 +52,15 @@ fun Route.createForm() {
     }
 }
 
-fun Route.create(editHashids: HashIDFactory, diceFactory: DiceFactory) {
-    post<DiceResource.New> { loc ->
+fun Route.create(diceService: DiceService) {
+    post<DiceResource.New> { resource ->
         val params = call.receiveParameters()
-        val dice = HTMLParamsDice.fromParametersOrNull(params)
-            ?.let { Dice.New(it.name, it.edges) }
-            ?.let { diceFactory.create(it) }
-        val redirectURL = if (dice != null) {
-            val id = editHashids.fromID(dice.id)
-            application.href(DiceResource.Edit(hashID = id, firstTime = true))
+        val hashID = HTMLParamsDice.fromParametersOrNull(params)
+            ?.let { diceService.saveDice(it.name, it.edges) }
+        val redirectURL = if (hashID != null) {
+            application.href(DiceResource.Edit(hashID = hashID, firstTime = true))
         } else {
-            application.href(DiceResource.New(isFailed = true))
+            application.href(resource.copy(isFailed = true))
         }
         call.respondRedirect(redirectURL)
     }

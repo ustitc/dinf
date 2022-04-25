@@ -6,7 +6,7 @@ import dinf.adapters.DBDiceSearch
 import dinf.adapters.DBDiceRepository
 import dinf.adapters.FailoverDiceSearch
 import dinf.adapters.HashIDFactoryImpl
-import dinf.adapters.MeiliDiceFactory
+import dinf.adapters.MeiliSearchIndexRepository
 import dinf.adapters.MeiliDiceSearch
 import dinf.config.Configuration
 import dinf.config.URL
@@ -16,7 +16,9 @@ import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceSearch
 import dinf.domain.DiceRepository
+import dinf.domain.DiceService
 import dinf.domain.HashIDFactory
+import dinf.domain.SearchIndexRepository
 import org.hashids.Hashids
 
 class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configuration) : AppDeps {
@@ -59,10 +61,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
 
     override fun diceFactory(): DiceFactory {
         return DiceFactory.Logging(
-            DiceFactory.Composite(
-                DBDiceFactory(),
-                MeiliDiceFactory(meiliDeps.meiliDiceIndex())
-            )
+            DBDiceFactory()
         )
     }
 
@@ -74,6 +73,14 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     override fun editHashIDFactory(): HashIDFactory {
         val hashids = hashids(cfg.urls.edit)
         return HashIDFactoryImpl(hashids)
+    }
+
+    override fun searchIndexRepository(): SearchIndexRepository {
+        return MeiliSearchIndexRepository(meiliDeps.meiliDiceIndex())
+    }
+
+    override fun diceService(): DiceService {
+        return DiceService.Impl(diceFactory(), searchIndexRepository(), editHashIDFactory())
     }
 
     private fun hashids(url: URL): Hashids {

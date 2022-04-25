@@ -2,17 +2,16 @@ package dinf.adapters
 
 import com.meilisearch.sdk.Index
 import dinf.domain.Dice
-import dinf.domain.DiceFactory
+import dinf.domain.SearchIndexRepository
 import org.json.JSONObject
 
-class MeiliDiceFactory(private val index: Index) : DiceFactory {
+class MeiliSearchIndexRepository(private val index: Index): SearchIndexRepository {
 
-    override suspend fun create(dice: Dice): Dice {
+    override fun add(dice: Dice) {
         val json = JSONObject().also {
             it.append(MeiliDiceCollection.idField, dice.id.number)
             it.append(MeiliDiceCollection.nameField, dice.name.print())
         }
         index.addDocuments(json.toString())
-        return dice
     }
 }

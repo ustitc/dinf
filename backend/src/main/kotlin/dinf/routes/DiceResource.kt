@@ -9,14 +9,14 @@ object DiceResource {
 
     @Serializable
     @Resource("/new")
-    class New(
+    data class New(
         val dices: DiceResource = DiceResource,
         val isFailed: Boolean? = null
     )
 
     @Serializable
     @Resource("/{hashID}")
-    class ByHashID(val dices: DiceResource = DiceResource, val hashID: String) {
+    data class ByHashID(val dices: DiceResource = DiceResource, val hashID: String) {
 
         constructor(hashID: dinf.domain.HashID) : this(hashID = hashID.print())
 
