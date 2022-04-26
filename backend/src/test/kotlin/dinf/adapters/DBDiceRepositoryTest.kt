@@ -48,4 +48,13 @@ class DBDiceRepositoryTest : StringSpec({
         DBDiceRepository().flow().count() shouldBe 0
     }
 
+    "find dice without edges" {
+        val dice = createDiceEntity(edges = emptyList())
+        val repository = DBDiceRepository()
+
+        val result = repository.oneOrNull(dice.id)
+
+        result!!.edges.toStringList() shouldBe emptyList()
+    }
+
 })

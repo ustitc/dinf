@@ -17,7 +17,9 @@ class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
                 Dice.Simple(
                     id = it,
                     name = Name(result.getString("name")),
-                    edges = Edges(result.getString("edges").split(edgesSeparator))
+                    edges = Edges(
+                        result.getString("edges")?.split(edgesSeparator) ?: emptyList()
+                    )
                 )
             }
     )

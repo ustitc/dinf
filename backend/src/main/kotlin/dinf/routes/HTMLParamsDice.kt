@@ -11,8 +11,8 @@ class HTMLParamsDice(val name: Name, val edges: Edges) {
 
         fun fromParametersOrNull(parameters: Parameters): HTMLParamsDice? {
             val name = parameters["name"]?.toNBStringOrNull()
-            val edges = parameters.getAll("edges")?.filter { it.isNotBlank() }
-            return if (name == null || edges == null) {
+            val edges = parameters.getAll("edges")?.filter { it.isNotBlank() } ?: emptyList()
+            return if (name == null) {
                 null
             } else {
                 HTMLParamsDice(Name(name), Edges(edges))

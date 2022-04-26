@@ -49,8 +49,9 @@ class DBDiceRepository : DiceRepository {
                         dices.id AS id, 
                         dices.name AS name, 
                         group_concat(edges.value, '$edgesSeparator') AS edges
-                    FROM dices, edges 
-                    WHERE dices.id = ? AND dices.id = edges.dice
+                    FROM dices
+                    LEFT JOIN edges ON dices.id = edges.dice
+                    WHERE dices.id = ?
                     GROUP BY dices.id
                 """.trimIndent()
             ).also { statement ->

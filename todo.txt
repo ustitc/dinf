@@ -1,5 +1,4 @@
 Delete dice in meilisearch on DiceService#delete
-Create dice without edges
 Add tests to offset
 Add IDFactory interface and remove PublicID#toID
 Divide deps for domain and service layers

@@ -11,6 +11,21 @@ class NotBlankString(private val refined: Refined<NotBlank, String>): CharSequen
 
     override fun toString(): String = refined.unrefined
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as NotBlankString
+
+        if (refined != other.refined) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return refined.hashCode()
+    }
+
 }
 
 typealias NBString = NotBlankString

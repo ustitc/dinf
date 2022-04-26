@@ -58,7 +58,8 @@ class DiceEditPage(
                 }
             }
 
-            insert(RollBlock(dice)) {
+            insert(RollBlock(dice.edges.toStringList())) {
+                withResultOnTop = false
             }
 
             insert(DiceForm(Form(editURL))) {

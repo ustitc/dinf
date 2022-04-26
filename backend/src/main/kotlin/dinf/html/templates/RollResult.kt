@@ -1,8 +1,6 @@
 package dinf.html.templates
 
 import dev.ustits.hyperscript.hyperscript
-import dinf.domain.Dice
-import dinf.domain.Edges
 import dinf.html.EscapedString
 import dinf.html.HTMLTextWithNewLines
 import dinf.html.HtmlContent
@@ -18,14 +16,14 @@ import kotlinx.html.style
 class RollResult(
     private val _id: String,
     private val eventName: String,
-    private val dice: Dice
+    private val rollValues: List<String>
 ) : Template<FlowContent> {
 
     private val edgesAttr = "data-edges"
 
     override fun FlowContent.apply() {
         p("roll") {
-            dataAttribute(edgesAttr, EdgesAttr(dice.edges))
+            dataAttribute(edgesAttr, EdgesAttr(rollValues))
             withRenderedNewLineSymbols()
             hyperscript = """
                 on $eventName get JSON.parse(@$edgesAttr)
@@ -43,10 +41,10 @@ class RollResult(
     }
 
     @JvmInline
-    private value class EdgesAttr(private val edges: Edges) : HtmlContent {
+    private value class EdgesAttr(private val values: List<String>) : HtmlContent {
         override fun print(): String {
             return JSStringArray(
-                edges.toStringList().map {
+                values.map {
                     HTMLTextWithNewLines(
                         EscapedString(it)
                     )

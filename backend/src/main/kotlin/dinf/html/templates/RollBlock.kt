@@ -1,20 +1,29 @@
 package dinf.html.templates
 
-import dinf.domain.Dice
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 
 @Suppress("MemberVisibilityCanBePrivate")
-class RollBlock(private val dice: Dice) : Template<FlowContent> {
-
-    private val id = "result"
-    private val eventName = "roll"
+class RollBlock(private var rollValues: List<String>) : Template<FlowContent> {
 
     val button = TemplatePlaceholder<RollButton>()
     val result = TemplatePlaceholder<RollResult>()
 
+    var id = "result"
+    var eventName = "roll"
+    var withResultOnTop: Boolean = false
+    var defaultValue: String = "Dice is empty, add some values to start rolling!"
+
     override fun FlowContent.apply() {
-        insert(RollButton(id, eventName), button)
-        insert(RollResult(id, eventName, dice), result)
+        if (rollValues.isEmpty()) {
+            rollValues = listOf(defaultValue)
+        }
+        if (withResultOnTop) {
+            insert(RollResult(id, eventName, rollValues), result)
+            insert(RollButton(id, eventName), button)
+        } else {
+            insert(RollButton(id, eventName), button)
+            insert(RollResult(id, eventName, rollValues), result)
+        }
     }
 }

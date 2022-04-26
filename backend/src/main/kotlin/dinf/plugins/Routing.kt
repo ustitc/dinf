@@ -50,7 +50,7 @@ fun Application.configureRouting(
     val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
 
     install(StatusPages) {
-        status(HttpStatusCode.NotFound) { call, status ->
+        status(HttpStatusCode.NotFound) { call, _ ->
             call.respondHtmlTemplate(layout) {
                 content {
                     p {
