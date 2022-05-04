@@ -8,13 +8,19 @@ on:
 
 jobs:
   build:
-    uses: ustits/dinf/.github/workflows/build_workflow.yml@main
+    uses: ustits/actions/.github/workflows/jdk_build.yml@main
+    with:
+      jdk_version: '11'
+      jdk_distribution: 'temurin'
+      distribution_path: 'backend/build/distributions/backend.tar'
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
-    uses: ustits/dinf/.github/workflows/deploy_workflow.yml@main
+    uses: ustits/actions/.github/workflows/jdk_deploy.yml@main
     with:
       version: ${{ github.run_id }}
+      tar_name: 'backend'
+      app_name: 'dinf'
     secrets:
       host: ${{ secrets.HOST }}
       username: ${{ secrets.USERNAME }}
