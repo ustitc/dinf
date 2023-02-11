@@ -12,8 +12,10 @@ class FormField : Template<FlowContent> {
     val control = Placeholder<FlowContent>()
 
     override fun FlowContent.apply() {
-        label {
-            +name
+        if (name.isNotBlank()) {
+            label {
+                +name
+            }
         }
         insert(control)
         if (help.isNotBlank()) {
