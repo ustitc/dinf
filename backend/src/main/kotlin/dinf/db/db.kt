@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource
 import dinf.config.Database
 import org.flywaydb.core.Flyway
 import java.sql.Connection
+import java.sql.PreparedStatement
 import java.sql.SQLException
 import javax.sql.DataSource
 
@@ -40,3 +41,16 @@ fun <R> transaction(block: Connection.() -> R): R =
             close()
         }
     }
+
+fun <R> sql(sql: String, block: PreparedStatement.() -> R): R {
+    return transaction {
+        prepareStatement(sql, block)
+    }
+}
+
+fun <R> Connection.prepareStatement(sql: String, block: PreparedStatement.() -> R): R {
+    val statement = prepareStatement(sql)
+    val result = block.invoke(statement)
+    statement.close()
+    return result
+}

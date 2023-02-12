@@ -1,9 +1,12 @@
 package dinf.plugins
 
+import dev.ustits.htmx.HTMXConfiguration
 import dinf.AppDeps
+import dinf.auth.UserSession
 import dinf.html.components.DiceCard
 import dinf.html.components.DiceFeed
 import dinf.config.Configuration
+import dinf.html.pages.NotFoundPage
 import dinf.html.pages.Page
 import dinf.routes.DiceResource
 import dinf.routes.create
@@ -15,7 +18,15 @@ import dinf.routes.edit
 import dinf.routes.editForm
 import dinf.routes.search
 import dinf.html.templates.Layout
+import dinf.routes.LoginResource
+import dinf.routes.LogoutResource
+import dinf.routes.RegisterResource
 import dinf.routes.htmxDices
+import dinf.routes.login
+import dinf.routes.loginForm
+import dinf.routes.logout
+import dinf.routes.register
+import dinf.routes.registerForm
 import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.http.*
@@ -24,40 +35,44 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.href
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import io.ktor.server.webjars.*
-import kotlinx.html.p
 
-private lateinit var layout: Layout
+private lateinit var htmxConfiguration: HTMXConfiguration
 
 suspend fun ApplicationCall.respondPage(page: Page) {
-    respondHtmlTemplate(layout) {
+    val session = sessions.get<UserSession>()
+    respondHtmlTemplate(
+        Layout(
+            newDiceURL = application.href(DiceResource.New()),
+            htmxConfiguration = htmxConfiguration,
+            loginURL = application.href(LoginResource()),
+            logoutURL = application.href(LogoutResource),
+            registerURL = application.href(RegisterResource()),
+            userSession = session
+        )
+    ) {
         insert(page) {}
     }
 }
 
 fun Application.configureRouting(
     config: Configuration,
-    dependencies: AppDeps
+    deps: AppDeps
 ) {
     install(Resources)
 
-    layout = Layout(htmxConfiguration = config.htmx)
+    htmxConfiguration = config.htmx
     val baseURL = config.server.baseURL
 
     val newDiceURL = href(DiceResource.New())
 
-    val diceCard = DiceCard(publicIDFactory = dependencies.publicIDFactory())
+    val diceCard = DiceCard(publicIDFactory = deps.publicIDFactory())
     val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
 
     install(StatusPages) {
         status(HttpStatusCode.NotFound) { call, _ ->
-            call.respondHtmlTemplate(layout) {
-                content {
-                    p {
-                        +"There is nothing here"
-                    }
-                }
-            }
+            call.respondPage(NotFoundPage())
         }
     }
 
@@ -66,37 +81,42 @@ fun Application.configureRouting(
     }
 
     routing {
+        loginForm()
+        registerForm()
+        login()
+        register(deps.userPrincipalService())
+        logout()
         index(
-            diceService = dependencies.diceService(),
+            diceService = deps.diceService(),
             diceFeed = diceFeed
         )
         create(
-            diceService = dependencies.diceService()
+            diceService = deps.diceService()
         )
         createForm()
         dice(
-            publicIDFactory = dependencies.publicIDFactory(),
-            diceService = dependencies.diceService()
+            publicIDFactory = deps.publicIDFactory(),
+            diceService = deps.diceService()
         )
         edit(
-            publicIDFactory = dependencies.publicIDFactory(),
-            diceRepository = dependencies.diceRepository()
+            publicIDFactory = deps.publicIDFactory(),
+            diceRepository = deps.diceRepository()
         )
         editForm(
-            publicIDFactory = dependencies.publicIDFactory(),
+            publicIDFactory = deps.publicIDFactory(),
             baseURL = baseURL,
-            diceRepository = dependencies.diceRepository()
+            diceRepository = deps.diceRepository()
         )
         delete(
-            editHashids = dependencies.publicIDFactory(),
-            diceService = dependencies.diceService()
+            editHashids = deps.publicIDFactory(),
+            diceService = deps.diceService()
         )
         search(
-            diceService = dependencies.diceService(),
+            diceService = deps.diceService(),
             diceFeed = diceFeed
         )
         htmxDices(
-            diceService = dependencies.diceService(),
+            diceService = deps.diceService(),
             diceFeed = diceFeed
         )
 

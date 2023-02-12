@@ -1,11 +1,9 @@
 package dinf.html.templates
 
-import dinf.routes.DiceResource
 import dev.ustits.htmx.HTMXConfiguration
 import dev.ustits.htmx.htmxConfiguration
+import dinf.auth.UserSession
 import dinf.html.components.picoHyperlinkAsButton
-import io.ktor.resources.*
-import io.ktor.resources.serialization.*
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.HTML
@@ -19,17 +17,20 @@ import kotlinx.html.link
 import kotlinx.html.main
 import kotlinx.html.meta
 import kotlinx.html.p
+import kotlinx.html.role
 import kotlinx.html.script
 import kotlinx.html.small
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMXConfiguration) : Template<HTML> {
-
-    constructor(htmxConfiguration: HTMXConfiguration) : this(
-        newDiceURL = href(ResourcesFormat(), DiceResource.New()),
-        htmxConfiguration = htmxConfiguration
-    )
+class Layout(
+    private val newDiceURL: String,
+    private val htmxConfiguration: HTMXConfiguration,
+    val loginURL: String,
+    val logoutURL: String,
+    val registerURL: String,
+    val userSession: UserSession?
+) : Template<HTML> {
 
     val content = Placeholder<FlowContent>()
 
@@ -59,9 +60,30 @@ class Layout(private val newDiceURL: String, private val htmxConfiguration: HTMX
                             }
                         }
                     }
-                    end {
-                        picoHyperlinkAsButton(href = newDiceURL) {
-                            +"New dice"
+                    if (userSession == null) {
+                        end {
+                            a(classes = "outline", href = loginURL) {
+                                role = "button"
+                                +"Login"
+                            }
+                        }
+                        end {
+                            a(href = registerURL) {
+                                role = "button"
+                                +"Register"
+                            }
+                        }
+                    } else {
+                        end {
+                            picoHyperlinkAsButton(href = newDiceURL) {
+                                +"New dice"
+                            }
+                        }
+                        end {
+                            a(classes = "secondary outline", href = logoutURL) {
+                                role = "button"
+                                +"Logout"
+                            }
                         }
                     }
                 }

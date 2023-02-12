@@ -1,11 +1,16 @@
 package dinf
 
+import dinf.adapters.BCryptPasswordFactory
 import dinf.adapters.DBDiceFactory
 import dinf.adapters.DBSearchIndexRepository
 import dinf.adapters.DBDiceRepository
 import dinf.adapters.FailoverSearchIndexRepository
 import dinf.adapters.HashidsPublicIDFactory
 import dinf.adapters.MeiliSearchIndexRepository
+import dinf.adapters.SqliteUserPrincipalFactory
+import dinf.adapters.SqliteUserPrincipalRepository
+import dinf.auth.PasswordFactory
+import dinf.auth.UserPrincipalService
 import dinf.config.Configuration
 import dinf.config.URL
 import dinf.domain.DiceMetricRepository
@@ -19,6 +24,15 @@ import org.hashids.Hashids
 class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configuration) : AppDeps {
 
     private val diceMetricRepository = DiceMetricRepository.InMemory()
+    private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
+    private val userPrincipalService: UserPrincipalService = UserPrincipalService(
+        repo = SqliteUserPrincipalRepository(
+            passwordFactory = passwordFactory
+        ),
+        factory = SqliteUserPrincipalFactory(),
+        passwordFactory = passwordFactory,
+        nameSource = { "Happy User" }
+    )
 
     override fun diceRepository(): DiceRepository {
         return DBDiceRepository()
@@ -56,6 +70,10 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
                 diceMetricRepository = diceMetricRepository()
             )
         )
+    }
+
+    override fun userPrincipalService(): UserPrincipalService {
+        return userPrincipalService
     }
 
     private fun hashids(url: URL): Hashids {

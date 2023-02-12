@@ -1,6 +1,6 @@
 package dinf.adapters
 
-import dinf.db.getPLong
+import dinf.db.getPLongOrNull
 import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
@@ -24,7 +24,7 @@ class DBDiceFactory : DiceFactory {
             ).also { it.setString(1, name.print()) }
 
             val rs = statement.executeQuery()
-            val id = rs.getPLong("id")!!
+            val id = rs.getPLongOrNull("id")!!
             edges.toStringList().forEach { edge ->
                 saveEdge(id, edge)
             }

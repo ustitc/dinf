@@ -1,5 +1,9 @@
 package dinf
 
+import dinf.auth.PasswordFactory
+import dinf.auth.UserPrincipalFactory
+import dinf.auth.UserPrincipalRepository
+import dinf.auth.UserPrincipalService
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
@@ -20,6 +24,8 @@ interface AppDeps {
     fun searchIndexRepository(): SearchIndexRepository
 
     fun diceService(): DiceService
+
+    fun userPrincipalService(): UserPrincipalService
 
     class Stub : AppDeps {
 
@@ -45,6 +51,15 @@ interface AppDeps {
 
         override fun diceService(): DiceService {
             return DiceService.Stub()
+        }
+
+        override fun userPrincipalService(): UserPrincipalService {
+            return UserPrincipalService(
+                repo = UserPrincipalRepository.InMemory(),
+                factory = UserPrincipalFactory.Stub(),
+                passwordFactory = PasswordFactory.Stub(),
+                nameSource = { "Happy User" }
+            )
         }
     }
 }

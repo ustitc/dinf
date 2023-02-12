@@ -24,6 +24,8 @@ ktor-serverWebjars = { module = "io.ktor:ktor-server-webjars", version.ref = "kt
 ktor-serverHtmlBuilder = { module = "io.ktor:ktor-server-html-builder", version.ref = "ktor" }
 ktor-serverStatusPages = { module = "io.ktor:ktor-server-status-pages", version.ref = "ktor" }
 ktor-serverCallLogging = { module = "io.ktor:ktor-server-call-logging", version.ref = "ktor" }
+ktor-serverAuth = { module = "io.ktor:ktor-server-auth", version.ref = "ktor" }
+ktor-serverSessions = { module = "io.ktor:ktor-server-sessions", version.ref = "ktor" }
 kotest-assertionsCore = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-extensionsAssertionsKtor = { module = "io.kotest.extensions:kotest-assertions-ktor", version.ref = "kotestKtor" }
 kotest-frameworkEngine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }

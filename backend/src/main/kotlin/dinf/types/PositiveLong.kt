@@ -30,3 +30,5 @@ fun Long.toPLongOrNull(): PLong? {
 }
 
 fun Long.toPLong(): PLong = toPLongOrNull()!!
+
+fun Int.toPLong(): PLong = toLong().toPLong()

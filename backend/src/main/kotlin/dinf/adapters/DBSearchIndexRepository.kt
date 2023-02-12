@@ -1,6 +1,6 @@
 package dinf.adapters
 
-import dinf.db.getPLong
+import dinf.db.getPLongOrNull
 import dinf.domain.Dice
 import dinf.db.toSequence
 import dinf.db.transaction
@@ -25,7 +25,7 @@ class DBSearchIndexRepository : SearchIndexRepository {
             }
 
             val result = statement.executeQuery().toSequence {
-                getPLong("id")!!
+                getPLongOrNull("id")!!
             }.toList().map { ID(it) }
             statement.close()
             result

@@ -12,7 +12,7 @@ import java.sql.ResultSet
 class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
 
     constructor(result: ResultSet, edgesSeparator: String) : this(
-        ID(result.getPLong("id")!!)
+        ID(result.getPLong("id"))
             .let {
                 Dice.Simple(
                     id = it,

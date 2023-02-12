@@ -32,10 +32,13 @@ dependencies {
     implementation(libs.ktor.serverStatusPages)
     implementation(libs.ktor.serverCallLogging)
     implementation(libs.ktor.serverMetricsMicrometer)
+    implementation(libs.ktor.serverAuth)
+    implementation(libs.ktor.serverSessions)
 
     implementation("io.micrometer:micrometer-registry-prometheus:1.8.4")
 
     implementation("org.json:json:20220320")
+    implementation("org.mindrot:jbcrypt:0.4")
 
     implementation("org.webjars.bowergithub.picocss:pico:1.5.0")
     implementation("org.webjars.npm:htmx.org:1.7.0")

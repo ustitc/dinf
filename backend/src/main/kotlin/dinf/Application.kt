@@ -2,6 +2,7 @@ package dinf
 
 import dinf.config.readConfiguration
 import dinf.db.configureDatabase
+import dinf.plugins.configureAuth
 import dinf.plugins.configureCallLogging
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
@@ -23,6 +24,7 @@ fun main() {
         }
 
         configureRouting(cfg, appDeps)
+        configureAuth(appDeps)
         configureCallLogging()
         configureMetrics()
     }.start(wait = true)
