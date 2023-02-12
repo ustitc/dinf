@@ -3,13 +3,13 @@ package dinf.adapters
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
 
-class DBSearchIndexRepositoryTest : StringSpec({
+class SqliteSearchIndexRepositoryTest : StringSpec({
 
-    listeners(DBListener())
+    listeners(SqliteListener())
 
     "dice is found by name" {
         createDiceEntity("pinky")
-        val repository = DBSearchIndexRepository()
+        val repository = SqliteSearchIndexRepository()
 
         val result = repository.search("pinky")
 
@@ -18,7 +18,7 @@ class DBSearchIndexRepositoryTest : StringSpec({
 
     "dice is found by part of name" {
         createDiceEntity("pinky")
-        val repository = DBSearchIndexRepository()
+        val repository = SqliteSearchIndexRepository()
 
         val result = repository.search("pi")
 

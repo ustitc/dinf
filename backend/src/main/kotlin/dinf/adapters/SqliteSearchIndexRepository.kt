@@ -7,7 +7,7 @@ import dinf.db.transaction
 import dinf.domain.ID
 import dinf.domain.SearchIndexRepository
 
-class DBSearchIndexRepository : SearchIndexRepository {
+class SqliteSearchIndexRepository : SearchIndexRepository {
 
     override fun add(dice: Dice) {
     }

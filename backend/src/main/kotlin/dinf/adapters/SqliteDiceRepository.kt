@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 
-class DBDiceRepository : DiceRepository {
+class SqliteDiceRepository : DiceRepository {
 
     private val edgesSeparator = ";"
 
@@ -32,7 +32,7 @@ class DBDiceRepository : DiceRepository {
         val rs = statement.executeQuery()
         return flow<Dice> {
             rs.toSequence {
-                DBDice(this, edgesSeparator)
+                SqliteDice(this, edgesSeparator)
             }.forEach { emit(it) }
         }.onCompletion {
             rs.close()
@@ -58,7 +58,7 @@ class DBDiceRepository : DiceRepository {
                 statement.setPLong(1, id.number)
             }
             val dice = statement.executeQuery().firstOrNull {
-                DBDice(this, edgesSeparator)
+                SqliteDice(this, edgesSeparator)
             }
             statement.close()
             dice
@@ -83,7 +83,7 @@ class DBDiceRepository : DiceRepository {
                 }
             }
             val list = statement.executeQuery().toSequence {
-                DBDice(this, edgesSeparator)
+                SqliteDice(this, edgesSeparator)
             }.toList()
             statement.close()
             list

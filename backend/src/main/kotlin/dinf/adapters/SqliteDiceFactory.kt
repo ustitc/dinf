@@ -11,7 +11,7 @@ import dinf.domain.Name
 import dinf.types.PLong
 import java.sql.Connection
 
-class DBDiceFactory : DiceFactory {
+class SqliteDiceFactory : DiceFactory {
 
     override suspend fun create(name: Name, edges: Edges): Dice {
         val id = transaction {
@@ -32,7 +32,7 @@ class DBDiceFactory : DiceFactory {
             rs.close()
             id
         }
-        return DBDiceRepository().oneOrNull(ID(id)) ?: error("Dice was not saved")
+        return SqliteDiceRepository().oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
     private fun Connection.saveEdge(diceID: PLong, edge: String) {

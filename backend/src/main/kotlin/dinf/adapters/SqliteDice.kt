@@ -9,7 +9,7 @@ import dinf.domain.Name
 import dinf.domain.ID
 import java.sql.ResultSet
 
-class DBDice private constructor(dice: Dice.Simple) : Dice by dice {
+class SqliteDice private constructor(dice: Dice.Simple) : Dice by dice {
 
     constructor(result: ResultSet, edgesSeparator: String) : this(
         ID(result.getPLong("id"))

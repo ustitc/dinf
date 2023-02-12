@@ -5,12 +5,12 @@ import dinf.domain.Name
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class DBDiceFactoryTest : StringSpec({
+class SqliteDiceFactoryTest : StringSpec({
 
-    listeners(DBListener())
+    listeners(SqliteListener())
 
     "creates dice" {
-        val factory = DBDiceFactory()
+        val factory = SqliteDiceFactory()
         val name = Name("test")
         val edges = Edges(listOf("1", "2", "3"))
 
@@ -21,7 +21,7 @@ class DBDiceFactoryTest : StringSpec({
     }
 
     "creates dice without edges" {
-        val factory = DBDiceFactory()
+        val factory = SqliteDiceFactory()
         val name = Name("test")
         val edges = Edges(listOf())
 

@@ -7,9 +7,9 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
 
-class DBDiceRepositoryTest : StringSpec({
+class SqliteDiceRepositoryTest : StringSpec({
 
-    listeners(DBListener())
+    listeners(SqliteListener())
 
     "lists all repository" {
         val count = 40
@@ -17,7 +17,7 @@ class DBDiceRepositoryTest : StringSpec({
             createDiceEntity()
         }
 
-        val repository = DBDiceRepository()
+        val repository = SqliteDiceRepository()
 
         repository.flow().toList().size shouldBe count
     }
@@ -28,7 +28,7 @@ class DBDiceRepositoryTest : StringSpec({
             createDiceEntity()
         }
 
-        val repository = DBDiceRepository()
+        val repository = SqliteDiceRepository()
 
         val serialsCount = 10
         repository.list(
@@ -41,16 +41,16 @@ class DBDiceRepositoryTest : StringSpec({
 
     "dice is deleted" {
         val dice = createDiceEntity()
-        val repository = DBDiceRepository()
+        val repository = SqliteDiceRepository()
 
         repository.remove(dice)
 
-        DBDiceRepository().flow().count() shouldBe 0
+        SqliteDiceRepository().flow().count() shouldBe 0
     }
 
     "find dice without edges" {
         val dice = createDiceEntity(edges = emptyList())
-        val repository = DBDiceRepository()
+        val repository = SqliteDiceRepository()
 
         val result = repository.oneOrNull(dice.id)
 

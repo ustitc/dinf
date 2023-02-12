@@ -1,9 +1,9 @@
 package dinf
 
 import dinf.adapters.BCryptPasswordFactory
-import dinf.adapters.DBDiceFactory
-import dinf.adapters.DBSearchIndexRepository
-import dinf.adapters.DBDiceRepository
+import dinf.adapters.SqliteDiceFactory
+import dinf.adapters.SqliteSearchIndexRepository
+import dinf.adapters.SqliteDiceRepository
 import dinf.adapters.FailoverSearchIndexRepository
 import dinf.adapters.HashidsPublicIDFactory
 import dinf.adapters.MeiliSearchIndexRepository
@@ -35,7 +35,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     )
 
     override fun diceRepository(): DiceRepository {
-        return DBDiceRepository()
+        return SqliteDiceRepository()
     }
 
     override fun diceMetricRepository(): DiceMetricRepository {
@@ -43,7 +43,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     }
 
     override fun diceFactory(): DiceFactory {
-        return DBDiceFactory()
+        return SqliteDiceFactory()
     }
 
     override fun publicIDFactory(): PublicIDFactory {
@@ -56,7 +56,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     override fun searchIndexRepository(): SearchIndexRepository {
         return FailoverSearchIndexRepository(
             main = MeiliSearchIndexRepository(meiliDeps.meiliDiceIndex()),
-            fallback = DBSearchIndexRepository()
+            fallback = SqliteSearchIndexRepository()
         )
     }
 
