@@ -1,6 +1,8 @@
 package dinf.adapters
 
-import dinf.db.getPLongOrNull
+import dinf.db.first
+import dinf.db.getPLong
+import dinf.db.prepareStatement
 import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
@@ -13,39 +15,57 @@ import java.sql.Connection
 
 class SqliteDiceFactory : DiceFactory {
 
-    override suspend fun create(name: Name, edges: Edges): Dice {
+    override suspend fun create(name: Name, edges: Edges, ownerID: ID): Dice {
         val id = transaction {
-            val statement = prepareStatement(
-                """
-                    INSERT INTO dices (name, created_at, updated_at) 
-                    VALUES (?, date('now'), date('now'))
-                    RETURNING id
-                """.trimIndent()
-            ).also { it.setString(1, name.print()) }
-
-            val rs = statement.executeQuery()
-            val id = rs.getPLongOrNull("id")!!
-            edges.toStringList().forEach { edge ->
-                saveEdge(id, edge)
-            }
-            statement.close()
-            rs.close()
-            id
+            val diceID = saveDice(name)
+            linkEdges(diceID, edges)
+            linkOwner(diceID, ownerID)
+            diceID
         }
         return SqliteDiceRepository().oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
-    private fun Connection.saveEdge(diceID: PLong, edge: String) {
-        val statement = prepareStatement(
+    private fun Connection.saveDice(name: Name): PLong {
+        return prepareStatement(
             """
+            INSERT INTO dices (name, created_at, updated_at) 
+            VALUES (?, date('now'), date('now'))
+            RETURNING id
+            """
+        ) {
+            setString(1, name.print())
+
+            executeQuery().first {
+                getPLong("id")
+            }
+        }
+    }
+
+    private fun Connection.linkEdges(diceID: PLong, edges: Edges) {
+        edges.toStringList().forEach { edge ->
+            prepareStatement(
+                """
                 INSERT INTO edges (value, dice)
                 VALUES (?, ?)
-            """.trimIndent()
-        ).also {
-            it.setString(1, edge)
-            it.setPLong(2, diceID)
+                """
+            ) {
+                setString(1, edge)
+                setPLong(2, diceID)
+                execute()
+            }
         }
-        statement.execute()
-        statement.close()
+    }
+
+    private fun Connection.linkOwner(diceID: PLong, ownerID: ID) {
+        prepareStatement(
+            """
+            INSERT INTO dice_owners (dice, user)
+            VALUES (?, ?)
+            """
+        ) {
+            setPLong(1, diceID)
+            setPLong(2, ownerID.number)
+            execute()
+        }
     }
 }

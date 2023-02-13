@@ -13,8 +13,9 @@ class SqliteDiceFactoryTest : StringSpec({
         val factory = SqliteDiceFactory()
         val name = Name("test")
         val edges = Edges(listOf("1", "2", "3"))
+        val userID = createUser()
 
-        val dice = factory.create(name, edges)
+        val dice = factory.create(name, edges, userID)
 
         dice.name.print() shouldBe name.print()
         dice.edges.toStringList() shouldBe edges.toStringList()
@@ -24,8 +25,9 @@ class SqliteDiceFactoryTest : StringSpec({
         val factory = SqliteDiceFactory()
         val name = Name("test")
         val edges = Edges(listOf())
+        val userID = createUser()
 
-        val dice = factory.create(name, edges)
+        val dice = factory.create(name, edges, userID)
 
         dice.edges.toStringList() shouldBe emptyList()
     }

@@ -6,9 +6,7 @@ import kotlin.random.Random
 interface Dice {
 
     val id: ID
-
     val name: Name
-
     val edges: Edges
 
     fun change(name: Name, edges: Edges)

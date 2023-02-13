@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 interface DiceService {
 
-    suspend fun saveDice(name: Name, edges: Edges): EditID
+    suspend fun saveDice(name: Name, edges: Edges, userID: ID): EditID
 
     suspend fun findDiceByShareID(shareID: ShareID): Dice?
 
@@ -24,8 +24,8 @@ interface DiceService {
         private val diceMetricRepository: DiceMetricRepository
     ) : DiceService {
 
-        override suspend fun saveDice(name: Name, edges: Edges): EditID {
-            val dice = diceFactory.create(name, edges)
+        override suspend fun saveDice(name: Name, edges: Edges, userID: ID): EditID {
+            val dice = diceFactory.create(name, edges, userID)
             searchIndexRepository.add(dice)
             return publicIDFactory.editIDFromID(dice.id)
         }
@@ -78,8 +78,8 @@ interface DiceService {
 
         private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
-        override suspend fun saveDice(name: Name, edges: Edges): EditID {
-            val hashID = service.saveDice(name, edges)
+        override suspend fun saveDice(name: Name, edges: Edges, userID: ID): EditID {
+            val hashID = service.saveDice(name, edges, userID)
             logger.info("Saved dice for id: ${hashID.toID()}")
             return hashID
         }
@@ -113,7 +113,7 @@ interface DiceService {
     }
 
     class Stub : DiceService {
-        override suspend fun saveDice(name: Name, edges: Edges): EditID = EditID.Stub()
+        override suspend fun saveDice(name: Name, edges: Edges, userID: ID): EditID = EditID.Stub()
         override suspend fun findDiceByShareID(shareID: ShareID): Dice? = null
         override suspend fun find(page: Page, count: Count): List<Dice> = emptyList()
         override suspend fun search(query: SearchQuery): List<Dice> = emptyList()

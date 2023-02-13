@@ -14,7 +14,7 @@ class SqliteDiceRepositoryTest : StringSpec({
     "lists all repository" {
         val count = 40
         repeat(count) {
-            createDiceEntity()
+            createDice()
         }
 
         val repository = SqliteDiceRepository()
@@ -25,7 +25,7 @@ class SqliteDiceRepositoryTest : StringSpec({
     "lists only specified repository" {
         val count = 40
         repeat(count) {
-            createDiceEntity()
+            createDice()
         }
 
         val repository = SqliteDiceRepository()
@@ -40,7 +40,7 @@ class SqliteDiceRepositoryTest : StringSpec({
     }
 
     "dice is deleted" {
-        val dice = createDiceEntity()
+        val dice = createDice()
         val repository = SqliteDiceRepository()
 
         repository.remove(dice)
@@ -49,7 +49,7 @@ class SqliteDiceRepositoryTest : StringSpec({
     }
 
     "find dice without edges" {
-        val dice = createDiceEntity(edges = emptyList())
+        val dice = createDice(edges = emptyList())
         val repository = SqliteDiceRepository()
 
         val result = repository.oneOrNull(dice.id)

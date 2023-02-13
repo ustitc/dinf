@@ -1,8 +1,10 @@
 package dinf.routes
 
+import dinf.auth.UserSession
 import dinf.domain.Count
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
+import dinf.domain.ID
 import dinf.domain.PublicIDFactory
 import dinf.domain.Page
 import dinf.html.components.DiceFeed
@@ -12,6 +14,7 @@ import dinf.html.pages.DiceEditPage
 import dinf.html.pages.DicePage
 import dinf.html.pages.MainPage
 import dinf.plugins.respondPage
+import dinf.types.toPLong
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -20,6 +23,7 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.get
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Route.index(diceService: DiceService, diceFeed: DiceFeed) {
     val page = 1
@@ -48,9 +52,10 @@ fun Route.createForm() {
 
 fun Route.create(diceService: DiceService) {
     post<DiceResource.New> { resource ->
+        val session = call.sessions.get<UserSession>()!!
         val params = call.receiveParameters()
         val hashID = HTMLParamsDice.fromParametersOrNull(params)
-            ?.let { diceService.saveDice(it.name, it.edges) }
+            ?.let { diceService.saveDice(it.name, it.edges, ID(session.id.toPLong())) }
         val redirectURL = if (hashID != null) {
             application.href(DiceResource.Edit(editID = hashID, firstTime = true))
         } else {

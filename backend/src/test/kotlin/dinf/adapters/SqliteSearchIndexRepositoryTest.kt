@@ -8,7 +8,7 @@ class SqliteSearchIndexRepositoryTest : StringSpec({
     listeners(SqliteListener())
 
     "dice is found by name" {
-        createDiceEntity("pinky")
+        createDice("pinky")
         val repository = SqliteSearchIndexRepository()
 
         val result = repository.search("pinky")
@@ -17,7 +17,7 @@ class SqliteSearchIndexRepositoryTest : StringSpec({
     }
 
     "dice is found by part of name" {
-        createDiceEntity("pinky")
+        createDice("pinky")
         val repository = SqliteSearchIndexRepository()
 
         val result = repository.search("pi")

@@ -1,0 +1,8 @@
+CREATE TABLE dice_owners(
+    dice INTEGER UNIQUE,
+    user INTEGER NOT NULL,
+    FOREIGN KEY (dice) REFERENCES dices(id) ON DELETE CASCADE ON UPDATE NO ACTION
+    FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
+CREATE INDEX dice_owners_user_index ON dice_owners(user);
