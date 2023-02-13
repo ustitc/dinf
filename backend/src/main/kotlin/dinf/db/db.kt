@@ -44,13 +44,6 @@ fun <R> transaction(block: Connection.() -> R): R =
 
 fun <R> sql(sql: String, block: PreparedStatement.() -> R): R {
     return transaction {
-        prepareStatement(sql, block)
+        prepareStatement(sql).use(block)
     }
-}
-
-fun <R> Connection.prepareStatement(sql: String, block: PreparedStatement.() -> R): R {
-    val statement = prepareStatement(sql)
-    val result = block.invoke(statement)
-    statement.close()
-    return result
 }

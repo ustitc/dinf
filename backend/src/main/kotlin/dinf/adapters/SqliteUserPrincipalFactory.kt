@@ -5,7 +5,6 @@ import dinf.auth.UserPrincipal
 import dinf.auth.UserPrincipalFactory
 import dinf.db.first
 import dinf.db.getPLong
-import dinf.db.prepareStatement
 import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.ID
@@ -29,10 +28,10 @@ class SqliteUserPrincipalFactory : UserPrincipalFactory {
             INSERT INTO users (name, email) VALUES (?, ?) 
             RETURNING id, name, email
             """
-        ) {
-            setString(1, name)
-            setString(2, email)
-            executeQuery().first {
+        ).use {
+            it.setString(1, name)
+            it.setString(2, email)
+            it.executeQuery().first {
                 toUser(this)
             }
         }
@@ -43,10 +42,10 @@ class SqliteUserPrincipalFactory : UserPrincipalFactory {
             """
             INSERT INTO user_passwords (password, user) VALUES (?, ?) 
             """
-        ) {
-            setString(1, password.hash)
-            setPLong(2, userId.number)
-            execute()
+        ).use {
+            it.setString(1, password.hash)
+            it.setPLong(2, userId.number)
+            it.execute()
         }
     }
 

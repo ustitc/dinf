@@ -2,7 +2,6 @@ package dinf.adapters
 
 import dinf.db.first
 import dinf.db.getPLong
-import dinf.db.prepareStatement
 import dinf.db.setPLong
 import dinf.db.transaction
 import dinf.domain.Dice
@@ -32,10 +31,10 @@ class SqliteDiceFactory : DiceFactory {
             VALUES (?, date('now'), date('now'))
             RETURNING id
             """
-        ) {
-            setString(1, name.print())
+        ).use {
+            it.setString(1, name.print())
 
-            executeQuery().first {
+            it.executeQuery().first {
                 getPLong("id")
             }
         }
@@ -48,10 +47,10 @@ class SqliteDiceFactory : DiceFactory {
                 INSERT INTO edges (value, dice)
                 VALUES (?, ?)
                 """
-            ) {
-                setString(1, edge)
-                setPLong(2, diceID)
-                execute()
+            ).use {
+                it.setString(1, edge)
+                it.setPLong(2, diceID)
+                it.execute()
             }
         }
     }
@@ -62,10 +61,10 @@ class SqliteDiceFactory : DiceFactory {
             INSERT INTO dice_owners (dice, user)
             VALUES (?, ?)
             """
-        ) {
-            setPLong(1, diceID)
-            setPLong(2, ownerID.number)
-            execute()
+        ).use {
+            it.setPLong(1, diceID)
+            it.setPLong(2, ownerID.number)
+            it.execute()
         }
     }
 }
