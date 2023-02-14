@@ -2,22 +2,15 @@ package dinf.domain
 
 interface PublicIDFactory {
 
-    fun shareIDFromStringOrNull(str: String): ShareID?
+    fun fromStringOrNull(str: String): PublicID?
 
-    fun editIDFromStringOrNull(str: String): EditID?
-
-    fun shareIDFromID(id: ID): ShareID
-
-    fun editIDFromID(id: ID): EditID
+    fun fromID(id: ID): PublicID
 
     class Stub(
-        private val shareID: ShareID? = null,
-        private val editID: EditID? = null,
+        private val publicID: PublicID? = null,
     ) : PublicIDFactory {
-        override fun shareIDFromStringOrNull(str: String): ShareID? = shareID
-        override fun editIDFromStringOrNull(str: String): EditID? = editID
-        override fun shareIDFromID(id: ID): ShareID = shareID!!
-        override fun editIDFromID(id: ID): EditID = editID!!
+        override fun fromStringOrNull(str: String): PublicID? = publicID
+        override fun fromID(id: ID): PublicID = publicID!!
     }
 
 }

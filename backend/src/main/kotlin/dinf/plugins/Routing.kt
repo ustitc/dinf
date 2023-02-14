@@ -95,20 +95,20 @@ fun Application.configureRouting(
         )
         createForm()
         dice(
-            publicIDFactory = deps.publicIDFactory(),
+            idFactory = deps.publicIDFactory(),
             diceService = deps.diceService()
         )
         edit(
-            publicIDFactory = deps.publicIDFactory(),
+            idFactory = deps.publicIDFactory(),
             diceRepository = deps.diceRepository()
         )
         editForm(
-            publicIDFactory = deps.publicIDFactory(),
+            idFactory = deps.publicIDFactory(),
             baseURL = baseURL,
             diceRepository = deps.diceRepository()
         )
         delete(
-            editHashids = deps.publicIDFactory(),
+            idFactory = deps.publicIDFactory(),
             diceService = deps.diceService()
         )
         search(

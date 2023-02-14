@@ -5,8 +5,8 @@ import dinf.domain.Count
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.ID
-import dinf.domain.PublicIDFactory
 import dinf.domain.Page
+import dinf.domain.PublicIDFactory
 import dinf.html.components.DiceFeed
 import dinf.html.pages.DiceCreatePage
 import dinf.html.pages.DiceDeletedPage
@@ -20,7 +20,6 @@ import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.post
-import io.ktor.server.resources.get
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
@@ -57,7 +56,7 @@ fun Route.create(diceService: DiceService) {
         val hashID = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { diceService.saveDice(it.name, it.edges, ID(session.id.toPLong())) }
         val redirectURL = if (hashID != null) {
-            application.href(DiceResource.Edit(editID = hashID, firstTime = true))
+            application.href(DiceResource.Edit(diceID = hashID, firstTime = true))
         } else {
             application.href(resource.copy(isFailed = true))
         }
@@ -65,9 +64,9 @@ fun Route.create(diceService: DiceService) {
     }
 }
 
-fun Route.dice(publicIDFactory: PublicIDFactory, diceService: DiceService) {
-    get<DiceResource.ByShareID> { resource ->
-        val dice = publicIDFactory.shareIDFromStringOrNull(resource.shareID)?.let { diceService.findDiceByShareID(it) }
+fun Route.dice(idFactory: PublicIDFactory, diceService: DiceService) {
+    get<DiceResource.ByID> { resource ->
+        val dice = idFactory.fromStringOrNull(resource.diceID)?.let { diceService.findDiceByPublicID(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -76,23 +75,23 @@ fun Route.dice(publicIDFactory: PublicIDFactory, diceService: DiceService) {
     }
 }
 
-fun Route.editForm(publicIDFactory: PublicIDFactory, baseURL: String, diceRepository: DiceRepository) {
+fun Route.editForm(idFactory: PublicIDFactory, baseURL: String, diceRepository: DiceRepository) {
     get<DiceResource.Edit> { resource ->
-        val dice = publicIDFactory.editIDFromStringOrNull(resource.editID)?.let { diceRepository.oneOrNull(it) }
+        val dice = idFactory.fromStringOrNull(resource.diceID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
-            val editURL = application.href(DiceResource.Edit(editID = resource.editID))
-            val deleteURL = application.href(DiceResource.Delete(editID = resource.editID))
+            val editURL = application.href(DiceResource.Edit(diceID = resource.diceID))
+            val deleteURL = application.href(DiceResource.Delete(diceID = resource.diceID))
             call.respondPage(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource))
         }
     }
 }
 
-fun Route.edit(publicIDFactory: PublicIDFactory, diceRepository: DiceRepository) {
+fun Route.edit(idFactory: PublicIDFactory, diceRepository: DiceRepository) {
     post<DiceResource.Edit> { loc ->
         val params = call.receiveParameters()
-        val dice = publicIDFactory.editIDFromStringOrNull(loc.editID)?.let { diceRepository.oneOrNull(it) }
+        val dice = idFactory.fromStringOrNull(loc.diceID)?.let { diceRepository.oneOrNull(it) }
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -109,9 +108,9 @@ fun Route.edit(publicIDFactory: PublicIDFactory, diceRepository: DiceRepository)
 }
 
 
-fun Route.delete(editHashids: PublicIDFactory, diceService: DiceService) {
+fun Route.delete(idFactory: PublicIDFactory, diceService: DiceService) {
     post<DiceResource.Delete> { loc ->
-        editHashids.editIDFromStringOrNull(loc.editID)?.let { diceService.deleteByEditID(it) }
+        idFactory.fromStringOrNull(loc.diceID)?.let { diceService.deleteByPublicID(it) }
         call.respondPage(DiceDeletedPage())
     }
 }

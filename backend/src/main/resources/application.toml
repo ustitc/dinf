@@ -7,10 +7,6 @@ jdbcURL = "jdbc:sqlite:db/dinf.db"
 salt = "salt"
 length = 6
 
-[urls.edit]
-salt = "another_salt"
-length = 24
-
 [server]
 port = 8080
 baseURL = "http://localhost:8080"

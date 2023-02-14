@@ -48,8 +48,7 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
 
     override fun publicIDFactory(): PublicIDFactory {
         return HashidsPublicIDFactory(
-            shareHashids = hashids(cfg.urls.share),
-            editHashids = hashids(cfg.urls.edit)
+            hashids = hashids(cfg.urls.share)
         )
     }
 

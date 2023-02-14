@@ -1,5 +1,6 @@
 package dinf.routes
 
+import dinf.domain.PublicID
 import io.ktor.resources.*
 import kotlinx.serialization.Serializable
 
@@ -15,31 +16,31 @@ object DiceResource {
     )
 
     @Serializable
-    @Resource("/{shareID}")
-    data class ByShareID(val dices: DiceResource = DiceResource, val shareID: String) {
+    @Resource("/{diceID}")
+    data class ByID(val dices: DiceResource = DiceResource, val diceID: String) {
 
-        constructor(shareID: dinf.domain.PublicID) : this(shareID = shareID.print())
+        constructor(diceID: PublicID) : this(diceID = diceID.print())
 
     }
 
     @Serializable
-    @Resource("/edit/{editID}")
+    @Resource("/edit/{diceID}")
     data class Edit(
         val dices: DiceResource = DiceResource,
-        val editID: String,
+        val diceID: String,
         val isFirstTime: Boolean? = null,
         val isFailed: Boolean? = null
     ) {
 
-        constructor(editID: dinf.domain.PublicID, firstTime: Boolean? = null) : this(
-            editID = editID.print(),
+        constructor(diceID: PublicID, firstTime: Boolean? = null) : this(
+            diceID = diceID.print(),
             isFirstTime = firstTime
         )
 
     }
 
     @Serializable
-    @Resource("/delete/{editID}")
-    data class Delete(val dices: DiceResource = DiceResource, val editID: String)
+    @Resource("/delete/{diceID}")
+    data class Delete(val dices: DiceResource = DiceResource, val diceID: String)
 
 }
