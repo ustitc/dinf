@@ -11,19 +11,6 @@ import java.sql.ResultSet
 
 class SqliteDice private constructor(dice: Dice.Simple) : Dice by dice {
 
-    constructor(result: ResultSet, edgesSeparator: String) : this(
-        ID(result.getPLong("id"))
-            .let {
-                Dice.Simple(
-                    id = it,
-                    name = Name(result.getString("name")),
-                    edges = Edges(
-                        result.getString("edges")?.split(edgesSeparator) ?: emptyList()
-                    )
-                )
-            }
-    )
-
     override fun change(name: Name, edges: Edges) {
         transaction {
             prepareStatement("UPDATE dices SET name = ? WHERE id = ?")
@@ -43,6 +30,23 @@ class SqliteDice private constructor(dice: Dice.Simple) : Dice by dice {
                         it.setPLong(2, id.number)
                     }.use { it.execute() }
             }
+        }
+    }
+
+    companion object {
+
+        const val EDGES_SEPARATOR = ";"
+
+        fun fromResultSet(result: ResultSet): SqliteDice {
+            val id = ID(result.getPLong("id"))
+            val dice = Dice.Simple(
+                id = id,
+                name = Name(result.getString("name")),
+                edges = Edges(
+                    result.getString("edges")?.split(EDGES_SEPARATOR) ?: emptyList()
+                )
+            )
+            return SqliteDice(dice)
         }
     }
 }

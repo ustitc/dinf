@@ -21,7 +21,8 @@ class DiceServiceTest : StringSpec({
             diceRepository = DiceRepository.Stub(listOf(first, second, third).toMutableList()),
             searchIndexRepository = SearchIndexRepository.Stub(listOf(first.id, second.id, third.id)),
             publicIDFactory = PublicIDFactory.Stub(),
-            diceMetricRepository = metrics
+            diceMetricRepository = metrics,
+            diceOwnerFactory = DiceOwnerFactory.Stub()
         )
 
         service.search(SearchQuery("any")) shouldContainInOrder listOf(first, second, third)

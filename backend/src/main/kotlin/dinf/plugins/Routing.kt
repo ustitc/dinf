@@ -31,12 +31,14 @@ import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.http.*
 import io.ktor.server.http.content.*
+import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.resources.*
 import io.ktor.server.resources.href
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.webjars.*
+import io.ktor.util.pipeline.*
 
 private lateinit var htmxConfiguration: HTMXConfiguration
 
@@ -54,6 +56,11 @@ suspend fun ApplicationCall.respondPage(page: Page) {
     ) {
         insert(page) {}
     }
+}
+
+fun PipelineContext<*, ApplicationCall>.getUserSessionOrRedirectToNotFound(): UserSession {
+    val session = call.sessions.get<UserSession>()
+    return session ?: throw NotFoundException()
 }
 
 fun Application.configureRouting(
@@ -95,20 +102,16 @@ fun Application.configureRouting(
         )
         createForm()
         dice(
-            idFactory = deps.publicIDFactory(),
             diceService = deps.diceService()
         )
         edit(
-            idFactory = deps.publicIDFactory(),
-            diceRepository = deps.diceRepository()
+            diceService = deps.diceService()
         )
         editForm(
-            idFactory = deps.publicIDFactory(),
             baseURL = baseURL,
-            diceRepository = deps.diceRepository()
+            diceService = deps.diceService()
         )
         delete(
-            idFactory = deps.publicIDFactory(),
             diceService = deps.diceService()
         )
         search(

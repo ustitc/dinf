@@ -14,25 +14,23 @@ import kotlinx.coroutines.flow.onCompletion
 
 class SqliteDiceRepository : DiceRepository {
 
-    private val edgesSeparator = ";"
-
     override fun flow(): Flow<Dice> {
         val connection = connection()
         val statement = connection.prepareStatement(
             """
-                    SELECT 
-                        dices.id AS id, 
-                        dices.name AS name, 
-                        group_concat(edges.value, '$edgesSeparator') AS edges
-                    FROM dices, edges 
-                    WHERE dices.id = edges.dice
-                    GROUP BY dices.id
-                """.trimIndent()
+            SELECT 
+                dices.id AS id, 
+                dices.name AS name, 
+                group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+            FROM dices, edges 
+            WHERE dices.id = edges.dice
+            GROUP BY dices.id
+            """.trimIndent()
         )
         val rs = statement.executeQuery()
         return flow<Dice> {
             rs.toSequence {
-                SqliteDice(this, edgesSeparator)
+                SqliteDice.fromResultSet(this)
             }.forEach { emit(it) }
         }.onCompletion {
             rs.close()
@@ -45,20 +43,20 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             val statement = prepareStatement(
                 """
-                    SELECT 
-                        dices.id AS id, 
-                        dices.name AS name, 
-                        group_concat(edges.value, '$edgesSeparator') AS edges
-                    FROM dices
-                    LEFT JOIN edges ON dices.id = edges.dice
-                    WHERE dices.id = ?
-                    GROUP BY dices.id
+                SELECT 
+                    dices.id AS id, 
+                    dices.name AS name, 
+                    group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+                FROM dices
+                LEFT JOIN edges ON dices.id = edges.dice
+                WHERE dices.id = ?
+                GROUP BY dices.id
                 """.trimIndent()
             ).also { statement ->
                 statement.setPLong(1, id.number)
             }
             val dice = statement.executeQuery().firstOrNull {
-                SqliteDice(this, edgesSeparator)
+                SqliteDice.fromResultSet(this)
             }
             statement.close()
             dice
@@ -72,18 +70,19 @@ class SqliteDiceRepository : DiceRepository {
                 SELECT 
                     dices.id AS id, 
                     dices.name AS name, 
-                    group_concat(edges.value, '$edgesSeparator') AS edges
+                    group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
                 FROM dices, edges 
-                WHERE dices.id IN (${ids.joinToString(separator = ",") { "?" }}) AND dices.id = edges.dice
+                WHERE dices.id IN (${ids.joinToString(separator = ",") { "?" }}) 
+                AND dices.id = edges.dice
                 GROUP BY dices.id
-            """.trimIndent()
+                """.trimIndent()
             ).also { statement ->
                 ids.forEachIndexed { i, d ->
                     statement.setPLong(i + 1, d.number)
                 }
             }
             val list = statement.executeQuery().toSequence {
-                SqliteDice(this, edgesSeparator)
+                SqliteDice.fromResultSet(this)
             }.toList()
             statement.close()
             list

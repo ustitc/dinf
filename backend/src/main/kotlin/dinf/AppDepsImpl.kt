@@ -7,6 +7,7 @@ import dinf.adapters.SqliteDiceRepository
 import dinf.adapters.FailoverSearchIndexRepository
 import dinf.adapters.HashidsPublicIDFactory
 import dinf.adapters.MeiliSearchIndexRepository
+import dinf.adapters.SqliteDiceOwner
 import dinf.adapters.SqliteUserPrincipalFactory
 import dinf.adapters.SqliteUserPrincipalRepository
 import dinf.auth.PasswordFactory
@@ -66,7 +67,8 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
                 diceRepository = diceRepository(),
                 searchIndexRepository = searchIndexRepository(),
                 publicIDFactory = publicIDFactory(),
-                diceMetricRepository = diceMetricRepository()
+                diceMetricRepository = diceMetricRepository(),
+                diceOwnerFactory = SqliteDiceOwner.Companion
             )
         )
     }
