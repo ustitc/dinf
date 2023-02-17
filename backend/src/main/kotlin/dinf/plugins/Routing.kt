@@ -67,8 +67,6 @@ fun Application.configureRouting(
     config: Configuration,
     deps: AppDeps
 ) {
-    install(Resources)
-
     htmxConfiguration = config.htmx
     val baseURL = config.server.baseURL
 

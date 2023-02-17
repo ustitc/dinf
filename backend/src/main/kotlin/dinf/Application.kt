@@ -6,8 +6,10 @@ import dinf.plugins.configureAuth
 import dinf.plugins.configureCallLogging
 import dinf.plugins.configureMetrics
 import dinf.plugins.configureRouting
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.resources.*
 import kotlinx.coroutines.launch
 
 fun main() {
@@ -23,8 +25,9 @@ fun main() {
             populateSearchIndex(appDeps)
         }
 
-        configureRouting(cfg, appDeps)
+        install(Resources)
         configureAuth(appDeps)
+        configureRouting(cfg, appDeps)
         configureCallLogging()
         configureMetrics()
     }.start(wait = true)

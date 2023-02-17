@@ -7,6 +7,8 @@ import io.kotest.assertions.ktor.client.shouldHaveStatus
 import io.kotest.core.spec.style.StringSpec
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.resources.*
 import io.ktor.server.testing.*
 
 class ApplicationTest : StringSpec({
@@ -15,11 +17,12 @@ class ApplicationTest : StringSpec({
         val deps = AppDeps.Stub()
         testApplication {
             application {
+                install(Resources)
+                configureAuth(deps)
                 configureRouting(
                     Configuration(),
                     deps,
                 )
-                configureAuth(deps)
             }
             val response = client.get("/")
             response shouldHaveStatus HttpStatusCode.OK

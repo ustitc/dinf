@@ -10,7 +10,7 @@ jobs:
   build:
     uses: ustits/actions/.github/workflows/jdk_build.yml@main
     with:
-      jdk_version: '11'
+      jdk_version: '17'
       jdk_distribution: 'temurin'
       distribution_path: 'backend/build/distributions/backend.tar'
   deploy:
