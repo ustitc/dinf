@@ -12,7 +12,8 @@ data class Configuration(
     val urls: URLs = URLs(),
     val server: Server = Server(),
     val search: Search = Search(),
-    val htmx: HTMXConfiguration = HTMXConfiguration(timeout = Duration.ofSeconds(5))
+    val htmx: HTMXConfiguration = HTMXConfiguration(timeout = Duration.ofSeconds(5)),
+    val toggles: Toggles = Toggles()
 )
 
 fun readConfiguration(): Configuration {

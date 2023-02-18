@@ -17,3 +17,7 @@ key = "key"
 
 [htmx]
 timeout = "5s"
+
+[toggles]
+passwordEnabled = false
+showUserButtons = false

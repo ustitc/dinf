@@ -4,6 +4,7 @@ import dinf.auth.PasswordFactory
 import dinf.auth.UserPrincipalFactory
 import dinf.auth.UserPrincipalRepository
 import dinf.auth.UserPrincipalService
+import dinf.config.Toggles
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
@@ -26,6 +27,8 @@ interface AppDeps {
     fun diceService(): DiceService
 
     fun userPrincipalService(): UserPrincipalService
+
+    val toggles: Toggles
 
     class Stub : AppDeps {
 
@@ -61,5 +64,7 @@ interface AppDeps {
                 nameSource = { "Happy User" }
             )
         }
+
+        override val toggles: Toggles = Toggles()
     }
 }

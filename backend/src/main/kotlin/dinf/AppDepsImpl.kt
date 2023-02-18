@@ -13,6 +13,7 @@ import dinf.adapters.SqliteUserPrincipalRepository
 import dinf.auth.PasswordFactory
 import dinf.auth.UserPrincipalService
 import dinf.config.Configuration
+import dinf.config.Toggles
 import dinf.config.URL
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceFactory
@@ -76,6 +77,8 @@ class AppDepsImpl(private val meiliDeps: MeiliDeps, private val cfg: Configurati
     override fun userPrincipalService(): UserPrincipalService {
         return userPrincipalService
     }
+
+    override val toggles: Toggles = cfg.toggles
 
     private fun hashids(url: URL): Hashids {
         return Hashids(url.salt, url.length)

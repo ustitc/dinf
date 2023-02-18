@@ -19,15 +19,17 @@ fun Application.configureAuth(appDeps: AppDeps) {
     val failedAuthURL = href(LoginResource(failed = true))
 
     install(Authentication) {
-        val userPrincipleSvc = appDeps.userPrincipalService()
-        form(FORM_LOGIN_CONFIGURATION_NAME) {
-            userParamName = FORM_LOGIN_EMAIL_FIELD
-            passwordParamName = FORM_LOGIN_PASSWORD_FIELD
+        if (appDeps.toggles.passwordEnabled) {
+            val userPrincipleSvc = appDeps.userPrincipalService()
+            form(FORM_LOGIN_CONFIGURATION_NAME) {
+                userParamName = FORM_LOGIN_EMAIL_FIELD
+                passwordParamName = FORM_LOGIN_PASSWORD_FIELD
 
-            validate { credential ->
-                userPrincipleSvc.find(credential)
+                validate { credential ->
+                    userPrincipleSvc.find(credential)
+                }
+                challenge(failedAuthURL)
             }
-            challenge(failedAuthURL)
         }
         session<UserSession>(SESSION_LOGIN_CONFIGURATION_NAME) {
             validate {

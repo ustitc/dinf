@@ -29,7 +29,8 @@ class Layout(
     val loginURL: String,
     val logoutURL: String,
     val registerURL: String,
-    val userSession: UserSession?
+    val userSession: UserSession?,
+    val showUserButtons: Boolean
 ) : Template<HTML> {
 
     val content = Placeholder<FlowContent>()
@@ -60,7 +61,7 @@ class Layout(
                             }
                         }
                     }
-                    if (userSession == null) {
+                    if (showUserButtons && userSession == null) {
                         end {
                             a(classes = "outline", href = loginURL) {
                                 role = "button"
@@ -73,7 +74,7 @@ class Layout(
                                 +"Register"
                             }
                         }
-                    } else {
+                    } else if (showUserButtons) {
                         end {
                             picoHyperlinkAsButton(href = newDiceURL) {
                                 +"New dice"

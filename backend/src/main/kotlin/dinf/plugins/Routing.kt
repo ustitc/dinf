@@ -1,6 +1,5 @@
 package dinf.plugins
 
-import dev.ustits.htmx.HTMXConfiguration
 import dinf.AppDeps
 import dinf.auth.UserSession
 import dinf.html.components.DiceCard
@@ -33,25 +32,25 @@ import io.ktor.http.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.resources.*
 import io.ktor.server.resources.href
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.webjars.*
 import io.ktor.util.pipeline.*
 
-private lateinit var htmxConfiguration: HTMXConfiguration
+private lateinit var cfg: Configuration
 
 suspend fun ApplicationCall.respondPage(page: Page) {
     val session = sessions.get<UserSession>()
     respondHtmlTemplate(
         Layout(
             newDiceURL = application.href(DiceResource.New()),
-            htmxConfiguration = htmxConfiguration,
+            htmxConfiguration = cfg.htmx,
             loginURL = application.href(LoginResource()),
             logoutURL = application.href(LogoutResource),
             registerURL = application.href(RegisterResource()),
-            userSession = session
+            userSession = session,
+            showUserButtons = cfg.toggles.showUserButtons
         )
     ) {
         insert(page) {}
@@ -67,7 +66,7 @@ fun Application.configureRouting(
     config: Configuration,
     deps: AppDeps
 ) {
-    htmxConfiguration = config.htmx
+    cfg = config
     val baseURL = config.server.baseURL
 
     val newDiceURL = href(DiceResource.New())
@@ -86,11 +85,13 @@ fun Application.configureRouting(
     }
 
     routing {
-        loginForm()
-        registerForm()
-        login()
-        register(deps.userPrincipalService())
-        logout()
+        if (cfg.toggles.showUserButtons) {
+            loginForm()
+            registerForm()
+            login()
+            register(deps.userPrincipalService())
+            logout()
+        }
         index(
             diceService = deps.diceService(),
             diceFeed = diceFeed
