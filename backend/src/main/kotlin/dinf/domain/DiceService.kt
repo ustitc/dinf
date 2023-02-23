@@ -127,13 +127,4 @@ interface DiceService {
         }
     }
 
-    class Stub : DiceService {
-        override suspend fun saveDice(name: Name, edges: Edges, userID: ID): PublicID = PublicID.Stub()
-        override suspend fun findDiceByPublicID(publicID: String): Dice? = null
-        override suspend fun findDiceByPublicIdAndUserId(publicID: String, userID: ID): Dice? = null
-        override suspend fun find(page: Page, count: Count): List<Dice> = emptyList()
-        override suspend fun search(query: SearchQuery): List<Dice> = emptyList()
-        override suspend fun deleteByPublicIdAndUserId(publicID: String, userId: ID) {}
-    }
-
 }

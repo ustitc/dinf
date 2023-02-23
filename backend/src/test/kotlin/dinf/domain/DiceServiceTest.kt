@@ -2,6 +2,7 @@ package dinf.domain
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContainInOrder
+import io.mockk.mockk
 
 class DiceServiceTest : StringSpec({
 
@@ -17,12 +18,12 @@ class DiceServiceTest : StringSpec({
         )
 
         val service = DiceService.Impl(
-            diceFactory = DiceFactory.Stub(),
+            diceFactory = mockk(),
             diceRepository = DiceRepository.Stub(listOf(first, second, third).toMutableList()),
             searchIndexRepository = SearchIndexRepository.Stub(listOf(first.id, second.id, third.id)),
-            publicIDFactory = PublicIDFactory.Stub(),
+            publicIDFactory = mockk(),
             diceMetricRepository = metrics,
-            diceOwnerFactory = DiceOwnerFactory.Stub()
+            diceOwnerFactory = mockk()
         )
 
         service.search(SearchQuery("any")) shouldContainInOrder listOf(first, second, third)

@@ -56,4 +56,6 @@ dependencies {
     testImplementation(libs.kotest.runnerJUnit5)
     testImplementation(libs.kotest.assertionsCore)
     testImplementation(libs.kotest.extensionsAssertionsKtor)
+
+    testImplementation("io.mockk:mockk:1.13.4")
 }

@@ -14,7 +14,7 @@ import io.ktor.server.testing.*
 class ApplicationTest : StringSpec({
 
     "root" {
-        val deps = AppDeps.Stub()
+        val deps = AppDepsMock()
         testApplication {
             application {
                 install(Resources)
