@@ -2,7 +2,7 @@ package dinf.plugins
 
 import dinf.AppDeps
 import dinf.auth.Credential
-import dinf.auth.CredentialValidation
+import dinf.auth.EmailPasswordValidation
 import dinf.auth.UserSession
 import dinf.config.Configuration
 import dinf.routes.LoginResource
@@ -29,7 +29,7 @@ fun Application.configureAuth(appDeps: AppDeps, config: Configuration, httpClien
 
     install(Authentication) {
         if (loginConfig.password.enabled) {
-            val authSvc = appDeps.authenticationService()
+            val authSvc = appDeps.emailPasswordService()
             form(FORM_LOGIN_CONFIGURATION_NAME) {
                 userParamName = FORM_LOGIN_EMAIL_FIELD
                 passwordParamName = FORM_LOGIN_PASSWORD_FIELD
@@ -39,7 +39,7 @@ fun Application.configureAuth(appDeps: AppDeps, config: Configuration, httpClien
                         Credential.EmailPassword(credential)
                     )
                     when (validation) {
-                        is CredentialValidation.Ok -> validation.userPrincipal
+                        is EmailPasswordValidation.Ok -> validation.userPrincipal
                         else -> null
                     }
                 }

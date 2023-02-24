@@ -9,8 +9,7 @@ import dinf.adapters.SqliteDiceOwner
 import dinf.adapters.SqliteDiceRepository
 import dinf.adapters.SqliteSearchIndexRepository
 import dinf.adapters.SqliteUserFactory
-import dinf.auth.AuthenticationService
-import dinf.auth.EmailPasswordsService
+import dinf.auth.EmailPasswordService
 import dinf.auth.OAuthService
 import dinf.auth.PasswordFactory
 import dinf.config.Configuration
@@ -28,19 +27,11 @@ import org.hashids.Hashids
 class AppDepsImpl(
     private val meiliDeps: MeiliDeps,
     private val cfg: Configuration,
-    httpClient: HttpClient
+    private val httpClient: HttpClient
 ) : AppDeps {
 
     private val diceMetricRepository = DiceMetricRepository.InMemory()
     private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
-    private val authenticationService: AuthenticationService = AuthenticationService(
-        emailPasswordsService = EmailPasswordsService(
-            passwordFactory = passwordFactory
-        ),
-        oAuthService = OAuthService(httpClient),
-        userFactory = SqliteUserFactory(),
-        nameSource = { "Happy User" }
-    )
 
     override fun diceRepository(): DiceRepository {
         return SqliteDiceRepository()
@@ -80,8 +71,20 @@ class AppDepsImpl(
         )
     }
 
-    override fun authenticationService(): AuthenticationService {
-        return authenticationService
+    override fun emailPasswordService(): EmailPasswordService {
+        return EmailPasswordService(
+            userFactory = SqliteUserFactory(),
+            nameSource = { "Happy User" },
+            passwordFactory = passwordFactory
+        )
+    }
+
+    override fun oAuthService(): OAuthService {
+        return OAuthService(
+            httpClient = httpClient,
+            nameSource = { "Happy User" },
+            userFactory = SqliteUserFactory(),
+        )
     }
 
     override val toggles: TogglesConfig = cfg.toggles

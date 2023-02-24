@@ -14,12 +14,12 @@ import kotlinx.html.passwordInput
 import kotlinx.html.small
 import kotlinx.html.submitInput
 
-class RegisterPage(private val resource: RegisterResource) : Page {
+class RegistrationPage(private val resource: RegisterResource) : Page {
 
     override fun Layout.apply() {
         content {
             h2 {
-                +"Register"
+                +"Registration"
             }
             form(action = registerURL, method = FormMethod.post) {
                 label {
@@ -47,7 +47,7 @@ class RegisterPage(private val resource: RegisterResource) : Page {
                 }
 
                 submitInput {
-                    value = "Sign Up"
+                    value = "Create account"
                 }
             }
         }

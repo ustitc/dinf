@@ -1,6 +1,7 @@
 package dinf
 
-import dinf.auth.AuthenticationService
+import dinf.auth.EmailPasswordService
+import dinf.auth.OAuthService
 import dinf.config.TogglesConfig
 import dinf.domain.DiceFactory
 import dinf.domain.DiceMetricRepository
@@ -23,7 +24,9 @@ interface AppDeps {
 
     fun diceService(): DiceService
 
-    fun authenticationService(): AuthenticationService
+    fun emailPasswordService(): EmailPasswordService
+
+    fun oAuthService(): OAuthService
 
     val toggles: TogglesConfig
 

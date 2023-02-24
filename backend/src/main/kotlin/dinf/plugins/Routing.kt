@@ -22,12 +22,11 @@ import dinf.routes.LogoutResource
 import dinf.routes.RegisterResource
 import dinf.routes.htmxDices
 import dinf.routes.login
-import dinf.routes.loginForm
+import dinf.routes.loginPage
 import dinf.routes.logout
 import dinf.routes.oAuthGoogle
 import dinf.routes.register
-import dinf.routes.registerForm
-import io.ktor.client.*
+import dinf.routes.registrationPage
 import io.ktor.server.application.*
 import io.ktor.server.html.*
 import io.ktor.http.*
@@ -88,14 +87,14 @@ fun Application.configureRouting(
 
     routing {
         if (cfg.toggles.showUserButtons) {
-            loginForm()
-            registerForm()
+            loginPage()
+            registrationPage()
             login()
-            register(deps.authenticationService())
+            register(deps.emailPasswordService())
             logout()
         }
         if (cfg.login.oauth.google.enabled) {
-            oAuthGoogle(deps.authenticationService())
+            oAuthGoogle(deps.oAuthService())
         }
         index(
             diceService = deps.diceService(),

@@ -13,7 +13,10 @@ import kotlinx.html.label
 import kotlinx.html.passwordInput
 import kotlinx.html.submitInput
 
-class LoginPage(private val resource: LoginResource) : Page {
+class LoginPage(
+    private val resource: LoginResource,
+    private val googleLoginUrl: String,
+) : Page {
 
     override fun Layout.apply() {
         content {
@@ -48,7 +51,12 @@ class LoginPage(private val resource: LoginResource) : Page {
                 }
 
                 submitInput {
-                    value = "Sign In"
+                    value = "Enter account"
+                }
+            }
+            form(action = googleLoginUrl, method = FormMethod.get) {
+                submitInput {
+                    value = "Enter with Google"
                 }
             }
         }

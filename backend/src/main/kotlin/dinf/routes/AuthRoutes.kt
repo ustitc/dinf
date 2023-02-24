@@ -1,12 +1,12 @@
 package dinf.routes
 
 import dinf.auth.Credential
+import dinf.auth.EmailPasswordService
+import dinf.auth.OAuthService
 import dinf.auth.UserPrincipal
-import dinf.auth.AuthenticationService
-import dinf.auth.CredentialValidation
 import dinf.auth.UserSession
 import dinf.html.pages.LoginPage
-import dinf.html.pages.RegisterPage
+import dinf.html.pages.RegistrationPage
 import dinf.plugins.FORM_LOGIN_CONFIGURATION_NAME
 import dinf.plugins.FORM_LOGIN_EMAIL_FIELD
 import dinf.plugins.FORM_LOGIN_PASSWORD_FIELD
@@ -21,15 +21,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
-fun Route.loginForm() {
+fun Route.loginPage() {
+    val googleLoginUrl = application.href(OAuthResource.Google())
     get<LoginResource> {
-        call.respondPage(LoginPage(it))
+        call.respondPage(LoginPage(it, googleLoginUrl))
     }
 }
 
-fun Route.registerForm() {
+fun Route.registrationPage() {
     get<RegisterResource> {
-        call.respondPage(RegisterPage(it))
+        call.respondPage(RegistrationPage(it))
     }
 }
 
@@ -42,7 +43,7 @@ fun Route.login() {
     }
 }
 
-fun Route.register(authSvc: AuthenticationService) {
+fun Route.register(authSvc: EmailPasswordService) {
     post<RegisterResource> {
         val params = call.receiveParameters()
         val email = params[FORM_LOGIN_EMAIL_FIELD]
@@ -52,8 +53,8 @@ fun Route.register(authSvc: AuthenticationService) {
 
         val auth = Credential.EmailPassword(email, password)
         when (val result = authSvc.register(auth)) {
-            is AuthenticationService.Registration.Created -> call.setSessionAndRedirect(result.userPrincipal.session)
-            is AuthenticationService.Registration.Exists -> {
+            is EmailPasswordService.Registration.Created -> call.setSessionAndRedirect(result.userPrincipal.session)
+            is EmailPasswordService.Registration.Exists -> {
                 val redirect = application.href(RegisterResource(userExists = true))
                 call.respondRedirect(redirect)
             }
@@ -68,7 +69,7 @@ fun Route.logout() {
     }
 }
 
-fun Route.oAuthGoogle(authSvc: AuthenticationService) {
+fun Route.oAuthGoogle(authSvc: OAuthService) {
     authenticate(OAUTH_GOOGLE_CONFIGURATION_NAME) {
         get<OAuthResource.Google> {
             // Redirects to 'authorizeUrl' automatically
@@ -80,15 +81,11 @@ fun Route.oAuthGoogle(authSvc: AuthenticationService) {
 
             val auth = Credential.Google(principal.accessToken)
             when (val login = authSvc.login(auth)) {
-                is CredentialValidation.Ok -> {
+                is OAuthService.Login.Ok -> {
                     call.sessions.set(login.userPrincipal.session)
                     call.respondRedirect("/")
                 }
-                is CredentialValidation.Invalid -> error("Bad credentials")
-                is CredentialValidation.NotFound -> {
-                    val redirect = application.href(RegisterResource(userExists = true))
-                    call.respondRedirect(redirect)
-                }
+                is OAuthService.Login.Invalid -> error("Bad credentials")
             }
         }
     }

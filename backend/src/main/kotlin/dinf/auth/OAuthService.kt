@@ -6,29 +6,42 @@ import dinf.db.setPLong
 import dinf.db.sql
 import dinf.domain.ID
 import dinf.domain.User
+import dinf.domain.UserFactory
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
 
-class OAuthService(private val httpClient: HttpClient) {
+class OAuthService(
+    private val httpClient: HttpClient,
+    private val userFactory: UserFactory,
+    private val nameSource: () -> String,
+) {
 
-    suspend fun addLogin(user: User, credential: Credential.Google) {
-        val googleUser = findInGoogle(credential.token)
-        requireNotNull(googleUser) { "Bad credentials=$credential passed for Google auth" }
-
-        sql("INSERT INTO login_oauth_google (user, email) VALUES (?, ?)") {
-            setPLong(1, user.id.number)
-            setString(2, googleUser.email)
-            execute()
-        }
+    sealed class Login {
+        class Ok(val userPrincipal: UserPrincipal) : Login()
+        object Invalid : Login()
     }
 
-    suspend fun findUser(credential: Credential.Google): CredentialValidation {
-        val googleUser = findInGoogle(credential.token) ?: return CredentialValidation.Invalid
+    suspend fun login(credential: Credential.Google): Login {
+        val googleUser = findUserInGoogle(credential.token) ?: return Login.Invalid
+        val user = findOrCreateInDb(googleUser)
+        return Login.Ok(UserPrincipal(user))
+    }
 
-        val user = sql(
+    private fun findOrCreateInDb(googleUser: GoogleUser): User {
+        val user = findUserInDb(googleUser)
+        if (user != null) {
+            return user
+        }
+        val createdUser = userFactory.create(nameSource.invoke())
+        addLogin(createdUser, googleUser)
+        return createdUser
+    }
+
+    private fun findUserInDb(googleUser: GoogleUser): User? {
+        return sql(
             """
             SELECT users.id, users.name 
             FROM users
@@ -43,12 +56,18 @@ class OAuthService(private val httpClient: HttpClient) {
                     name = getString("name"),
                 )
             }
-        } ?: return CredentialValidation.NotFound
-
-        return CredentialValidation.Ok(UserPrincipal(user))
+        }
     }
 
-    private suspend fun findInGoogle(token: String): GoogleUser? {
+    private fun addLogin(user: User, googleUser: GoogleUser) {
+        sql("INSERT INTO login_oauth_google (user, email) VALUES (?, ?)") {
+            setPLong(1, user.id.number)
+            setString(2, googleUser.email)
+            execute()
+        }
+    }
+
+    private suspend fun findUserInGoogle(token: String): GoogleUser? {
         val response = httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $token")
