@@ -1,8 +1,14 @@
 package dinf.plugins
 
 import dinf.AppDeps
+import dinf.auth.Credential
+import dinf.auth.CredentialValidation
 import dinf.auth.UserSession
+import dinf.config.Configuration
 import dinf.routes.LoginResource
+import dinf.routes.OAuthResource
+import io.ktor.client.*
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.resources.*
@@ -12,21 +18,30 @@ import kotlin.time.Duration
 
 const val FORM_LOGIN_CONFIGURATION_NAME = "form-auth"
 const val SESSION_LOGIN_CONFIGURATION_NAME = "session-auth"
+const val OAUTH_GOOGLE_CONFIGURATION_NAME = "oauth-google"
 const val FORM_LOGIN_EMAIL_FIELD = "email"
 const val FORM_LOGIN_PASSWORD_FIELD = "password"
 
-fun Application.configureAuth(appDeps: AppDeps) {
+fun Application.configureAuth(appDeps: AppDeps, config: Configuration, httpClient: HttpClient) {
     val failedAuthURL = href(LoginResource(failed = true))
+    val googleCallback = href(OAuthResource.Google.Callback())
+    val loginConfig = config.login
 
     install(Authentication) {
-        if (appDeps.toggles.passwordEnabled) {
-            val userPrincipleSvc = appDeps.userPrincipalService()
+        if (loginConfig.password.enabled) {
+            val authSvc = appDeps.authenticationService()
             form(FORM_LOGIN_CONFIGURATION_NAME) {
                 userParamName = FORM_LOGIN_EMAIL_FIELD
                 passwordParamName = FORM_LOGIN_PASSWORD_FIELD
 
                 validate { credential ->
-                    userPrincipleSvc.find(credential)
+                    val validation = authSvc.login(
+                        Credential.EmailPassword(credential)
+                    )
+                    when (validation) {
+                        is CredentialValidation.Ok -> validation.userPrincipal
+                        else -> null
+                    }
                 }
                 challenge(failedAuthURL)
             }
@@ -37,6 +52,25 @@ fun Application.configureAuth(appDeps: AppDeps) {
             }
             challenge {
                 call.respondRedirect("/")
+            }
+        }
+
+        if (loginConfig.oauth.google.enabled) {
+            oauth(OAUTH_GOOGLE_CONFIGURATION_NAME) {
+                urlProvider = { "${config.server.baseURL}$googleCallback" }
+                providerLookup = {
+                    OAuthServerSettings.OAuth2ServerSettings(
+                        name = "google",
+                        authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
+                        accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
+                        requestMethod = HttpMethod.Post,
+                        clientId = loginConfig.oauth.google.clientId,
+                        clientSecret = loginConfig.oauth.google.clientSecret,
+                        defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.email"),
+                        extraAuthParameters = listOf("access_type" to "offline"),
+                    )
+                }
+                client = httpClient
             }
         }
     }

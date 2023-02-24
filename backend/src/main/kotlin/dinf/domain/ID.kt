@@ -8,6 +8,10 @@ value class ID(val number: PLong) {
 
     constructor(number: Int) : this(number.toPLong())
 
+    fun toLong(): Long {
+        return number.toLong()
+    }
+
     companion object {
 
         fun first() = ID(PLong.fromLong(1L))

@@ -1,4 +1,5 @@
 **/build
+**/application-dev.toml
 /.idea
 /.gradle
 /.vscode

@@ -1,7 +1,7 @@
 package dinf
 
-import dinf.auth.UserPrincipalService
-import dinf.config.Toggles
+import dinf.auth.AuthenticationService
+import dinf.config.TogglesConfig
 import dinf.domain.DiceFactory
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
@@ -24,8 +24,8 @@ class AppDepsMock : AppDeps {
 
     override fun diceService(): DiceService = mockk(relaxed = true)
 
-    override fun userPrincipalService(): UserPrincipalService = mockk()
+    override fun authenticationService(): AuthenticationService = mockk()
 
-    override val toggles: Toggles = Toggles()
+    override val toggles: TogglesConfig = TogglesConfig()
 
 }

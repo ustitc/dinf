@@ -1,7 +1,7 @@
 package dinf
 
-import dinf.auth.UserPrincipalService
-import dinf.config.Toggles
+import dinf.auth.AuthenticationService
+import dinf.config.TogglesConfig
 import dinf.domain.DiceFactory
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
@@ -23,8 +23,8 @@ interface AppDeps {
 
     fun diceService(): DiceService
 
-    fun userPrincipalService(): UserPrincipalService
+    fun authenticationService(): AuthenticationService
 
-    val toggles: Toggles
+    val toggles: TogglesConfig
 
 }

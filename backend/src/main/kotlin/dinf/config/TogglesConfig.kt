@@ -1,6 +1,5 @@
 package dinf.config
 
-data class Toggles(
-    val passwordEnabled: Boolean = false,
+data class TogglesConfig(
     val showUserButtons: Boolean = false
 )

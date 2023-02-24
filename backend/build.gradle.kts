@@ -21,10 +21,16 @@ dependencies {
 
     implementation("com.meilisearch.sdk:meilisearch-java:0.7.0")
 
+    implementation(libs.ktor.clientCore)
+    implementation(libs.ktor.clientCIO)
+    implementation(libs.ktor.clientContentNegotiation)
+
+    implementation(libs.ktor.serialization)
+    implementation(libs.ktor.serializationJson)
+
     implementation(libs.ktor.serverCore)
     implementation(libs.ktor.serverHostCommon)
     implementation(libs.ktor.serverNetty)
-    implementation(libs.ktor.serialization)
     implementation(libs.ktor.serverResources)
     implementation(libs.ktor.serverWebjars)
     implementation(libs.ktor.serverHtmlBuilder)

@@ -19,5 +19,15 @@ key = "key"
 timeout = "5s"
 
 [toggles]
-passwordEnabled = false
 showUserButtons = false
+
+[login]
+
+[login.password]
+enabled = false
+
+[login.oauth]
+[login.oauth.google]
+enabled = false
+clientId = ""
+clientSecret = ""

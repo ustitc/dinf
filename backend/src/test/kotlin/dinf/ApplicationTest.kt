@@ -10,15 +10,17 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.testing.*
+import io.mockk.mockk
 
 class ApplicationTest : StringSpec({
 
     "root" {
         val deps = AppDepsMock()
+        val config = Configuration()
         testApplication {
             application {
                 install(Resources)
-                configureAuth(deps)
+                configureAuth(deps, config, mockk())
                 configureRouting(
                     Configuration(),
                     deps,
