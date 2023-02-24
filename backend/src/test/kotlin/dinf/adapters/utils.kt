@@ -7,7 +7,6 @@ import dinf.domain.Dice
 import dinf.domain.Edges
 import dinf.domain.ID
 import dinf.domain.Name
-import kotlin.random.Random
 
 suspend fun createDice(
     name: String = "test",
@@ -21,10 +20,9 @@ suspend fun createDice(
     )
 }
 
-fun createUser(email: String = "test${Random.nextInt()}@test.com"): ID {
-    return sql("""INSERT INTO users(email, name) VALUES(?, ?) RETURNING id""") {
-        setString(1,  email)
-        setString(2, "Happy User")
+fun createUser(): ID {
+    return sql("""INSERT INTO users(name) VALUES(?) RETURNING id""") {
+        setString(1, "Happy User")
         executeQuery().first {
             getPLong("id")
         }
