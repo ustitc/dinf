@@ -5,6 +5,7 @@ import dinf.auth.EmailPasswordService
 import dinf.auth.OAuthService
 import dinf.auth.UserPrincipal
 import dinf.auth.UserSession
+import dinf.config.LoginConfig
 import dinf.html.pages.LoginPage
 import dinf.html.pages.RegistrationPage
 import dinf.plugins.FORM_LOGIN_CONFIGURATION_NAME
@@ -21,10 +22,17 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
-fun Route.loginPage() {
+fun Route.loginPage(loginConfig: LoginConfig) {
     val googleLoginUrl = application.href(OAuthResource.Google())
     get<LoginResource> {
-        call.respondPage(LoginPage(it, googleLoginUrl))
+        call.respondPage(
+            LoginPage(
+                resource = it,
+                googleLoginUrl = googleLoginUrl,
+                emailPasswordEnabled = loginConfig.password.enabled,
+                googleLoginEnabled = loginConfig.oauth.google.enabled
+            )
+        )
     }
 }
 
@@ -34,7 +42,7 @@ fun Route.registrationPage() {
     }
 }
 
-fun Route.login() {
+fun Route.emailPasswordLogin() {
     authenticate(FORM_LOGIN_CONFIGURATION_NAME) {
         post<LoginResource> {
             val principal = call.principal<UserPrincipal>()!!
@@ -43,7 +51,7 @@ fun Route.login() {
     }
 }
 
-fun Route.register(authSvc: EmailPasswordService) {
+fun Route.registration(authSvc: EmailPasswordService) {
     post<RegisterResource> {
         val params = call.receiveParameters()
         val email = params[FORM_LOGIN_EMAIL_FIELD]

@@ -30,7 +30,8 @@ class Layout(
     val logoutURL: String,
     val registerURL: String,
     val userSession: UserSession?,
-    val showUserButtons: Boolean
+    val showUserButtons: Boolean,
+    val registartionEnabled: Boolean
 ) : Template<HTML> {
 
     val content = Placeholder<FlowContent>()
@@ -68,10 +69,12 @@ class Layout(
                                 +"Login"
                             }
                         }
-                        end {
-                            a(href = registerURL) {
-                                role = "button"
-                                +"Register"
+                        if (registartionEnabled) {
+                            end {
+                                a(href = registerURL) {
+                                    role = "button"
+                                    +"Register"
+                                }
                             }
                         }
                     } else if (showUserButtons) {

@@ -16,6 +16,8 @@ import kotlinx.html.submitInput
 class LoginPage(
     private val resource: LoginResource,
     private val googleLoginUrl: String,
+    private val emailPasswordEnabled: Boolean,
+    private val googleLoginEnabled: Boolean,
 ) : Page {
 
     override fun Layout.apply() {
@@ -28,37 +30,42 @@ class LoginPage(
                     +"Email or password were incorrect"
                 }
             }
-            form(action = loginURL, method = FormMethod.post) {
-                label {
-                    +"Email"
-                    emailInput(name = FORM_LOGIN_EMAIL_FIELD) {
-                        placeholder = "gendalf@tatooine.rick"
-                        required = true
-                        if (isFailedAuth()) {
-                            attributes["aria-invalid"] = "true"
+            if (emailPasswordEnabled) {
+                form(action = loginURL, method = FormMethod.post) {
+                    label {
+                        +"Email"
+                        emailInput(name = FORM_LOGIN_EMAIL_FIELD) {
+                            placeholder = "gendalf@tatooine.rick"
+                            required = true
+                            if (isFailedAuth()) {
+                                attributes["aria-invalid"] = "true"
+                            }
                         }
                     }
-                }
 
-                label {
-                    +"Password"
-                    passwordInput(name = FORM_LOGIN_PASSWORD_FIELD) {
-                        required = true
-                        if (isFailedAuth()) {
-                            attributes["aria-invalid"] = "true"
+                    label {
+                        +"Password"
+                        passwordInput(name = FORM_LOGIN_PASSWORD_FIELD) {
+                            required = true
+                            if (isFailedAuth()) {
+                                attributes["aria-invalid"] = "true"
+                            }
                         }
                     }
-                }
 
-                submitInput {
-                    value = "Enter account"
+                    submitInput {
+                        value = "Enter account"
+                    }
                 }
             }
-            form(action = googleLoginUrl, method = FormMethod.get) {
-                submitInput {
-                    value = "Enter with Google"
+            if (googleLoginEnabled) {
+                form(action = googleLoginUrl, method = FormMethod.get) {
+                    submitInput {
+                        value = "Enter with Google"
+                    }
                 }
             }
+
         }
     }
 

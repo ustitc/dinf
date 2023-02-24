@@ -21,11 +21,11 @@ import dinf.routes.LoginResource
 import dinf.routes.LogoutResource
 import dinf.routes.RegisterResource
 import dinf.routes.htmxDices
-import dinf.routes.login
+import dinf.routes.emailPasswordLogin
 import dinf.routes.loginPage
 import dinf.routes.logout
 import dinf.routes.oAuthGoogle
-import dinf.routes.register
+import dinf.routes.registration
 import dinf.routes.registrationPage
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -51,7 +51,8 @@ suspend fun ApplicationCall.respondPage(page: Page) {
             logoutURL = application.href(LogoutResource),
             registerURL = application.href(RegisterResource()),
             userSession = session,
-            showUserButtons = cfg.toggles.showUserButtons
+            showUserButtons = cfg.toggles.showUserButtons,
+            registartionEnabled = cfg.login.password.enabled
         )
     ) {
         insert(page) {}
@@ -87,11 +88,14 @@ fun Application.configureRouting(
 
     routing {
         if (cfg.toggles.showUserButtons) {
-            loginPage()
-            registrationPage()
-            login()
-            register(deps.emailPasswordService())
+            loginPage(cfg.login)
             logout()
+
+            if (cfg.login.password.enabled) {
+                registrationPage()
+                emailPasswordLogin()
+                registration(deps.emailPasswordService())
+            }
         }
         if (cfg.login.oauth.google.enabled) {
             oAuthGoogle(deps.oAuthService())
