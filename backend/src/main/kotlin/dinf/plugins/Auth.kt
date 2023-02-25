@@ -66,7 +66,7 @@ fun Application.configureAuth(appDeps: AppDeps, config: Configuration, httpClien
                         requestMethod = HttpMethod.Post,
                         clientId = loginConfig.oauth.google.clientId,
                         clientSecret = loginConfig.oauth.google.clientSecret,
-                        defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.email"),
+                        defaultScopes = listOf("openid"),
                         extraAuthParameters = listOf("access_type" to "offline"),
                     )
                 }

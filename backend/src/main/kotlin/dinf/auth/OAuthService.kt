@@ -46,10 +46,10 @@ class OAuthService(
             SELECT users.id, users.name 
             FROM users
             JOIN login_oauth_google ON users.id = login_oauth_google.user
-            WHERE login_oauth_google.email = ?
+            WHERE login_oauth_google.google_id = ?
             """.trimIndent()
         ) {
-            setString(1, googleUser.email)
+            setString(1, googleUser.id)
             executeQuery().firstOrNull {
                 User(
                     id = ID(getPLong("id")),
@@ -60,9 +60,9 @@ class OAuthService(
     }
 
     private fun addLogin(user: User, googleUser: GoogleUser) {
-        sql("INSERT INTO login_oauth_google (user, email) VALUES (?, ?)") {
+        sql("INSERT INTO login_oauth_google (user, google_id) VALUES (?, ?)") {
             setPLong(1, user.id.number)
-            setString(2, googleUser.email)
+            setString(2, googleUser.id)
             execute()
         }
     }
@@ -81,6 +81,6 @@ class OAuthService(
     }
 
     @Serializable
-    private data class GoogleUser(val email: String)
+    private data class GoogleUser(val id: String)
 
 }
