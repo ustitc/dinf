@@ -4,11 +4,7 @@ plugins {
 }
 
 application {
-    mainClass.set("dinf.ApplicationKt")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    mainClass.set("dinf.app.ApplicationKt")
 }
 
 dependencies {
@@ -61,5 +57,5 @@ dependencies {
     testImplementation(libs.kotest.assertionsCore)
     testImplementation(libs.kotest.extensionsAssertionsKtor)
 
-    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation(libs.mockk.mockk)
 }
