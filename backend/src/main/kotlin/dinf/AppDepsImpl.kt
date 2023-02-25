@@ -2,6 +2,7 @@ package dinf
 
 import dinf.adapters.BCryptPasswordFactory
 import dinf.adapters.HashidsPublicIDFactory
+import dinf.adapters.LoggingDiceService
 import dinf.adapters.SqliteDiceFactory
 import dinf.adapters.SqliteDiceOwner
 import dinf.adapters.SqliteDiceRepository
@@ -45,14 +46,14 @@ class AppDepsImpl(
     private val searchIndexRepository: SearchIndexRepository = SqliteSearchIndexRepository()
 
     override fun diceService(): DiceService {
-        return DiceService.Logging(
+        return LoggingDiceService(
             DiceService.Impl(
                 diceFactory = diceFactory,
                 diceRepository = diceRepository,
                 searchIndexRepository = searchIndexRepository,
                 publicIDFactory = publicIDFactory,
                 diceMetricRepository = diceMetricRepository,
-                diceOwnerFactory = SqliteDiceOwner.Companion
+                diceOwnerFactory = SqliteDiceOwner
             )
         )
     }

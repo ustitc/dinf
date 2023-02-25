@@ -12,6 +12,7 @@ tasks.test {
 }
 
 dependencies {
+    implementation(project(":domain"))
     implementation(project(":libs:htmx"))
     implementation(project(":libs:hyperscript"))
 
@@ -48,7 +49,6 @@ dependencies {
     implementation("org.webjars.npm:hyperscript.org:0.9.7")
 
     implementation("org.hashids:hashids:1.0.3")
-    implementation("dev.ustits.krefty:krefty-core:0.3.4")
 
     implementation(libs.hoplite.core)
     implementation(libs.hoplite.toml)
