@@ -11,10 +11,6 @@ length = 6
 port = 8080
 baseURL = "http://localhost:8080"
 
-[search]
-url = "http://localhost:7700"
-key = "key"
-
 [htmx]
 timeout = "5s"
 

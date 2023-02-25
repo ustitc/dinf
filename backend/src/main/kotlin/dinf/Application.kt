@@ -14,7 +14,6 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.resources.*
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 fun main() {
@@ -31,12 +30,7 @@ fun main() {
             }
         }
 
-        val meiliDeps = MeiliDeps(cfg.search)
-        val appDeps = AppDepsImpl(meiliDeps, cfg, httpClient)
-
-        launch {
-            populateSearchIndex(appDeps)
-        }
+        val appDeps = AppDepsImpl(cfg, httpClient)
 
         install(Resources)
         configureAuth(appDeps, cfg, httpClient)

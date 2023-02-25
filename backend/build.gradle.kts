@@ -19,8 +19,6 @@ dependencies {
     implementation("org.flywaydb:flyway-core:9.15.0")
     implementation("com.zaxxer:HikariCP:5.0.1")
 
-    implementation("com.meilisearch.sdk:meilisearch-java:0.7.0")
-
     implementation(libs.ktor.clientCore)
     implementation(libs.ktor.clientCIO)
     implementation(libs.ktor.clientContentNegotiation)

@@ -11,7 +11,6 @@ data class Configuration(
     val database: DatabaseConfig = DatabaseConfig("jdbc:sqlite::memory:"),
     val urls: URLsConfig = URLsConfig(),
     val server: ServerConfig = ServerConfig(),
-    val search: SearchConfig = SearchConfig(),
     val htmx: HTMXConfiguration = HTMXConfiguration(timeout = Duration.ofSeconds(5)),
     val toggles: TogglesConfig = TogglesConfig(),
     val login: LoginConfig = LoginConfig()

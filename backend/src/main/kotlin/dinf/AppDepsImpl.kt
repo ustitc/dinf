@@ -1,9 +1,7 @@
 package dinf
 
 import dinf.adapters.BCryptPasswordFactory
-import dinf.adapters.FailoverSearchIndexRepository
 import dinf.adapters.HashidsPublicIDFactory
-import dinf.adapters.MeiliSearchIndexRepository
 import dinf.adapters.SqliteDiceFactory
 import dinf.adapters.SqliteDiceOwner
 import dinf.adapters.SqliteDiceRepository
@@ -25,7 +23,6 @@ import io.ktor.client.*
 import org.hashids.Hashids
 
 class AppDepsImpl(
-    private val meiliDeps: MeiliDeps,
     private val cfg: Configuration,
     private val httpClient: HttpClient
 ) : AppDeps {
@@ -52,10 +49,7 @@ class AppDepsImpl(
     }
 
     override fun searchIndexRepository(): SearchIndexRepository {
-        return FailoverSearchIndexRepository(
-            main = MeiliSearchIndexRepository(meiliDeps.meiliDiceIndex()),
-            fallback = SqliteSearchIndexRepository()
-        )
+        return SqliteSearchIndexRepository()
     }
 
     override fun diceService(): DiceService {
