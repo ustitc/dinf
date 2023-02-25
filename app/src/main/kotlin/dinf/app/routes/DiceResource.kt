@@ -28,13 +28,11 @@ object DiceResource {
     data class Edit(
         val dices: DiceResource = DiceResource,
         val diceID: String,
-        val isFirstTime: Boolean? = null,
         val isFailed: Boolean? = null
     ) {
 
-        constructor(diceID: PublicID, firstTime: Boolean? = null) : this(
-            diceID = diceID.print(),
-            isFirstTime = firstTime
+        constructor(diceID: PublicID) : this(
+            diceID = diceID.print()
         )
 
     }

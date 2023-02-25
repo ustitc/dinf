@@ -53,7 +53,7 @@ fun Route.diceCreateRoutes() {
         val hashID = HTMLParamsDice.fromParametersOrNull(params)
             ?.let { deps.diceService().saveDice(it.name, it.edges, ID(session.id.toPLong())) }
         val redirectURL = if (hashID != null) {
-            application.href(DiceResource.Edit(diceID = hashID, firstTime = true))
+            application.href(DiceResource.ByID(diceID = hashID))
         } else {
             application.href(resource.copy(isFailed = true))
         }

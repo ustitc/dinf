@@ -19,6 +19,16 @@ class SqliteDiceOwnerTest : StringSpec({
         dice shouldNotBe null
     }
 
+    "find the dice with no edges" {
+        val userId = createUser()
+        val diceId = createDice(ownerID = userId, edges = emptyList()).id
+        val diceOwner = SqliteDiceOwner(userId)
+
+        val dice = diceOwner.findDice(diceId)
+
+        dice shouldNotBe null
+    }
+
     "deletes links and the dice" {
         val userId = createUser()
         val diceId = createDice(ownerID = userId).id

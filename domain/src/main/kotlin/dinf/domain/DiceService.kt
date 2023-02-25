@@ -41,9 +41,11 @@ interface DiceService {
 
         override suspend fun findDiceByPublicIdAndUserId(publicID: String, userID: ID): Dice? {
             val diceOwner = diceOwnerFactory.create(userID)
-            return publicIDFactory.fromStringOrNull(publicID)
-                ?.toID()
-                ?.let { diceOwner.findDice(it) }
+            val diceId = publicIDFactory.fromStringOrNull(publicID)?.toID()
+            if (diceId != null) {
+                return diceOwner.findDice(diceId)
+            }
+            return null
         }
 
         override suspend fun find(page: Page, count: Count): List<Dice> {

@@ -17,10 +17,10 @@ class SqliteDiceOwner(override val id: ID) : DiceOwner {
             SELECT 
                 dices.id, 
                 dices.name,
-                group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+                COALESCE(group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}'), '') AS edges
             FROM dices
             JOIN dice_owners ON dices.id = dice_owners.dice
-            JOIN edges ON dices.id = edges.dice
+            LEFT JOIN edges ON dices.id = edges.dice
             WHERE dice_owners.dice = ? 
             AND dice_owners.user = ?
             GROUP BY dices.id
