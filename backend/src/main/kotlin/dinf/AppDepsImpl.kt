@@ -10,7 +10,7 @@ import dinf.adapters.SqliteUserFactory
 import dinf.auth.EmailPasswordService
 import dinf.auth.OAuthService
 import dinf.auth.PasswordFactory
-import dinf.config.Configuration
+import dinf.config.AppConfig
 import dinf.config.TogglesConfig
 import dinf.config.URLConfig
 import dinf.domain.DiceFactory
@@ -19,47 +19,39 @@ import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.domain.PublicIDFactory
 import dinf.domain.SearchIndexRepository
+import dinf.html.components.DiceCardComponentFactory
+import dinf.html.components.DiceFeedComponentFactory
+import dinf.plugins.isLoginedUser
+import dinf.routes.DiceResource
 import io.ktor.client.*
+import io.ktor.resources.*
+import io.ktor.resources.serialization.*
+import io.ktor.server.application.*
 import org.hashids.Hashids
 
 class AppDepsImpl(
-    private val cfg: Configuration,
+    private val cfg: AppConfig,
     private val httpClient: HttpClient
 ) : AppDeps {
 
-    private val diceMetricRepository = DiceMetricRepository.InMemory()
+    private val diceRepository: DiceRepository = SqliteDiceRepository()
+    private val diceFactory: DiceFactory = SqliteDiceFactory()
+    private val diceMetricRepository: DiceMetricRepository = DiceMetricRepository.InMemory()
     private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
-
-    override fun diceRepository(): DiceRepository {
-        return SqliteDiceRepository()
-    }
-
-    override fun diceMetricRepository(): DiceMetricRepository {
-        return diceMetricRepository
-    }
-
-    override fun diceFactory(): DiceFactory {
-        return SqliteDiceFactory()
-    }
-
-    override fun publicIDFactory(): PublicIDFactory {
-        return HashidsPublicIDFactory(
-            hashids = hashids(cfg.urls.share)
-        )
-    }
-
-    override fun searchIndexRepository(): SearchIndexRepository {
-        return SqliteSearchIndexRepository()
-    }
+    private val publicIDFactory: PublicIDFactory = HashidsPublicIDFactory(
+        hashids = hashids(cfg.urls.share)
+    )
+    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory(publicIDFactory)
+    private val searchIndexRepository: SearchIndexRepository = SqliteSearchIndexRepository()
 
     override fun diceService(): DiceService {
         return DiceService.Logging(
             DiceService.Impl(
-                diceFactory = diceFactory(),
-                diceRepository = diceRepository(),
-                searchIndexRepository = searchIndexRepository(),
-                publicIDFactory = publicIDFactory(),
-                diceMetricRepository = diceMetricRepository(),
+                diceFactory = diceFactory,
+                diceRepository = diceRepository,
+                searchIndexRepository = searchIndexRepository,
+                publicIDFactory = publicIDFactory,
+                diceMetricRepository = diceMetricRepository,
                 diceOwnerFactory = SqliteDiceOwner.Companion
             )
         )
@@ -78,6 +70,15 @@ class AppDepsImpl(
             httpClient = httpClient,
             nameSource = { "Happy User" },
             userFactory = SqliteUserFactory(),
+        )
+    }
+
+    override fun diceFeedComponentFactory(call: ApplicationCall): DiceFeedComponentFactory {
+        val newDiceURL = href(ResourcesFormat(), DiceResource.New())
+        return DiceFeedComponentFactory(
+            newDiceURL = newDiceURL,
+            diceCardComponentFactory = diceCardComponentFactory,
+            showAddButton = toggles.showUserButtons && call.isLoginedUser()
         )
     }
 

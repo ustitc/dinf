@@ -1,10 +1,9 @@
 package dinf.routes
 
+import dinf.deps
 import dinf.domain.Count
-import dinf.domain.DiceService
 import dinf.domain.ID
 import dinf.domain.Page
-import dinf.html.components.DiceFeed
 import dinf.html.pages.DiceCreatePage
 import dinf.html.pages.DiceDeletedPage
 import dinf.html.pages.DiceEditPage
@@ -21,13 +20,14 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.index(diceService: DiceService, diceFeed: DiceFeed) {
+fun Route.mainPage() {
     val page = 1
     val count = 10
     val searchAPI = application.href(HTMXResource.Search(page = page, count = count))
     val nextDicePageURL = application.href(HTMXResource.Dices(page = page + 1, count = count))
     get("/") {
-        val diceList = diceService.find(Page(page), Count(count))
+        val diceFeed = deps.diceFeedComponentFactory(call)
+        val diceList = deps.diceService().find(Page(page), Count(count))
         call.respondPage(
             MainPage(
                 searchURL = searchAPI,
@@ -39,20 +39,19 @@ fun Route.index(diceService: DiceService, diceFeed: DiceFeed) {
     }
 }
 
-fun Route.createForm() {
+fun Route.diceCreateRoutes() {
     val url = application.href(DiceResource.New())
+
     get<DiceResource.New> { resource ->
         getUserSessionOrRedirectToNotFound()
         call.respondPage(DiceCreatePage(url, resource))
     }
-}
 
-fun Route.create(diceService: DiceService) {
     post<DiceResource.New> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
         val params = call.receiveParameters()
         val hashID = HTMLParamsDice.fromParametersOrNull(params)
-            ?.let { diceService.saveDice(it.name, it.edges, ID(session.id.toPLong())) }
+            ?.let { deps.diceService().saveDice(it.name, it.edges, ID(session.id.toPLong())) }
         val redirectURL = if (hashID != null) {
             application.href(DiceResource.Edit(diceID = hashID, firstTime = true))
         } else {
@@ -62,9 +61,9 @@ fun Route.create(diceService: DiceService) {
     }
 }
 
-fun Route.dice(diceService: DiceService) {
+fun Route.dicePage() {
     get<DiceResource.ByID> { resource ->
-        val dice = diceService.findDiceByPublicID(resource.diceID)
+        val dice = deps.diceService().findDiceByPublicID(resource.diceID)
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -73,10 +72,10 @@ fun Route.dice(diceService: DiceService) {
     }
 }
 
-fun Route.editForm(baseURL: String, diceService: DiceService) {
+fun Route.diceEditRoutes(baseURL: String) {
     get<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        val dice = diceService.findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
+        val dice = deps.diceService().findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
         
         if (dice == null) {
             throw NotFoundException()
@@ -86,12 +85,10 @@ fun Route.editForm(baseURL: String, diceService: DiceService) {
             call.respondPage(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource))
         }
     }
-}
 
-fun Route.edit(diceService: DiceService) {
     post<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        val dice = diceService.findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
+        val dice = deps.diceService().findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
 
         if (dice == null) {
             throw NotFoundException()
@@ -109,11 +106,10 @@ fun Route.edit(diceService: DiceService) {
     }
 }
 
-
-fun Route.delete(diceService: DiceService) {
+fun Route.diceDeleteRoutes() {
     post<DiceResource.Delete> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        diceService.deleteByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
+        deps.diceService().deleteByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
         call.respondPage(DiceDeletedPage())
     }
 }

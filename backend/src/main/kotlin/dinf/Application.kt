@@ -16,6 +16,8 @@ import io.ktor.server.netty.*
 import io.ktor.server.resources.*
 import kotlinx.serialization.json.Json
 
+lateinit var deps: AppDeps
+
 fun main() {
     val cfg = readConfiguration()
 
@@ -30,11 +32,11 @@ fun main() {
             }
         }
 
-        val appDeps = AppDepsImpl(cfg, httpClient)
+        deps = AppDepsImpl(cfg, httpClient)
 
         install(Resources)
-        configureAuth(appDeps, cfg, httpClient)
-        configureRouting(cfg, appDeps)
+        configureAuth(cfg, httpClient)
+        configureRouting(cfg)
         configureCallLogging()
         configureMetrics()
     }.start(wait = true)

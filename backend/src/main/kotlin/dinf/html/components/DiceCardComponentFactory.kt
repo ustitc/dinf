@@ -12,7 +12,7 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.h3
 
-class DiceCard(private val publicIDFactory: PublicIDFactory) {
+class DiceCardComponentFactory(private val publicIDFactory: PublicIDFactory) {
 
     fun component(flowContent: FlowContent, dice: Dice) {
         val hashID = publicIDFactory.fromID(dice.id)

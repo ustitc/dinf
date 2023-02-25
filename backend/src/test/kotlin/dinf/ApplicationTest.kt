@@ -1,6 +1,6 @@
 package dinf
 
-import dinf.config.Configuration
+import dinf.config.AppConfig
 import dinf.plugins.configureAuth
 import dinf.plugins.configureRouting
 import io.kotest.assertions.ktor.client.shouldHaveStatus
@@ -16,13 +16,13 @@ class ApplicationTest : StringSpec({
 
     "root" {
         val deps = AppDepsMock()
-        val config = Configuration()
+        val config = AppConfig()
         testApplication {
             application {
                 install(Resources)
                 configureAuth(deps, config, mockk())
                 configureRouting(
-                    Configuration(),
+                    AppConfig(),
                     deps,
                 )
             }

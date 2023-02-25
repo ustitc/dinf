@@ -1,45 +1,43 @@
 package dinf.plugins
 
-import dinf.AppDeps
 import dinf.auth.UserSession
-import dinf.html.components.DiceCard
-import dinf.html.components.DiceFeed
-import dinf.config.Configuration
+import dinf.config.AppConfig
 import dinf.html.pages.NotFoundPage
 import dinf.html.pages.Page
-import dinf.routes.DiceResource
-import dinf.routes.create
-import dinf.routes.createForm
-import dinf.routes.dice
-import dinf.routes.delete
-import dinf.routes.index
-import dinf.routes.edit
-import dinf.routes.editForm
-import dinf.routes.search
 import dinf.html.templates.Layout
+import dinf.routes.DiceResource
 import dinf.routes.LoginResource
 import dinf.routes.LogoutResource
 import dinf.routes.RegisterResource
-import dinf.routes.htmxDices
-import dinf.routes.emailPasswordLogin
+import dinf.routes.diceCreateRoutes
+import dinf.routes.diceDeleteRoutes
+import dinf.routes.dicePage
+import dinf.routes.diceEditRoutes
+import dinf.routes.emailPasswordLoginRoutes
+import dinf.routes.htmxDiceList
+import dinf.routes.mainPage
 import dinf.routes.loginPage
 import dinf.routes.logout
-import dinf.routes.oAuthGoogle
-import dinf.routes.registration
-import dinf.routes.registrationPage
+import dinf.routes.oAuthGoogleRoute
+import dinf.routes.registrationRoutes
+import dinf.routes.htmxDiceSearch
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
-import io.ktor.http.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.resources.href
+import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.webjars.*
 import io.ktor.util.pipeline.*
 
-private lateinit var cfg: Configuration
+private lateinit var cfg: AppConfig
+
+fun ApplicationCall.isLoginedUser(): Boolean {
+    return sessions.get<UserSession>() != null
+}
 
 suspend fun ApplicationCall.respondPage(page: Page) {
     val session = sessions.get<UserSession>()
@@ -64,17 +62,9 @@ fun PipelineContext<*, ApplicationCall>.getUserSessionOrRedirectToNotFound(): Us
     return session ?: throw NotFoundException()
 }
 
-fun Application.configureRouting(
-    config: Configuration,
-    deps: AppDeps
-) {
+fun Application.configureRouting(config: AppConfig) {
     cfg = config
     val baseURL = config.server.baseURL
-
-    val newDiceURL = href(DiceResource.New())
-
-    val diceCard = DiceCard(publicIDFactory = deps.publicIDFactory())
-    val diceFeed = DiceFeed(newDiceURL = newDiceURL, diceCard = diceCard)
 
     install(StatusPages) {
         status(HttpStatusCode.NotFound) { call, _ ->
@@ -92,43 +82,20 @@ fun Application.configureRouting(
             logout()
 
             if (cfg.login.password.enabled) {
-                registrationPage()
-                emailPasswordLogin()
-                registration(deps.emailPasswordService())
+                registrationRoutes()
+                emailPasswordLoginRoutes()
             }
         }
         if (cfg.login.oauth.google.enabled) {
-            oAuthGoogle(deps.oAuthService())
+            oAuthGoogleRoute()
         }
-        index(
-            diceService = deps.diceService(),
-            diceFeed = diceFeed
-        )
-        create(
-            diceService = deps.diceService()
-        )
-        createForm()
-        dice(
-            diceService = deps.diceService()
-        )
-        edit(
-            diceService = deps.diceService()
-        )
-        editForm(
-            baseURL = baseURL,
-            diceService = deps.diceService()
-        )
-        delete(
-            diceService = deps.diceService()
-        )
-        search(
-            diceService = deps.diceService(),
-            diceFeed = diceFeed
-        )
-        htmxDices(
-            diceService = deps.diceService(),
-            diceFeed = diceFeed
-        )
+        mainPage()
+        dicePage()
+        diceCreateRoutes()
+        diceEditRoutes(baseURL = baseURL)
+        diceDeleteRoutes()
+        htmxDiceSearch()
+        htmxDiceList()
 
         static("assets") {
             resources("js")

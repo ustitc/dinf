@@ -15,9 +15,10 @@ import kotlinx.html.hr
 import kotlinx.html.id
 import kotlinx.html.input
 
-class DiceFeed(
+class DiceFeedComponentFactory(
     private val newDiceURL: String,
-    private val diceCard: DiceCard
+    private val diceCardComponentFactory: DiceCardComponentFactory,
+    private val showAddButton: Boolean
 ) {
 
     private val loadBlockID = "pagination-block-load"
@@ -26,7 +27,7 @@ class DiceFeed(
         flowContent.insert(Feed()) {
             diceList.forEach { dice ->
                 item {
-                    diceCard.component(this, dice)
+                    diceCardComponentFactory.component(this, dice)
                     hr { }
                 }
             }
@@ -53,9 +54,11 @@ class DiceFeed(
                 }
             }
             noContent {
-                form(action = newDiceURL) {
-                    input(type = InputType.submit) {
-                        value = "Create new dice"
+                if (showAddButton) {
+                    form(action = newDiceURL) {
+                        input(type = InputType.submit) {
+                            value = "Create new dice"
+                        }
                     }
                 }
             }

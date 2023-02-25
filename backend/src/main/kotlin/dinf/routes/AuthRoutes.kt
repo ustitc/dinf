@@ -6,6 +6,7 @@ import dinf.auth.OAuthService
 import dinf.auth.UserPrincipal
 import dinf.auth.UserSession
 import dinf.config.LoginConfig
+import dinf.deps
 import dinf.html.pages.LoginPage
 import dinf.html.pages.RegistrationPage
 import dinf.plugins.FORM_LOGIN_CONFIGURATION_NAME
@@ -36,22 +37,11 @@ fun Route.loginPage(loginConfig: LoginConfig) {
     }
 }
 
-fun Route.registrationPage() {
+fun Route.registrationRoutes() {
     get<RegisterResource> {
         call.respondPage(RegistrationPage(it))
     }
-}
 
-fun Route.emailPasswordLogin() {
-    authenticate(FORM_LOGIN_CONFIGURATION_NAME) {
-        post<LoginResource> {
-            val principal = call.principal<UserPrincipal>()!!
-            call.setSessionAndRedirect(principal.session)
-        }
-    }
-}
-
-fun Route.registration(authSvc: EmailPasswordService) {
     post<RegisterResource> {
         val params = call.receiveParameters()
         val email = params[FORM_LOGIN_EMAIL_FIELD]
@@ -60,12 +50,21 @@ fun Route.registration(authSvc: EmailPasswordService) {
         requireNotNull(password)
 
         val auth = Credential.EmailPassword(email, password)
-        when (val result = authSvc.register(auth)) {
+        when (val result = deps.emailPasswordService().register(auth)) {
             is EmailPasswordService.Registration.Created -> call.setSessionAndRedirect(result.userPrincipal.session)
             is EmailPasswordService.Registration.Exists -> {
                 val redirect = application.href(RegisterResource(userExists = true))
                 call.respondRedirect(redirect)
             }
+        }
+    }
+}
+
+fun Route.emailPasswordLoginRoutes() {
+    authenticate(FORM_LOGIN_CONFIGURATION_NAME) {
+        post<LoginResource> {
+            val principal = call.principal<UserPrincipal>()!!
+            call.setSessionAndRedirect(principal.session)
         }
     }
 }
@@ -77,7 +76,7 @@ fun Route.logout() {
     }
 }
 
-fun Route.oAuthGoogle(authSvc: OAuthService) {
+fun Route.oAuthGoogleRoute() {
     authenticate(OAUTH_GOOGLE_CONFIGURATION_NAME) {
         get<OAuthResource.Google> {
             // Redirects to 'authorizeUrl' automatically
@@ -88,7 +87,7 @@ fun Route.oAuthGoogle(authSvc: OAuthService) {
             requireNotNull(principal) { "Callback must contain token" }
 
             val auth = Credential.Google(principal.accessToken)
-            when (val login = authSvc.login(auth)) {
+            when (val login = deps.oAuthService().login(auth)) {
                 is OAuthService.Login.Ok -> {
                     call.sessions.set(login.userPrincipal.session)
                     call.respondRedirect("/")

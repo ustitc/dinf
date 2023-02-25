@@ -7,7 +7,7 @@ import dev.ustits.htmx.HTMXConfiguration
 import java.io.File
 import java.time.Duration
 
-data class Configuration(
+data class AppConfig(
     val database: DatabaseConfig = DatabaseConfig("jdbc:sqlite::memory:"),
     val urls: URLsConfig = URLsConfig(),
     val server: ServerConfig = ServerConfig(),
@@ -16,7 +16,7 @@ data class Configuration(
     val login: LoginConfig = LoginConfig()
 )
 
-fun readConfiguration(): Configuration {
+fun readConfiguration(): AppConfig {
     return configLoader().loadConfigOrThrow()
 }
 

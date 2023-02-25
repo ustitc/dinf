@@ -10,7 +10,9 @@ class DicePage(private val dice: Dice) : Page {
 
     override fun Layout.apply() {
         content {
-            h2 { +dice.name.print() }
+            h2 {
+                +dice.name.print()
+            }
 
             insert(RollBlock(dice.edges.toStringList())) {
                 withResultOnTop = false

@@ -1,10 +1,10 @@
 package dinf.plugins
 
-import dinf.AppDeps
 import dinf.auth.Credential
 import dinf.auth.EmailPasswordValidation
 import dinf.auth.UserSession
-import dinf.config.Configuration
+import dinf.config.AppConfig
+import dinf.deps
 import dinf.routes.LoginResource
 import dinf.routes.OAuthResource
 import io.ktor.client.*
@@ -22,14 +22,14 @@ const val OAUTH_GOOGLE_CONFIGURATION_NAME = "oauth-google"
 const val FORM_LOGIN_EMAIL_FIELD = "email"
 const val FORM_LOGIN_PASSWORD_FIELD = "password"
 
-fun Application.configureAuth(appDeps: AppDeps, config: Configuration, httpClient: HttpClient) {
+fun Application.configureAuth(config: AppConfig, httpClient: HttpClient) {
     val failedAuthURL = href(LoginResource(failed = true))
     val googleCallback = href(OAuthResource.Google.Callback())
     val loginConfig = config.login
 
     install(Authentication) {
         if (loginConfig.password.enabled) {
-            val authSvc = appDeps.emailPasswordService()
+            val authSvc = deps.emailPasswordService()
             form(FORM_LOGIN_CONFIGURATION_NAME) {
                 userParamName = FORM_LOGIN_EMAIL_FIELD
                 passwordParamName = FORM_LOGIN_PASSWORD_FIELD

@@ -11,7 +11,6 @@ import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.form
 import kotlinx.html.h2
-import kotlinx.html.hGroup
 import kotlinx.html.input
 
 class DiceEditPage(
@@ -23,8 +22,8 @@ class DiceEditPage(
 
     override fun Layout.apply() {
         content {
-            hGroup {
-                h2 { +dice.name.print() }
+            h2 {
+                +dice.name.print()
             }
 
             insert(RollBlock(dice.edges.toStringList())) {

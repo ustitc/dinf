@@ -24,7 +24,6 @@ interface DiceService {
 
         override suspend fun saveDice(name: Name, edges: Edges, userID: ID): PublicID {
             val dice = diceFactory.create(name, edges, userID)
-            searchIndexRepository.add(dice)
             return publicIDFactory.fromID(dice.id)
         }
 
