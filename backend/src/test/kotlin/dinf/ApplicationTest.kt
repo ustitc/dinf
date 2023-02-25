@@ -15,16 +15,13 @@ import io.mockk.mockk
 class ApplicationTest : StringSpec({
 
     "root" {
-        val deps = AppDepsMock()
+        deps = AppDepsMock()
         val config = AppConfig()
         testApplication {
             application {
                 install(Resources)
-                configureAuth(deps, config, mockk())
-                configureRouting(
-                    AppConfig(),
-                    deps,
-                )
+                configureAuth(config, mockk())
+                configureRouting(AppConfig())
             }
             val response = client.get("/")
             response shouldHaveStatus HttpStatusCode.OK

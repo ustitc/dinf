@@ -16,7 +16,7 @@ class AppDepsMock : AppDeps {
 
     override fun oAuthService(): OAuthService = mockk()
 
-    override fun diceFeedComponentFactory(call: ApplicationCall): DiceFeedComponentFactory = mockk()
+    override fun diceFeedComponentFactory(call: ApplicationCall): DiceFeedComponentFactory = mockk(relaxed = true)
 
     override val toggles: TogglesConfig = TogglesConfig()
 
