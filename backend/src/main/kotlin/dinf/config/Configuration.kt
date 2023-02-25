@@ -8,10 +8,10 @@ import java.io.File
 import java.time.Duration
 
 data class Configuration(
-    val database: Database = Database("jdbc:sqlite::memory:"),
-    val urls: URLs = URLs(),
-    val server: Server = Server(),
-    val search: Search = Search(),
+    val database: DatabaseConfig = DatabaseConfig("jdbc:sqlite::memory:"),
+    val urls: URLsConfig = URLsConfig(),
+    val server: ServerConfig = ServerConfig(),
+    val search: SearchConfig = SearchConfig(),
     val htmx: HTMXConfiguration = HTMXConfiguration(timeout = Duration.ofSeconds(5)),
     val toggles: TogglesConfig = TogglesConfig(),
     val login: LoginConfig = LoginConfig()

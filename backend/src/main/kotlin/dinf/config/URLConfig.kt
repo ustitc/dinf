@@ -1,6 +1,6 @@
 package dinf.config
 
-data class URL(
+data class URLConfig(
     val salt: String,
     val length: Int
 )

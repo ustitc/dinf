@@ -14,7 +14,7 @@ import dinf.auth.OAuthService
 import dinf.auth.PasswordFactory
 import dinf.config.Configuration
 import dinf.config.TogglesConfig
-import dinf.config.URL
+import dinf.config.URLConfig
 import dinf.domain.DiceFactory
 import dinf.domain.DiceMetricRepository
 import dinf.domain.DiceRepository
@@ -89,7 +89,7 @@ class AppDepsImpl(
 
     override val toggles: TogglesConfig = cfg.toggles
 
-    private fun hashids(url: URL): Hashids {
+    private fun hashids(url: URLConfig): Hashids {
         return Hashids(url.salt, url.length)
     }
 }

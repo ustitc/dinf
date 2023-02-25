@@ -3,9 +3,9 @@ package dinf
 import com.meilisearch.sdk.Client
 import com.meilisearch.sdk.Config
 import com.meilisearch.sdk.Index
-import dinf.config.Search
+import dinf.config.SearchConfig
 
-class MeiliDeps(private val search: Search) {
+class MeiliDeps(private val searchConfig: SearchConfig) {
 
     private val indexName = "dices"
 
@@ -15,7 +15,7 @@ class MeiliDeps(private val search: Search) {
 
     private fun meiliClient(): Client {
         return Client(
-            Config(search.url, search.key)
+            Config(searchConfig.url, searchConfig.key)
         )
     }
 

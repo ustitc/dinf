@@ -1,7 +1,7 @@
 package dinf.db
 
 import com.zaxxer.hikari.HikariDataSource
-import dinf.config.Database
+import dinf.config.DatabaseConfig
 import org.flywaydb.core.Flyway
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -10,8 +10,8 @@ import javax.sql.DataSource
 
 private lateinit var dataSource: DataSource
 
-fun configureDatabase(database: Database) {
-    dataSource = HikariDataSource(database.toHikariConfig())
+fun configureDatabase(databaseConfig: DatabaseConfig) {
+    dataSource = HikariDataSource(databaseConfig.toHikariConfig())
     migrateDatabase()
 }
 

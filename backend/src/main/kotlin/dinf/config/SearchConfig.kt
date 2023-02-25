@@ -1,6 +1,6 @@
 package dinf.config
 
-data class Search(
+data class SearchConfig(
     val url: String = "http://localhost:7700",
     val key: String = ""
 )
