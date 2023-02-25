@@ -9,7 +9,7 @@ enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "dinf"
 
-include("backend")
+include("app")
 include("domain")
 include("libs:htmx")
 include("libs:hyperscript")

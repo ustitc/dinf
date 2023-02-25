@@ -12,14 +12,14 @@ jobs:
     with:
       jdk_version: '17'
       jdk_distribution: 'temurin'
-      distribution_path: 'backend/build/distributions/backend.tar'
+      distribution_path: 'app/build/distributions/app.tar'
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main'
     uses: ustits/actions/.github/workflows/jdk_deploy.yml@main
     with:
       version: ${{ github.run_id }}
-      tar_name: 'backend'
+      tar_name: 'app'
       app_name: 'dinf'
     secrets:
       host: ${{ secrets.HOST }}
