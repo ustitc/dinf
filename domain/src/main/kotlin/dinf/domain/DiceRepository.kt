@@ -18,4 +18,6 @@ interface DiceRepository {
 
     suspend fun update(dice: Dice)
 
+    fun search(text: String): List<Dice>
+
 }

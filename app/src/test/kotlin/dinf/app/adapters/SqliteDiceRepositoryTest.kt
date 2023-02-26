@@ -3,6 +3,7 @@ package dinf.app.adapters
 import dinf.domain.ID
 import dinf.types.toPLongOrNull
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.toList
@@ -55,6 +56,24 @@ class SqliteDiceRepositoryTest : StringSpec({
         val result = repository.oneOrNull(dice.id)
 
         result!!.edges.toStringList() shouldBe emptyList()
+    }
+
+    "dice is found by name" {
+        createDice("pinky")
+        val repository = SqliteDiceRepository()
+
+        val result = repository.search("pinky")
+
+        result shouldHaveSize 1
+    }
+
+    "dice is found by part of name" {
+        createDice("pinky")
+        val repository = SqliteDiceRepository()
+
+        val result = repository.search("pi")
+
+        result shouldHaveSize 1
     }
 
 })

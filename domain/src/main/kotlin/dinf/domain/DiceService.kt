@@ -5,9 +5,7 @@ import kotlinx.coroutines.flow.toList
 class DiceService(
     private val diceFactory: DiceFactory,
     private val diceRepository: DiceRepository,
-    private val searchIndexRepository: SearchIndexRepository,
     private val publicIDFactory: PublicIDFactory,
-    private val diceMetricRepository: DiceMetricRepository,
     private val diceOwnerFactory: DiceOwnerFactory
 ) {
 
@@ -21,12 +19,6 @@ class DiceService(
             ?.toID()
             ?: return null
 
-        val metric = diceMetricRepository.forID(id)
-        if (metric == null) {
-            diceMetricRepository.create(id, Metric.Simple(1))
-        } else {
-            metric.addClick()
-        }
         return diceRepository.oneOrNull(id)
     }
 
@@ -42,26 +34,21 @@ class DiceService(
     suspend fun find(page: Page, count: Count): List<Dice> {
         return diceRepository.flow()
             .toList()
-            .map { it to diceMetricRepository.forIDOrZero(it.id) }
-            .sortAndLimit(page, count)
+            .paginate(page, count)
     }
 
-    suspend fun search(query: SearchQuery): List<Dice> {
-        val ids = searchIndexRepository.search(query.text)
-            .map { it to diceMetricRepository.forIDOrZero(it) }
-            .sortAndLimit(query.page, query.count)
-        return diceRepository.list(ids)
+    fun search(query: SearchQuery): List<Dice> {
+        return diceRepository
+            .search(query.text)
+            .paginate(query.page, query.count)
     }
 
-    private fun <T> List<Pair<T, Metric>>.sortAndLimit(page: Page, count: Count): List<T> {
+    private fun <T> List<T>.paginate(page: Page, count: Count): List<T> {
         val offset = Offset(page, count)
-        return sortedByDescending { it.second.clicks }
-            .map { it.first }
-            .drop(offset.toInt())
-            .take(count.toInt())
+        return drop(offset.toInt()).take(count.toInt())
     }
 
-    suspend fun deleteByPublicIdAndUserId(publicID: String, userId: ID) {
+    fun deleteByPublicIdAndUserId(publicID: String, userId: ID) {
         val diceOwner = diceOwnerFactory.create(userId)
         publicIDFactory.fromStringOrNull(publicID)
             ?.toID()

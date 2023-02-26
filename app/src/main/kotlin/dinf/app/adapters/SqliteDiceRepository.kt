@@ -94,11 +94,13 @@ class SqliteDiceRepository : DiceRepository {
     }
 
     override suspend fun update(dice: Dice) {
-        sql("""
+        sql(
+            """
             UPDATE dices SET
             name = ?
             RETURNING id, name 
-        """.trimIndent()) {
+        """.trimIndent()
+        ) {
             setString(1, dice.name.print())
             execute()
         }
@@ -124,6 +126,29 @@ class SqliteDiceRepository : DiceRepository {
                     ?: emptyList()
             )
         )
+    }
+
+    override fun search(text: String): List<Dice> {
+        return transaction {
+            prepareStatement(
+                """
+                    SELECT 
+                        dices.id AS id, 
+                        dices.name AS name, 
+                        group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
+                    FROM dices, edges 
+                    WHERE dices.name LIKE ? 
+                    AND dices.id = edges.dice
+                    GROUP BY dices.id
+                """.trimIndent()
+            ).also {
+                it.setString(1, "${text}%")
+            }.use {
+                it.executeQuery().toSequence {
+                    fromResultSet(this)
+                }.toList()
+            }
+        }
     }
 
     companion object {
