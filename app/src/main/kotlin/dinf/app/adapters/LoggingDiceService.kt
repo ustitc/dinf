@@ -59,4 +59,7 @@ class LoggingDiceService(private val service: DiceService) : DiceService {
         logger.info("Deleted dice for id=$publicID, userId=${userId}")
     }
 
+    override suspend fun renameDice(publicID: String, name: Name) {
+        service.renameDice(publicID, name)
+    }
 }

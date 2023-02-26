@@ -25,7 +25,7 @@ class DicePageService(private val diceService: DiceService) {
         requireNotNull(dice)
         requireNotNull(parsedParams)
 
-        dice.rename(parsedParams.name)
+        diceService.renameDice(diceId, parsedParams.name)
         dice.edges.replaceAll(parsedParams.edges)
     }
 

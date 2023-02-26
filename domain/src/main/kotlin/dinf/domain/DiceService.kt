@@ -10,6 +10,7 @@ interface DiceService {
     suspend fun find(page: Page, count: Count): List<Dice>
     suspend fun search(query: SearchQuery): List<Dice>
     suspend fun deleteByPublicIdAndUserId(publicID: String, userId: ID)
+    suspend fun renameDice(publicID: String, name: Name)
 
     class Impl(
         private val diceFactory: DiceFactory,
@@ -27,7 +28,7 @@ interface DiceService {
 
         override suspend fun findDiceByPublicID(publicID: String): Dice? {
             val id = publicIDFactory.fromStringOrNull(publicID)
-                ?.let { it.toID() }
+                ?.toID()
                 ?: return null
 
             val metric = diceMetricRepository.forID(id)
@@ -75,6 +76,12 @@ interface DiceService {
             publicIDFactory.fromStringOrNull(publicID)
                 ?.toID()
                 ?.let { diceOwner.deleteDice(it) }
+        }
+
+        override suspend fun renameDice(publicID: String, name: Name) {
+            val dice = findDiceByPublicID(publicID)
+            requireNotNull(dice)
+            diceRepository.update(dice.copy(name = name))
         }
     }
 

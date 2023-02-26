@@ -2,15 +2,19 @@ package dinf.app.adapters
 
 import dinf.app.db.connection
 import dinf.app.db.firstOrNull
+import dinf.app.db.getPLong
 import dinf.app.db.setPLong
+import dinf.app.db.sql
 import dinf.app.db.toSequence
 import dinf.app.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceRepository
 import dinf.domain.ID
+import dinf.domain.Name
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import java.sql.ResultSet
 
 class SqliteDiceRepository : DiceRepository {
 
@@ -21,16 +25,16 @@ class SqliteDiceRepository : DiceRepository {
             SELECT 
                 dices.id AS id, 
                 dices.name AS name, 
-                group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+                group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
             FROM dices, edges 
             WHERE dices.id = edges.dice
             GROUP BY dices.id
             """.trimIndent()
         )
         val rs = statement.executeQuery()
-        return flow<Dice> {
+        return flow {
             rs.toSequence {
-                SqliteDice.fromResultSet(this)
+                fromResultSet(this)
             }.forEach { emit(it) }
         }.onCompletion {
             rs.close()
@@ -46,7 +50,7 @@ class SqliteDiceRepository : DiceRepository {
                 SELECT 
                     dices.id AS id, 
                     dices.name AS name, 
-                    group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+                    group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
                 FROM dices
                 LEFT JOIN edges ON dices.id = edges.dice
                 WHERE dices.id = ?
@@ -56,7 +60,7 @@ class SqliteDiceRepository : DiceRepository {
                 statement.setPLong(1, id.number)
             }
             val dice = statement.executeQuery().firstOrNull {
-                SqliteDice.fromResultSet(this)
+                fromResultSet(this)
             }
             statement.close()
             dice
@@ -70,7 +74,7 @@ class SqliteDiceRepository : DiceRepository {
                 SELECT 
                     dices.id AS id, 
                     dices.name AS name, 
-                    group_concat(edges.value, '${SqliteDice.EDGES_SEPARATOR}') AS edges
+                    group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
                 FROM dices, edges 
                 WHERE dices.id IN (${ids.joinToString(separator = ",") { "?" }}) 
                 AND dices.id = edges.dice
@@ -82,10 +86,21 @@ class SqliteDiceRepository : DiceRepository {
                 }
             }
             val list = statement.executeQuery().toSequence {
-                SqliteDice.fromResultSet(this)
+                fromResultSet(this)
             }.toList()
             statement.close()
             list
+        }
+    }
+
+    override suspend fun update(dice: Dice) {
+        sql("""
+            UPDATE dices SET
+            name = ?
+            RETURNING id, name 
+        """.trimIndent()) {
+            setString(1, dice.name.print())
+            execute()
         }
     }
 
@@ -96,4 +111,23 @@ class SqliteDiceRepository : DiceRepository {
             }.use { it.execute() }
         }
     }
+
+    private fun fromResultSet(result: ResultSet): Dice {
+        val id = ID(result.getPLong("id"))
+        return Dice(
+            id = id,
+            name = Name(result.getString("name")),
+            edges = SqliteEdges(
+                diceId = id,
+                list = result.getString("edges")
+                    ?.split(EDGES_SEPARATOR)
+                    ?: emptyList()
+            )
+        )
+    }
+
+    companion object {
+        const val EDGES_SEPARATOR = ";"
+    }
+
 }
