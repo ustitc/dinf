@@ -6,7 +6,7 @@ import dinf.app.db.setPLong
 import dinf.app.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceFactory
-import dinf.domain.Edges
+import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
 import dinf.types.PLong
@@ -14,10 +14,10 @@ import java.sql.Connection
 
 class SqliteDiceFactory : DiceFactory {
 
-    override suspend fun create(name: Name, edges: Edges, ownerID: ID): Dice {
+    override suspend fun create(name: Name, edges: List<Edge>, ownerID: ID): Dice {
         val id = transaction {
             val diceID = saveDice(name)
-            linkEdges(diceID, edges)
+            addEdges(diceID, edges)
             linkOwner(diceID, ownerID)
             diceID
         }
@@ -40,15 +40,15 @@ class SqliteDiceFactory : DiceFactory {
         }
     }
 
-    private fun Connection.linkEdges(diceID: PLong, edges: Edges) {
-        edges.toStringList().forEach { edge ->
+    private fun Connection.addEdges(diceID: PLong, edges: List<Edge>) {
+        edges.forEach { edge ->
             prepareStatement(
                 """
                 INSERT INTO edges (value, dice)
                 VALUES (?, ?)
                 """
             ).use {
-                it.setString(1, edge)
+                it.setString(1, edge.value)
                 it.setPLong(2, diceID)
                 it.execute()
             }

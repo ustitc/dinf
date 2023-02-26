@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.toList
 
 interface DiceService {
 
-    suspend fun saveDice(name: Name, edges: Edges, userID: ID): PublicID
+    suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): PublicID
     suspend fun findDiceByPublicID(publicID: String): Dice?
     suspend fun findDiceByPublicIdAndUserId(publicID: String, userID: ID): Dice?
     suspend fun find(page: Page, count: Count): List<Dice>
@@ -20,7 +20,7 @@ interface DiceService {
         private val diceOwnerFactory: DiceOwnerFactory
     ) : DiceService {
 
-        override suspend fun saveDice(name: Name, edges: Edges, userID: ID): PublicID {
+        override suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): PublicID {
             val dice = diceFactory.create(name, edges, userID)
             return publicIDFactory.fromID(dice.id)
         }

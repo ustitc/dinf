@@ -24,6 +24,7 @@ import dinf.app.html.components.DiceCardComponentFactory
 import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
 import dinf.app.routes.DiceResource
+import dinf.app.services.DicePageService
 import io.ktor.client.*
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
@@ -81,6 +82,10 @@ class AppDepsImpl(
             diceCardComponentFactory = diceCardComponentFactory,
             showAddButton = toggles.showUserButtons && call.isLoginedUser()
         )
+    }
+
+    override fun dicePageService(): DicePageService {
+        return DicePageService(diceService())
     }
 
     override val toggles: TogglesConfig = cfg.toggles

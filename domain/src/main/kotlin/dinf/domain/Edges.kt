@@ -1,12 +1,13 @@
 package dinf.domain
 
-@JvmInline
-value class Edges(private val list: List<String>) {
+interface Edges {
 
-    constructor() : this(listOf())
+    fun asEdgeList(): List<Edge>
 
     fun toStringList(): List<String> {
-        return list
+        return asEdgeList().map { it.value }
     }
+
+    fun replaceAll(list: List<Edge>)
 
 }

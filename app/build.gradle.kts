@@ -7,6 +7,10 @@ application {
     mainClass.set("dinf.app.ApplicationKt")
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation(project(":domain"))
     implementation(project(":libs:htmx"))

@@ -1,15 +1,23 @@
 package dinf.domain
 
+import dinf.types.toPLongOrNull
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldContainInOrder
 import io.mockk.mockk
+import kotlin.random.Random
 
 class DiceServiceTest : StringSpec({
 
+    class Stub(name: String = "stub") : Dice by Dice.Simple(
+        id = ID(Random.nextLong(1, 100).toPLongOrNull()!!),
+        name = Name(name),
+        edges = mockk()
+    )
+
     "dices with higher click count must be first" {
-        val first = Dice.Stub("first")
-        val second = Dice.Stub("second")
-        val third = Dice.Stub("third")
+        val first = Stub("first")
+        val second = Stub("second")
+        val third = Stub("third")
 
         val metrics = DiceMetricRepository.InMemory(
             first to Metric.Simple(10),
@@ -28,5 +36,7 @@ class DiceServiceTest : StringSpec({
 
         service.search(SearchQuery("any")) shouldContainInOrder listOf(first, second, third)
     }
+
+
 
 })

@@ -5,6 +5,7 @@ import dinf.app.auth.OAuthService
 import dinf.app.config.TogglesConfig
 import dinf.domain.DiceService
 import dinf.app.html.components.DiceFeedComponentFactory
+import dinf.app.services.DicePageService
 import io.ktor.server.application.*
 
 interface AppDeps {
@@ -16,6 +17,8 @@ interface AppDeps {
     fun oAuthService(): OAuthService
 
     fun diceFeedComponentFactory(call: ApplicationCall): DiceFeedComponentFactory
+
+    fun dicePageService(): DicePageService
 
     val toggles: TogglesConfig
 

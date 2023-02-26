@@ -1,9 +1,6 @@
 package dinf.app.routes
 
 import dinf.app.deps
-import dinf.domain.Count
-import dinf.domain.ID
-import dinf.domain.Page
 import dinf.app.html.pages.DiceCreatePage
 import dinf.app.html.pages.DiceDeletedPage
 import dinf.app.html.pages.DiceEditPage
@@ -11,6 +8,9 @@ import dinf.app.html.pages.DicePage
 import dinf.app.html.pages.MainPage
 import dinf.app.plugins.getUserSessionOrRedirectToNotFound
 import dinf.app.plugins.respondPage
+import dinf.domain.Count
+import dinf.domain.ID
+import dinf.domain.Page
 import dinf.types.toPLong
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
@@ -47,17 +47,12 @@ fun Route.diceCreateRoutes() {
         call.respondPage(DiceCreatePage(url, resource))
     }
 
-    post<DiceResource.New> { resource ->
+    post<DiceResource.New> {
         val session = getUserSessionOrRedirectToNotFound()
         val params = call.receiveParameters()
-        val hashID = HTMLParamsDice.fromParametersOrNull(params)
-            ?.let { deps.diceService().saveDice(it.name, it.edges, ID(session.id.toPLong())) }
-        val redirectURL = if (hashID != null) {
-            application.href(DiceResource.ByID(diceID = hashID))
-        } else {
-            application.href(resource.copy(isFailed = true))
-        }
-        call.respondRedirect(redirectURL)
+        val id = deps.dicePageService().createDice(session, params)
+        val redirect = application.href(DiceResource.ByID(diceID = id))
+        call.respondRedirect(redirect)
     }
 }
 
@@ -88,21 +83,9 @@ fun Route.diceEditRoutes(baseURL: String) {
 
     post<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        val dice = deps.diceService().findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
-
-        if (dice == null) {
-            throw NotFoundException()
-        } else {
-            val params = call.receiveParameters()
-            val htmlDice = HTMLParamsDice.fromParametersOrNull(params)
-            val redirectURL = if (htmlDice != null) {
-                dice.change(htmlDice.name, htmlDice.edges)
-                application.href(resource)
-            } else {
-                application.href(resource.copy(isFailed = true))
-            }
-            call.respondRedirect(redirectURL)
-        }
+        deps.dicePageService().updateDice(resource.diceID, session, call.receiveParameters())
+        val redirect = application.href(resource)
+        call.respondRedirect(redirect)
     }
 }
 

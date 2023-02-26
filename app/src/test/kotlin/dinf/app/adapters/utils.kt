@@ -4,7 +4,7 @@ import dinf.app.db.first
 import dinf.app.db.getPLong
 import dinf.app.db.sql
 import dinf.domain.Dice
-import dinf.domain.Edges
+import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
 
@@ -15,7 +15,7 @@ suspend fun createDice(
 ): Dice {
     return SqliteDiceFactory().create(
         name = Name(name),
-        edges = Edges(edges),
+        edges = edges.map { Edge(ID.first(), it) },
         ownerID = ownerID
     )
 }

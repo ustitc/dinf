@@ -3,7 +3,7 @@ package dinf.app.adapters
 import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceService
-import dinf.domain.Edges
+import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
 import dinf.domain.Page
@@ -16,8 +16,8 @@ class LoggingDiceService(private val service: DiceService) : DiceService {
 
     private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
-    override suspend fun saveDice(name: Name, edges: Edges, userID: ID): PublicID {
-        val hashID = service.saveDice(name, edges, userID)
+    override suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): PublicID {
+        val hashID = service.createDice(name, edges, userID)
         logger.info("Saved dice for id: ${hashID.toID()}")
         return hashID
     }
