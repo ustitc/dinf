@@ -3,39 +3,42 @@
 ``` mermaid
 erDiagram
     USERS {
-        int id
-        string name
-        date created_at
-        date updated_at
+        id INTEGER PK
+        name TEXT
+        created_at DATE
+        updated_at DATE
     }
     LOGIN_EMAIL_PASSWORDS {
-        int id PK
-        string password
-        date created_at
-        date updated_at
+        id INTEGER PK
+        password TEXT
+        created_at DATE
+        updated_at DATE
     }
     LOGIN_OAUTH_GOOGLE {
-        int user FK
-        string email
-        date created_at
+        dice INTEGER FK
+        google_id TEXT
+        created_at DATE
     }
     USERS ||--o| LOGIN_EMAIL_PASSWORDS : "logins by"
     USERS ||--o| LOGIN_OAUTH_GOOGLE : "logins by"
     
     DICE_OWNERS {
-        int dice FK
-        int user FK
+        dice INTEGER FK
+        user INTEGER FK
     }
     DICES {
-        int id PK
-        string name
-        date created_at
-        date updated_at
+        id INTEGER PK
+        name TEXT
+        created_at DATE
+        updated_at DATE
     }
-    EDGES {
-        string text
-        int dice FK
+    
+   EDGES {
+        id INTEGER PK
+        value TEXT
+        dice INTEGER FK
     }
+   
     USERS ||--o{ DICE_OWNERS : "can be"
     DICES ||--|| DICE_OWNERS : "owned by"
     DICES ||--o{ EDGES : "contains"
