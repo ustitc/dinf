@@ -32,7 +32,7 @@ class DiceServiceTest : StringSpec({
         val diceRepository: DiceRepository = mockk()
         coEvery { diceRepository.list(any()) } returns listOf(first, second, third)
 
-        val service = DiceService.Impl(
+        val service = DiceService(
             diceFactory = mockk(),
             diceRepository = diceRepository,
             searchIndexRepository = SearchIndexRepository.Stub(),

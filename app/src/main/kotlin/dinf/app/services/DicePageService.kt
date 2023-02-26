@@ -9,14 +9,20 @@ import dinf.domain.PublicID
 import dinf.types.toNBStringOrNull
 import dinf.types.toPLong
 import io.ktor.http.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class DicePageService(private val diceService: DiceService) {
+
+    private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
     suspend fun createDice(session: UserSession, parameters: Parameters): PublicID {
         val parsedParams = fromParametersOrNull(parameters)
         requireNotNull(parsedParams)
 
-        return diceService.createDice(parsedParams.name, parsedParams.edges, ID(session.id.toPLong()))
+        val publicId = diceService.createDice(parsedParams.name, parsedParams.edges, ID(session.id.toPLong()))
+        logger.info("Created dice with publicId=$publicId")
+        return publicId
     }
 
     suspend fun updateDice(diceId: String, session: UserSession, parameters: Parameters) {
@@ -27,6 +33,7 @@ class DicePageService(private val diceService: DiceService) {
 
         diceService.renameDice(diceId, parsedParams.name)
         dice.edges.replaceAll(parsedParams.edges)
+        logger.info("Updated dice=$dice for session=$session, params=$parameters, publicId=$diceId")
     }
 
     private class HTMLParamsDice(val name: Name, val edges: List<Edge>)
