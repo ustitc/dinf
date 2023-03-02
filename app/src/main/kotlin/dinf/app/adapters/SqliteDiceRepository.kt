@@ -20,17 +20,7 @@ class SqliteDiceRepository : DiceRepository {
 
     override fun flow(): Flow<Dice> {
         val connection = connection()
-        val statement = connection.prepareStatement(
-            """
-            SELECT 
-                dices.id AS id, 
-                dices.name AS name, 
-                group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
-            FROM dices, edges 
-            WHERE dices.id = edges.dice
-            GROUP BY dices.id
-            """.trimIndent()
-        )
+        val statement = connection.prepareStatement("SELECT id, name, edges, owner FROM dice_details")
         val rs = statement.executeQuery()
         return flow {
             rs.toSequence {
@@ -47,14 +37,8 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             val statement = prepareStatement(
                 """
-                SELECT 
-                    dices.id AS id, 
-                    dices.name AS name, 
-                    group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
-                FROM dices
-                LEFT JOIN edges ON dices.id = edges.dice
-                WHERE dices.id = ?
-                GROUP BY dices.id
+                SELECT id, name, edges, owner FROM dice_details
+                WHERE id = ?
                 """.trimIndent()
             ).also { statement ->
                 statement.setPLong(1, id.number)
@@ -71,14 +55,8 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             val statement = prepareStatement(
                 """
-                SELECT 
-                    dices.id AS id, 
-                    dices.name AS name, 
-                    group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
-                FROM dices, edges 
-                WHERE dices.id IN (${ids.joinToString(separator = ",") { "?" }}) 
-                AND dices.id = edges.dice
-                GROUP BY dices.id
+                SELECT id, name, edges, owner FROM dice_details
+                WHERE id IN (${ids.joinToString(separator = ",") { "?" }}) 
                 """.trimIndent()
             ).also { statement ->
                 ids.forEachIndexed { i, d ->
@@ -124,7 +102,8 @@ class SqliteDiceRepository : DiceRepository {
                 list = result.getString("edges")
                     ?.split(EDGES_SEPARATOR)
                     ?: emptyList()
-            )
+            ),
+            ownerId = ID(result.getPLong("owner"))
         )
     }
 
@@ -132,14 +111,8 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             prepareStatement(
                 """
-                    SELECT 
-                        dices.id AS id, 
-                        dices.name AS name, 
-                        group_concat(edges.value, '$EDGES_SEPARATOR') AS edges
-                    FROM dices, edges 
-                    WHERE dices.name LIKE ? 
-                    AND dices.id = edges.dice
-                    GROUP BY dices.id
+                    SELECT id, name, edges, owner FROM dice_details
+                    WHERE name LIKE ? 
                 """.trimIndent()
             ).also {
                 it.setString(1, "${text}%")

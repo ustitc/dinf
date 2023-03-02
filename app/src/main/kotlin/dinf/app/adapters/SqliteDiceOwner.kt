@@ -17,16 +17,8 @@ class SqliteDiceOwner(override val id: ID) : DiceOwner {
     override fun findDice(diceId: ID): Dice? {
         return sql(
             """
-            SELECT 
-                dices.id, 
-                dices.name,
-                COALESCE(group_concat(edges.value, '${SqliteDiceRepository.EDGES_SEPARATOR}'), '') AS edges
-            FROM dices
-            JOIN dice_owners ON dices.id = dice_owners.dice
-            LEFT JOIN edges ON dices.id = edges.dice
-            WHERE dice_owners.dice = ? 
-            AND dice_owners.user = ?
-            GROUP BY dices.id
+            SELECT id, name, edges, owner FROM dice_details 
+            WHERE owner = ?
             """.trimIndent()
         ) {
             setPLong(1, diceId.number)
@@ -70,7 +62,8 @@ class SqliteDiceOwner(override val id: ID) : DiceOwner {
                 list = result.getString("edges")
                     ?.split(SqliteDiceRepository.EDGES_SEPARATOR)
                     ?: emptyList()
-            )
+            ),
+            ownerId = ID(result.getPLong("owner"))
         )
     }
 
