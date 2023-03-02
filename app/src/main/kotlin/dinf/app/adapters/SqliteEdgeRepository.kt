@@ -3,14 +3,12 @@ package dinf.app.adapters
 import dinf.app.db.setPLong
 import dinf.app.db.transaction
 import dinf.domain.Edge
-import dinf.domain.Edges
+import dinf.domain.EdgeRepository
 import dinf.domain.ID
 
-class SqliteEdges(private val diceId: ID, private val list: List<String>) : Edges {
+class SqliteEdgeRepository : EdgeRepository {
 
-    override fun asEdgeList(): List<Edge> = list.map { Edge(ID.first(), it) }
-
-    override fun replaceAll(list: List<Edge>) {
+    override fun replaceAll(diceId: ID, list: List<Edge>) {
         transaction {
             prepareStatement("DELETE FROM edges WHERE dice = ?")
                 .also { it.setPLong(1, diceId.number) }

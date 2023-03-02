@@ -14,7 +14,7 @@ class DicePage(private val dice: Dice) : Page {
                 +dice.name.print()
             }
 
-            insert(RollBlock(dice.edges.toStringList())) {
+            insert(RollBlock(dice.edges.map { it.value })) {
                 withResultOnTop = false
             }
         }

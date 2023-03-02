@@ -36,7 +36,7 @@ class DicePageService(private val diceService: DiceService, private val publicID
         return publicIDFactory.fromID(dice.id)
     }
 
-    suspend fun updateDice(publicDiceId: String, session: UserSession, parameters: Parameters) {
+    fun updateDice(publicDiceId: String, session: UserSession, parameters: Parameters) {
         val id = publicIDFactory.fromStringOrNull(publicDiceId)?.toID()
         requireNotNull(id)
         val dice = diceService.findDice(id, ID(session.id.toPLong()))
@@ -44,8 +44,9 @@ class DicePageService(private val diceService: DiceService, private val publicID
         requireNotNull(dice)
         requireNotNull(parsedParams)
 
-        diceService.renameDice(id, parsedParams.name)
-        dice.edges.replaceAll(parsedParams.edges)
+        diceService.updateDice(
+            dice.copy(name = parsedParams.name, edges = parsedParams.edges)
+        )
         logger.info("Updated dice=$dice for session=$session, params=$parameters, publicId=$publicDiceId")
     }
 

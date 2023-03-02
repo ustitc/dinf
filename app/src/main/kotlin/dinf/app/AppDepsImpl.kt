@@ -4,6 +4,7 @@ import dinf.app.adapters.BCryptPasswordFactory
 import dinf.app.adapters.HashidsPublicIDFactory
 import dinf.app.adapters.SqliteDiceFactory
 import dinf.app.adapters.SqliteDiceRepository
+import dinf.app.adapters.SqliteEdgeRepository
 import dinf.app.adapters.SqliteUserFactory
 import dinf.app.auth.EmailPasswordService
 import dinf.app.auth.OAuthService
@@ -42,7 +43,8 @@ class AppDepsImpl(
     override fun diceService(): DiceService {
         return DiceService(
             diceFactory = diceFactory,
-            diceRepository = diceRepository
+            diceRepository = diceRepository,
+            edgeRepository = SqliteEdgeRepository()
         )
     }
 

@@ -25,7 +25,7 @@ class DiceCardComponentFactory(private val publicIDFactory: PublicIDFactory) {
                 a(href = location) { +dice.name.print() }
             }
 
-            insert(RollBlock(dice.edges.toStringList())) {
+            insert(RollBlock(dice.edges.map { it.value })) {
                 this.id = id
                 this.eventName = eventName
                 this.withResultOnTop = true

@@ -26,13 +26,13 @@ class DiceEditPage(
                 +dice.name.print()
             }
 
-            insert(RollBlock(dice.edges.toStringList())) {
+            insert(RollBlock(dice.edges.map { it.value })) {
                 withResultOnTop = false
             }
 
             insert(DiceForm(Form(editURL))) {
                 name = dice.name.print()
-                edges = dice.edges.toStringList()
+                edges = dice.edges.map { it.value }
                 failed = resource.isFailed ?: false
                 submit {
                     value = "Save changes"

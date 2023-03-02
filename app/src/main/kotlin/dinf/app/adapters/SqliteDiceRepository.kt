@@ -9,6 +9,7 @@ import dinf.app.db.toSequence
 import dinf.app.db.transaction
 import dinf.domain.Dice
 import dinf.domain.DiceRepository
+import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
 import kotlinx.coroutines.flow.Flow
@@ -97,12 +98,10 @@ class SqliteDiceRepository : DiceRepository {
         return Dice(
             id = id,
             name = Name(result.getString("name")),
-            edges = SqliteEdges(
-                diceId = id,
-                list = result.getString("edges")
-                    ?.split(EDGES_SEPARATOR)
-                    ?: emptyList()
-            ),
+            edges = result.getString("edges")
+                ?.split(EDGES_SEPARATOR)
+                ?.map { Edge(ID.first(), it) }
+                ?: emptyList(),
             ownerId = ID(result.getPLong("owner"))
         )
     }
