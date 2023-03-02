@@ -8,11 +8,11 @@ interface DiceRepository {
 
     fun oneOrNull(id: ID): Dice?
 
-    suspend fun list(ids: List<ID>): List<Dice>
+    fun list(ids: List<ID>): List<Dice>
 
-    suspend fun remove(dice: Dice)
+    fun remove(dice: Dice)
 
-    suspend fun update(dice: Dice)
+    fun update(dice: Dice)
 
     fun search(text: String): List<Dice>
 

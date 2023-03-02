@@ -3,7 +3,6 @@ package dinf.app
 import dinf.app.adapters.BCryptPasswordFactory
 import dinf.app.adapters.HashidsPublicIDFactory
 import dinf.app.adapters.SqliteDiceFactory
-import dinf.app.adapters.SqliteDiceOwner
 import dinf.app.adapters.SqliteDiceRepository
 import dinf.app.adapters.SqliteUserFactory
 import dinf.app.auth.EmailPasswordService
@@ -43,8 +42,7 @@ class AppDepsImpl(
     override fun diceService(): DiceService {
         return DiceService(
             diceFactory = diceFactory,
-            diceRepository = diceRepository,
-            diceOwnerFactory = SqliteDiceOwner
+            diceRepository = diceRepository
         )
     }
 

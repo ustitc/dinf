@@ -4,8 +4,7 @@ import kotlinx.coroutines.flow.toList
 
 class DiceService(
     private val diceFactory: DiceFactory,
-    private val diceRepository: DiceRepository,
-    private val diceOwnerFactory: DiceOwnerFactory
+    private val diceRepository: DiceRepository
 ) {
 
     suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): Dice {
@@ -42,8 +41,10 @@ class DiceService(
     }
 
     fun deleteDice(diceId: ID, userId: ID) {
-        val diceOwner = diceOwnerFactory.create(userId)
-        diceOwner.deleteDice(diceId)
+        val dice = diceRepository.oneOrNull(diceId)
+        requireNotNull(dice)
+        check(dice.ownerId == userId)
+        diceRepository.remove(dice)
     }
 
     suspend fun renameDice(id: ID, name: Name) {

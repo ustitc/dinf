@@ -51,7 +51,7 @@ class SqliteDiceRepository : DiceRepository {
         }
     }
 
-    override suspend fun list(ids: List<ID>): List<Dice> {
+    override fun list(ids: List<ID>): List<Dice> {
         return transaction {
             val statement = prepareStatement(
                 """
@@ -71,7 +71,7 @@ class SqliteDiceRepository : DiceRepository {
         }
     }
 
-    override suspend fun update(dice: Dice) {
+    override fun update(dice: Dice) {
         sql(
             """
             UPDATE dices SET
@@ -84,7 +84,7 @@ class SqliteDiceRepository : DiceRepository {
         }
     }
 
-    override suspend fun remove(dice: Dice) {
+    override fun remove(dice: Dice) {
         transaction {
             prepareStatement("DELETE FROM dices WHERE id = ?").also {
                 it.setPLong(1, dice.id.number)
