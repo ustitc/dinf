@@ -1,6 +1,6 @@
 package dinf.app.routes
 
-import dinf.domain.PublicID
+import dinf.app.services.PublicID
 import io.ktor.resources.*
 import kotlinx.serialization.Serializable
 
@@ -29,13 +29,7 @@ object DiceResource {
         val dices: DiceResource = DiceResource,
         val diceID: String,
         val isFailed: Boolean? = null
-    ) {
-
-        constructor(diceID: PublicID) : this(
-            diceID = diceID.print()
-        )
-
-    }
+    )
 
     @Serializable
     @Resource("/delete/{diceID}")

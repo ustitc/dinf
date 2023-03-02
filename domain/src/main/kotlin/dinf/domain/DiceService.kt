@@ -5,28 +5,21 @@ import kotlinx.coroutines.flow.toList
 class DiceService(
     private val diceFactory: DiceFactory,
     private val diceRepository: DiceRepository,
-    private val publicIDFactory: PublicIDFactory,
     private val diceOwnerFactory: DiceOwnerFactory
 ) {
 
-    suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): PublicID {
-        val dice = diceFactory.create(name, edges, userID)
-        return publicIDFactory.fromID(dice.id)
+    suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): Dice {
+        return diceFactory.create(name, edges, userID)
     }
 
-    suspend fun findDiceByPublicID(publicID: String): Dice? {
-        val id = publicIDFactory.fromStringOrNull(publicID)
-            ?.toID()
-            ?: return null
-
+    fun findDice(id: ID): Dice? {
         return diceRepository.oneOrNull(id)
     }
 
-    fun findDiceByPublicIdAndUserId(publicID: String, userID: ID): Dice? {
-        val diceOwner = diceOwnerFactory.create(userID)
-        val diceId = publicIDFactory.fromStringOrNull(publicID)?.toID()
-        if (diceId != null) {
-            return diceOwner.findDice(diceId)
+    fun findDice(id: ID, userID: ID): Dice? {
+        val dice = diceRepository.oneOrNull(id) ?: return null
+        if (dice.ownerId == userID) {
+            return dice
         }
         return null
     }
@@ -48,15 +41,13 @@ class DiceService(
         return drop(offset.toInt()).take(count.toInt())
     }
 
-    fun deleteByPublicIdAndUserId(publicID: String, userId: ID) {
+    fun deleteDice(diceId: ID, userId: ID) {
         val diceOwner = diceOwnerFactory.create(userId)
-        publicIDFactory.fromStringOrNull(publicID)
-            ?.toID()
-            ?.let { diceOwner.deleteDice(it) }
+        diceOwner.deleteDice(diceId)
     }
 
-    suspend fun renameDice(publicID: String, name: Name) {
-        val dice = findDiceByPublicID(publicID)
+    suspend fun renameDice(id: ID, name: Name) {
+        val dice = findDice(id)
         requireNotNull(dice)
         diceRepository.update(dice.copy(name = name))
     }

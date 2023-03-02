@@ -33,7 +33,7 @@ class SqliteDiceRepository : DiceRepository {
         }
     }
 
-    override suspend fun oneOrNull(id: ID): Dice? {
+    override fun oneOrNull(id: ID): Dice? {
         return transaction {
             val statement = prepareStatement(
                 """

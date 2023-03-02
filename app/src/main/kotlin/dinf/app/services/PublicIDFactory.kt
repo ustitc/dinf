@@ -1,4 +1,6 @@
-package dinf.domain
+package dinf.app.services
+
+import dinf.domain.ID
 
 interface PublicIDFactory {
 

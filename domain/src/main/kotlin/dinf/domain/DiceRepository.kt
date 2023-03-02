@@ -6,7 +6,7 @@ interface DiceRepository {
 
     fun flow(): Flow<Dice>
 
-    suspend fun oneOrNull(id: ID): Dice?
+    fun oneOrNull(id: ID): Dice?
 
     suspend fun list(ids: List<ID>): List<Dice>
 

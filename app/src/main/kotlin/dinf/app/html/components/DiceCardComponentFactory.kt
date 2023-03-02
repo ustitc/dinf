@@ -2,7 +2,7 @@ package dinf.app.html.components
 
 import dinf.app.routes.DiceResource
 import dinf.domain.Dice
-import dinf.domain.PublicIDFactory
+import dinf.app.services.PublicIDFactory
 import dinf.app.html.templates.RollBlock
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*

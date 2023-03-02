@@ -20,7 +20,7 @@ import dinf.app.services.DicePageService
 import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
-import dinf.domain.PublicIDFactory
+import dinf.app.services.PublicIDFactory
 import io.ktor.client.*
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
@@ -28,7 +28,7 @@ import io.ktor.server.application.*
 import org.hashids.Hashids
 
 class AppDepsImpl(
-    private val cfg: AppConfig,
+    cfg: AppConfig,
     private val httpClient: HttpClient
 ) : AppDeps {
 
@@ -44,7 +44,6 @@ class AppDepsImpl(
         return DiceService(
             diceFactory = diceFactory,
             diceRepository = diceRepository,
-            publicIDFactory = publicIDFactory,
             diceOwnerFactory = SqliteDiceOwner
         )
     }
@@ -75,7 +74,10 @@ class AppDepsImpl(
     }
 
     override fun dicePageService(): DicePageService {
-        return DicePageService(diceService())
+        return DicePageService(
+            diceService = diceService(),
+            publicIDFactory = publicIDFactory
+        )
     }
 
     override val toggles: TogglesConfig = cfg.toggles

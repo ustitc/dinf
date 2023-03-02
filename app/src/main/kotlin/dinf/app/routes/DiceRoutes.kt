@@ -9,9 +9,7 @@ import dinf.app.html.pages.MainPage
 import dinf.app.plugins.getUserSessionOrRedirectToNotFound
 import dinf.app.plugins.respondPage
 import dinf.domain.Count
-import dinf.domain.ID
 import dinf.domain.Page
-import dinf.types.toPLong
 import io.ktor.server.application.*
 import io.ktor.server.plugins.*
 import io.ktor.server.request.*
@@ -58,7 +56,7 @@ fun Route.diceCreateRoutes() {
 
 fun Route.dicePage() {
     get<DiceResource.ByID> { resource ->
-        val dice = deps.diceService().findDiceByPublicID(resource.diceID)
+        val dice = deps.dicePageService().findDice(resource.diceID)
         if (dice == null) {
             throw NotFoundException()
         } else {
@@ -70,7 +68,7 @@ fun Route.dicePage() {
 fun Route.diceEditRoutes(baseURL: String) {
     get<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        val dice = deps.diceService().findDiceByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
+        val dice = deps.dicePageService().findDice(resource.diceID, session)
         
         if (dice == null) {
             throw NotFoundException()
@@ -92,7 +90,7 @@ fun Route.diceEditRoutes(baseURL: String) {
 fun Route.diceDeleteRoutes() {
     post<DiceResource.Delete> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        deps.diceService().deleteByPublicIdAndUserId(resource.diceID, ID(session.id.toPLong()))
+        deps.dicePageService().deleteDice(resource.diceID, session)
         call.respondPage(DiceDeletedPage())
     }
 }

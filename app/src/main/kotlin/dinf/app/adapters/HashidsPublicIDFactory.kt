@@ -1,8 +1,8 @@
 package dinf.app.adapters
 
-import dinf.domain.PublicIDFactory
+import dinf.app.services.PublicIDFactory
 import dinf.domain.ID
-import dinf.domain.PublicID
+import dinf.app.services.PublicID
 import dinf.types.toPLongOrNull
 import org.hashids.Hashids
 
