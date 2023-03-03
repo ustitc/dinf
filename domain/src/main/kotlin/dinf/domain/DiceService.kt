@@ -50,9 +50,11 @@ class DiceService(
         diceRepository.remove(dice)
     }
 
-    fun updateDice(dice: Dice) {
-        check(findDice(dice.id) != null)
-        diceRepository.update(dice)
-        edgeRepository.replaceAll(dice.id, dice.edges)
+    fun updateDice(request: DiceUpdateRequest) {
+        val dice = findDice(request.diceId, request.ownerID)
+        check(dice != null)
+        diceRepository.update(dice.copy(name = request.toUpdate.name))
+        edgeRepository.deleteAllByDiceId(request.diceId)
+        edgeRepository.createAll(request.newEdges)
     }
 }

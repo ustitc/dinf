@@ -4,7 +4,7 @@ import dinf.app.auth.UserSession
 import dinf.domain.Dice
 import dinf.domain.DiceCreateRequest
 import dinf.domain.DiceService
-import dinf.domain.Edge
+import dinf.domain.DiceUpdateRequest
 import dinf.domain.ID
 import dinf.domain.Name
 import dinf.types.toNBStringOrNull
@@ -46,18 +46,20 @@ class DicePageService(private val diceService: DiceService, private val publicID
     fun updateDice(publicDiceId: String, session: UserSession, parameters: Parameters) {
         val diceId = publicIDFactory.fromStringOrNull(publicDiceId)?.toID()
         requireNotNull(diceId)
-        val dice = diceService.findDice(diceId, ID(session.id.toPLong()))
         val parsedParams = fromParametersOrNull(parameters)
-        requireNotNull(dice)
         requireNotNull(parsedParams)
 
         diceService.updateDice(
-            dice.copy(
-                name = parsedParams.name,
-                edges = parsedParams.edges.map { Edge(id = ID.first(), it, diceId) }
+            DiceUpdateRequest(
+                diceId = diceId,
+                ownerID = ID(session.id.toPLong()),
+                toUpdate = DiceUpdateRequest.ToUpdate(
+                    name = parsedParams.name,
+                    edges = parsedParams.edges
+                )
             )
         )
-        logger.info("Updated dice=$dice for session=$session, params=$parameters, publicId=$publicDiceId")
+        logger.info("Updated dice for session=$session, params=$parameters, publicId=$publicDiceId")
     }
 
     fun deleteDice(publicId: String, session: UserSession) {

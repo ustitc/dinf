@@ -13,22 +13,6 @@ import java.sql.ResultSet
 
 class SqliteEdgeRepository : EdgeRepository {
 
-    override fun replaceAll(diceId: ID, list: List<Edge>) {
-        transaction {
-            prepareStatement("DELETE FROM edges WHERE dice = ?")
-                .also { it.setPLong(1, diceId.number) }
-                .use { it.execute() }
-
-            list.forEach { edge ->
-                prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?)")
-                    .also {
-                        it.setString(1, edge.value)
-                        it.setPLong(2, diceId.number)
-                    }.use { it.execute() }
-            }
-        }
-    }
-
     override fun update(edge: Edge) {
         transaction {
             prepareStatement(
@@ -48,8 +32,19 @@ class SqliteEdgeRepository : EdgeRepository {
     }
 
     override fun createAll(list: List<Edge.New>): List<Edge> {
-        return list.map {
-            create(it)
+        return transaction {
+            list.map { edge ->
+                prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?) RETURNING id, value, dice")
+                    .also {
+                        it.setString(1, edge.value)
+                        it.setPLong(2, edge.diceId.number)
+                    }.use {
+                        it.executeQuery()
+                            .first {
+                                toEdge(this)
+                            }
+                    }
+            }
         }
     }
 
@@ -78,5 +73,13 @@ class SqliteEdgeRepository : EdgeRepository {
             value = rs.getString("value"),
             diceId = ID(rs.getPLong("dice"))
         )
+    }
+
+    override fun deleteAllByDiceId(diceId: ID) {
+        transaction {
+            prepareStatement("DELETE FROM edges WHERE dice = ?")
+                .also { it.setPLong(1, diceId.number) }
+                .use { it.execute() }
+        }
     }
 }
