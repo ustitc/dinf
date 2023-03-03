@@ -1,6 +1,8 @@
 package dinf.app.adapters
 
+import dinf.domain.Dice
 import dinf.domain.ID
+import dinf.domain.Name
 import dinf.types.toPLongOrNull
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
@@ -11,6 +13,16 @@ import kotlinx.coroutines.flow.toList
 class SqliteDiceRepositoryTest : StringSpec({
 
     listeners(SqliteListener())
+
+    "creates dice" {
+        val repository = SqliteDiceRepository()
+        val name = Name("test")
+        val userID = createUser()
+
+        val dice = repository.create(Dice.New(name = name, ownerId = userID))
+
+        dice.name.print() shouldBe name.print()
+    }
 
     "lists all repository" {
         val count = 40
@@ -55,7 +67,7 @@ class SqliteDiceRepositoryTest : StringSpec({
 
         val result = repository.oneOrNull(dice.id)
 
-        result!!.edges.toStringList() shouldBe emptyList()
+        result!!.edges shouldBe emptyList()
     }
 
     "dice is found by name" {

@@ -3,13 +3,15 @@ package dinf.domain
 import kotlinx.coroutines.flow.toList
 
 class DiceService(
-    private val diceFactory: DiceFactory,
     private val diceRepository: DiceRepository,
     private val edgeRepository: EdgeRepository
 ) {
 
-    suspend fun createDice(name: Name, edges: List<Edge>, userID: ID): Dice {
-        return diceFactory.create(name, edges, userID)
+    fun createDice(request: DiceCreateRequest): Dice {
+        val createdDice = diceRepository.create(request.newDice())
+        val edges = request.newEdges(createdDice.id)
+        val createdEdges = edgeRepository.createAll(edges)
+        return createdDice.copy(edges = createdEdges)
     }
 
     fun findDice(id: ID): Dice? {

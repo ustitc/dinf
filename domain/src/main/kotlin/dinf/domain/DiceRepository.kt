@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface DiceRepository {
 
+    fun create(dice: Dice.New): Dice
+
     fun flow(): Flow<Dice>
 
     fun oneOrNull(id: ID): Dice?

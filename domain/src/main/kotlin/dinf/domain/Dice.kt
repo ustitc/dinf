@@ -5,4 +5,11 @@ data class Dice(
     val name: Name,
     val edges: List<Edge>,
     val ownerId: ID
-)
+) {
+
+    data class New(
+        val name: Name,
+        val ownerId: ID
+    )
+
+}

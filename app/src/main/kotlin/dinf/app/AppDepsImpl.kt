@@ -2,7 +2,6 @@ package dinf.app
 
 import dinf.app.adapters.BCryptPasswordFactory
 import dinf.app.adapters.HashidsPublicIDFactory
-import dinf.app.adapters.SqliteDiceFactory
 import dinf.app.adapters.SqliteDiceRepository
 import dinf.app.adapters.SqliteEdgeRepository
 import dinf.app.adapters.SqliteUserFactory
@@ -17,7 +16,6 @@ import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
 import dinf.app.routes.DiceResource
 import dinf.app.services.DicePageService
-import dinf.domain.DiceFactory
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.app.services.PublicIDFactory
@@ -33,7 +31,6 @@ class AppDepsImpl(
 ) : AppDeps {
 
     private val diceRepository: DiceRepository = SqliteDiceRepository()
-    private val diceFactory: DiceFactory = SqliteDiceFactory()
     private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
     private val publicIDFactory: PublicIDFactory = HashidsPublicIDFactory(
         hashids = hashids(cfg.urls.share)
@@ -42,7 +39,6 @@ class AppDepsImpl(
 
     override fun diceService(): DiceService {
         return DiceService(
-            diceFactory = diceFactory,
             diceRepository = diceRepository,
             edgeRepository = SqliteEdgeRepository()
         )

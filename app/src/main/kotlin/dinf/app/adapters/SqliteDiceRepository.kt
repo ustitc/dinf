@@ -1,6 +1,7 @@
 package dinf.app.adapters
 
 import dinf.app.db.connection
+import dinf.app.db.first
 import dinf.app.db.firstOrNull
 import dinf.app.db.getPLong
 import dinf.app.db.setPLong
@@ -12,12 +13,52 @@ import dinf.domain.DiceRepository
 import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
+import dinf.types.PLong
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import java.sql.Connection
 import java.sql.ResultSet
 
 class SqliteDiceRepository : DiceRepository {
+
+    override fun create(dice: Dice.New): Dice {
+        val id = transaction {
+            val diceID = saveDice(dice.name)
+            linkOwner(diceID, dice.ownerId)
+            diceID
+        }
+        return oneOrNull(ID(id)) ?: error("Dice was not saved")
+    }
+
+    private fun Connection.saveDice(name: Name): PLong {
+        return prepareStatement(
+            """
+            INSERT INTO dices (name, created_at, updated_at) 
+            VALUES (?, date('now'), date('now'))
+            RETURNING id
+            """
+        ).use {
+            it.setString(1, name.print())
+
+            it.executeQuery().first {
+                getPLong("id")
+            }
+        }
+    }
+
+    private fun Connection.linkOwner(diceID: PLong, ownerID: ID) {
+        prepareStatement(
+            """
+            INSERT INTO dice_owners (dice, user)
+            VALUES (?, ?)
+            """
+        ).use {
+            it.setPLong(1, diceID)
+            it.setPLong(2, ownerID.number)
+            it.execute()
+        }
+    }
 
     override fun flow(): Flow<Dice> {
         val connection = connection()
@@ -38,7 +79,8 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             val statement = prepareStatement(
                 """
-                SELECT id, name, edges, owner FROM dice_details
+                SELECT id, name, edges, owner 
+                FROM dice_details
                 WHERE id = ?
                 """.trimIndent()
             ).also { statement ->
@@ -56,7 +98,8 @@ class SqliteDiceRepository : DiceRepository {
         return transaction {
             val statement = prepareStatement(
                 """
-                SELECT id, name, edges, owner FROM dice_details
+                SELECT id, name, edges, owner 
+                FROM dice_details
                 WHERE id IN (${ids.joinToString(separator = ",") { "?" }}) 
                 """.trimIndent()
             ).also { statement ->
@@ -75,12 +118,15 @@ class SqliteDiceRepository : DiceRepository {
     override fun update(dice: Dice) {
         sql(
             """
-            UPDATE dices SET
-            name = ?
+            UPDATE dices 
+            SET name = ?,
+                updated_at = date('now') 
+            WHERE id = ?
             RETURNING id, name 
         """.trimIndent()
         ) {
             setString(1, dice.name.print())
+            setPLong(2, dice.id.number)
             execute()
         }
     }
@@ -100,7 +146,7 @@ class SqliteDiceRepository : DiceRepository {
             name = Name(result.getString("name")),
             edges = result.getString("edges")
                 ?.split(EDGES_SEPARATOR)
-                ?.map { Edge(ID.first(), it) }
+                ?.map { Edge(ID.first(), it, id) }
                 ?: emptyList(),
             ownerId = ID(result.getPLong("owner"))
         )
