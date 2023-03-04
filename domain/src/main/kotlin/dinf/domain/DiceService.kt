@@ -8,10 +8,7 @@ class DiceService(
 ) {
 
     fun createDice(request: DiceCreateRequest): Dice {
-        val createdDice = diceRepository.create(request.newDice())
-        val edges = request.newEdges(createdDice.id)
-        val createdEdges = edgeRepository.createAll(edges)
-        return createdDice.copy(edges = createdEdges)
+        return diceRepository.create(request.newDice())
     }
 
     fun findDice(id: ID): Dice? {

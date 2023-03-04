@@ -26,12 +26,17 @@ import java.sql.ResultSet
 class SqliteDiceRepository : DiceRepository {
 
     override fun create(dice: Dice.New): Dice {
-        val id = transaction {
-            val diceID = saveDice(dice.name)
-            linkOwner(diceID, dice.ownerId)
-            diceID
+        return transaction {
+            val diceId = saveDice(dice.name)
+            val edges = addEdges(diceId, dice.edges)
+            linkOwner(diceId, dice.ownerId)
+            Dice(
+                id = ID(diceId),
+                name = dice.name,
+                edges = edges,
+                ownerId = dice.ownerId
+            )
         }
-        return oneOrNull(ID(id)) ?: error("Dice was not saved")
     }
 
     private fun Connection.saveDice(name: Name): PLong {
@@ -60,6 +65,21 @@ class SqliteDiceRepository : DiceRepository {
             it.setPLong(1, diceID)
             it.setPLong(2, ownerID.number)
             it.execute()
+        }
+    }
+
+    private fun Connection.addEdges(diceID: PLong, values: List<String>): List<Edge> {
+        return values.map { value ->
+            prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?) RETURNING id, value, dice")
+                .also {
+                    it.setString(1, value)
+                    it.setPLong(2, diceID)
+                }.use {
+                    it.executeQuery()
+                        .first {
+                            toEdge()
+                        }
+                }
         }
     }
 

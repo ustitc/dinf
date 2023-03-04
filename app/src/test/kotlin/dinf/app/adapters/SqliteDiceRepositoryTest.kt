@@ -19,7 +19,7 @@ class SqliteDiceRepositoryTest : StringSpec({
         val name = Name("test")
         val userID = createUser()
 
-        val dice = repository.create(Dice.New(name = name, ownerId = userID))
+        val dice = repository.create(Dice.New(name = name, ownerId = userID, edges = emptyList()))
 
         dice.name.print() shouldBe name.print()
     }

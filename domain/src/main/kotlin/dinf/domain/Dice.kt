@@ -9,6 +9,7 @@ data class Dice(
 
     data class New(
         val name: Name,
+        val edges: List<String>,
         val ownerId: ID
     )
 

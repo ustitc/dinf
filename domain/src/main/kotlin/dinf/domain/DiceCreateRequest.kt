@@ -7,11 +7,7 @@ data class DiceCreateRequest(
 ) {
 
     internal fun newDice(): Dice.New {
-        return Dice.New(name = name, ownerId = ownerId)
-    }
-
-    internal fun newEdges(diceID: ID): List<Edge.New> {
-        return edges.map { Edge.New(it, diceID) }
+        return Dice.New(name = name, ownerId = ownerId, edges = edges)
     }
 
 }
