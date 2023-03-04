@@ -1,5 +1,6 @@
 package dinf.app.routes
 
+import dinf.app.auth.UserSession
 import dinf.app.deps
 import dinf.app.html.pages.DiceCreatePage
 import dinf.app.html.pages.DiceDeletedPage
@@ -17,6 +18,7 @@ import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 
 fun Route.mainPage() {
     val page = 1
@@ -56,33 +58,21 @@ fun Route.diceCreateRoutes() {
 
 fun Route.dicePage() {
     get<DiceResource.ByID> { resource ->
-        val dice = deps.dicePageService().findDice(resource.diceID)
-        if (dice == null) {
-            throw NotFoundException()
-        } else {
-            call.respondPage(DicePage(dice))
+        val session = call.sessions.get<UserSession>()
+        val dice = deps.dicePageService().findDice(resource.diceID, session)
+        when {
+            dice == null -> throw NotFoundException()
+            session != null && dice.belongsTo(session) -> call.respondPage(DiceEditPage(dice = dice))
+            else -> call.respondPage(DicePage(dice))
         }
     }
 }
 
-fun Route.diceEditRoutes(baseURL: String) {
-    get<DiceResource.Edit> { resource ->
-        val session = getUserSessionOrRedirectToNotFound()
-        val dice = deps.dicePageService().findDice(resource.diceID, session)
-        
-        if (dice == null) {
-            throw NotFoundException()
-        } else {
-            val editURL = application.href(DiceResource.Edit(diceID = resource.diceID))
-            val deleteURL = application.href(DiceResource.Delete(diceID = resource.diceID))
-            call.respondPage(DiceEditPage(dice, "$baseURL$editURL", deleteURL, resource))
-        }
-    }
-
+fun Route.diceEditRoutes() {
     post<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
         deps.dicePageService().updateDice(resource.diceID, session, call.receiveParameters())
-        val redirect = application.href(resource)
+        val redirect = application.href(DiceResource.ByID(diceID = resource.diceID))
         call.respondRedirect(redirect)
     }
 }

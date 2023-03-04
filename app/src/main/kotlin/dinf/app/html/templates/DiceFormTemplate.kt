@@ -8,7 +8,7 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.input
 
-class DiceForm(private val form: Form) : Template<FlowContent> {
+class DiceFormTemplate(private val form: Form) : Template<FlowContent> {
 
     var name: String = ""
     var edges: List<EdgeView> = emptyList()
@@ -24,7 +24,7 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
                     input(name = "name", type = InputType.text) {
                         required = true
                         autoFocus = true
-                        value = this@DiceForm.name
+                        value = this@DiceFormTemplate.name
                         if (failed) {
                             attributes["aria-invalid"] = "true"
                         }
@@ -34,15 +34,15 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
             field {
                 name = "Edges"
                 control {
-                    insert(EditableList()) {
+                    insert(EditableListTemplate()) {
                         name = "edges"
                         addButtonText = NBString("Add edge")
-                        items = edges.map { EditableList.Item(it.id.print(), it.value) }
+                        items = edges.map { EditableListTemplate.Item(it.id.print(), it.value) }
                     }
                 }
             }
             submit {
-                insert(this@DiceForm.submit)
+                insert(this@DiceFormTemplate.submit)
             }
         }
     }

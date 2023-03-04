@@ -9,6 +9,7 @@ import io.ktor.server.plugins.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
@@ -21,9 +22,9 @@ fun Route.htmxDiceSearch() {
         )
         val dices = deps.diceService().search(query)
         val nextPage = application.href(resource.nextPage())
-        call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
-            val factory = deps.diceFeedComponentFactory(call)
-            createHTML().div {
+        val factory = deps.diceFeedComponentFactory(call)
+        call.respondHtmx {
+            div {
                 factory.component(this, dices, nextPage)
             }
         }
@@ -37,11 +38,17 @@ fun Route.htmxDiceList() {
             resource.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
         )
         val nextPage = application.href(resource.nextPage())
-        call.respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
-            val factory = deps.diceFeedComponentFactory(call)
-            createHTML().div {
+        val factory = deps.diceFeedComponentFactory(call)
+        call.respondHtmx {
+            div {
                 factory.component(this, diceList, nextPage)
             }
         }
+    }
+}
+
+private suspend fun ApplicationCall.respondHtmx(block: TagConsumer<String>.() -> String) {
+    respondText(contentType = ContentType.Text.Html.withCharset(Charsets.UTF_8)) {
+        createHTML().block()
     }
 }

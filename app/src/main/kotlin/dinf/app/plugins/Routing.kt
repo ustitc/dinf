@@ -11,16 +11,16 @@ import dinf.app.routes.LogoutResource
 import dinf.app.routes.RegisterResource
 import dinf.app.routes.diceCreateRoutes
 import dinf.app.routes.diceDeleteRoutes
-import dinf.app.routes.dicePage
 import dinf.app.routes.diceEditRoutes
+import dinf.app.routes.dicePage
 import dinf.app.routes.emailPasswordLoginRoutes
 import dinf.app.routes.htmxDiceList
-import dinf.app.routes.mainPage
+import dinf.app.routes.htmxDiceSearch
 import dinf.app.routes.loginPage
 import dinf.app.routes.logout
+import dinf.app.routes.mainPage
 import dinf.app.routes.oAuthGoogleRoute
 import dinf.app.routes.registrationRoutes
-import dinf.app.routes.htmxDiceSearch
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.html.*
@@ -64,7 +64,6 @@ fun PipelineContext<*, ApplicationCall>.getUserSessionOrRedirectToNotFound(): Us
 
 fun Application.configureRouting(config: AppConfig) {
     cfg = config
-    val baseURL = config.server.baseURL
 
     install(StatusPages) {
         status(HttpStatusCode.NotFound) { call, _ ->
@@ -92,7 +91,7 @@ fun Application.configureRouting(config: AppConfig) {
         mainPage()
         dicePage()
         diceCreateRoutes()
-        diceEditRoutes(baseURL = baseURL)
+        diceEditRoutes()
         diceDeleteRoutes()
         htmxDiceSearch()
         htmxDiceList()

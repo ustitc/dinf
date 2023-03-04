@@ -22,7 +22,7 @@ class DicePageService(
 
     private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
-    fun findDice(publicDiceId: String, session: UserSession? = null): DiceView? {
+    fun findDice(publicDiceId: String, session: UserSession?): DiceView? {
         val id = diceIdFactory.fromStringOrNull(publicDiceId)
             ?.toID()
             ?: return null
