@@ -1,9 +1,14 @@
 [database]
 jdbcURL = "jdbc:sqlite:db/dinf.db"
 
-[urls]
-
-[urls.share]
+[publicId]
+[publicId.dice]
+salt = "salt"
+length = 6
+[publicId.edge]
+salt = "salt"
+length = 6
+[publicId.user]
 salt = "salt"
 length = 6
 

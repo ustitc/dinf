@@ -48,8 +48,8 @@ fun Route.diceCreateRoutes() {
     post<DiceResource.New> {
         val session = getUserSessionOrRedirectToNotFound()
         val params = call.receiveParameters()
-        val id = deps.dicePageService().createDice(session, params)
-        val redirect = application.href(DiceResource.ByID(diceID = id))
+        val dice = deps.dicePageService().createDice(session, params)
+        val redirect = application.href(DiceResource.ByID(diceID = dice.id))
         call.respondRedirect(redirect)
     }
 }

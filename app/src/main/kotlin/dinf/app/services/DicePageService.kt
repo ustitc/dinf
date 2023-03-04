@@ -13,22 +13,28 @@ import io.ktor.http.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class DicePageService(private val diceService: DiceService, private val publicIDFactory: PublicIDFactory) {
+class DicePageService(
+    private val diceService: DiceService,
+    private val diceIdFactory: PublicIDFactory,
+    private val edgeIdFactory: PublicIDFactory,
+    private val userIdFactory: PublicIDFactory
+) {
 
     private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
 
-    fun findDice(publicID: String, session: UserSession? = null): Dice? {
-        val id = publicIDFactory.fromStringOrNull(publicID)
+    fun findDice(publicDiceId: String, session: UserSession? = null): DiceView? {
+        val id = diceIdFactory.fromStringOrNull(publicDiceId)
             ?.toID()
             ?: return null
-        return if (session == null) {
+        val dice = if (session == null) {
             diceService.findDice(id)
         } else {
             diceService.findDice(id, ID(session.id.toPLong()))
         }
+        return dice?.toDiceView()
     }
 
-    fun createDice(session: UserSession, parameters: Parameters): PublicID {
+    fun createDice(session: UserSession, parameters: Parameters): DiceView {
         val parsedParams = fromParametersOrNull(parameters)
         requireNotNull(parsedParams)
 
@@ -40,11 +46,11 @@ class DicePageService(private val diceService: DiceService, private val publicID
             )
         )
         logger.info("Created dice=$dice")
-        return publicIDFactory.fromID(dice.id)
+        return dice.toDiceView()
     }
 
     fun updateDice(publicDiceId: String, session: UserSession, parameters: Parameters) {
-        val diceId = publicIDFactory.fromStringOrNull(publicDiceId)?.toID()
+        val diceId = diceIdFactory.fromStringOrNull(publicDiceId)?.toID()
         requireNotNull(diceId)
         val parsedParams = fromParametersOrNull(parameters)
         requireNotNull(parsedParams)
@@ -63,7 +69,7 @@ class DicePageService(private val diceService: DiceService, private val publicID
     }
 
     fun deleteDice(publicId: String, session: UserSession) {
-        publicIDFactory.fromStringOrNull(publicId)
+        diceIdFactory.fromStringOrNull(publicId)
             ?.toID()
             ?.let { diceService.deleteDice(it, ID(session.id.toPLong())) }
     }
@@ -80,5 +86,15 @@ class DicePageService(private val diceService: DiceService, private val publicID
         } else {
             HTMLParamsDice(Name(name), edges)
         }
+    }
+
+    private fun Dice.toDiceView(): DiceView {
+        val edgeViewList = edges.map { EdgeView(id = edgeIdFactory.fromID(it.id), value = it.value) }
+        return DiceView(
+            id = diceIdFactory.fromID(id),
+            name = name.print(),
+            ownerId = userIdFactory.fromID(ownerId),
+            edges = edgeViewList
+        )
     }
 }

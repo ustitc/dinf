@@ -1,6 +1,6 @@
 package dinf.app.html.templates
 
-import dinf.domain.Edge
+import dinf.app.services.EdgeView
 import dinf.types.NBString
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
@@ -11,7 +11,7 @@ import kotlinx.html.input
 class DiceForm(private val form: Form) : Template<FlowContent> {
 
     var name: String = ""
-    var edges: List<Edge> = emptyList()
+    var edges: List<EdgeView> = emptyList()
     var failed: Boolean = false
 
     val submit = Placeholder<INPUT>()

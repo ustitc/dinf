@@ -21,7 +21,7 @@ class ApplicationTest : StringSpec({
             application {
                 install(Resources)
                 configureAuth(config, mockk())
-                configureRouting(AppConfig())
+                configureRouting(config)
             }
             val response = client.get("/")
             response shouldHaveStatus HttpStatusCode.OK

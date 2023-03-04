@@ -1,17 +1,17 @@
 package dinf.app.html.pages
 
-import dinf.domain.Dice
 import dinf.app.html.templates.Layout
 import dinf.app.html.templates.RollBlock
+import dinf.app.services.DiceView
 import io.ktor.server.html.*
 import kotlinx.html.h2
 
-class DicePage(private val dice: Dice) : Page {
+class DicePage(private val dice: DiceView) : Page {
 
     override fun Layout.apply() {
         content {
             h2 {
-                +dice.name.print()
+                +dice.name
             }
 
             insert(RollBlock(dice.edges.map { it.value })) {

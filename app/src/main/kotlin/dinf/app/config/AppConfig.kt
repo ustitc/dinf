@@ -9,7 +9,7 @@ import java.time.Duration
 
 data class AppConfig(
     val database: DatabaseConfig = DatabaseConfig("jdbc:sqlite::memory:"),
-    val urls: URLsConfig = URLsConfig(),
+    val publicId: PublicIdConfig = PublicIdConfig(),
     val server: ServerConfig = ServerConfig(),
     val htmx: HTMXConfiguration = HTMXConfiguration(timeout = Duration.ofSeconds(5)),
     val toggles: TogglesConfig = TogglesConfig(),

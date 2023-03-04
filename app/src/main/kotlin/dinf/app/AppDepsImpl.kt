@@ -10,7 +10,7 @@ import dinf.app.auth.OAuthService
 import dinf.app.auth.PasswordFactory
 import dinf.app.config.AppConfig
 import dinf.app.config.TogglesConfig
-import dinf.app.config.URLConfig
+import dinf.app.config.HashConfig
 import dinf.app.html.components.DiceCardComponentFactory
 import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
@@ -32,10 +32,16 @@ class AppDepsImpl(
 
     private val diceRepository: DiceRepository = SqliteDiceRepository()
     private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
-    private val publicIDFactory: PublicIDFactory = HashidsPublicIDFactory(
-        hashids = hashids(cfg.urls.share)
+    private val dicePublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
+        hashids = hashids(cfg.publicId.dice)
     )
-    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory(publicIDFactory)
+    private val edgePublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
+        hashids = hashids(cfg.publicId.edge)
+    )
+    private val userPublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
+        hashids = hashids(cfg.publicId.edge)
+    )
+    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory(dicePublicIdFactory)
 
     override fun diceService(): DiceService {
         return DiceService(
@@ -72,13 +78,15 @@ class AppDepsImpl(
     override fun dicePageService(): DicePageService {
         return DicePageService(
             diceService = diceService(),
-            publicIDFactory = publicIDFactory
+            diceIdFactory = dicePublicIdFactory,
+            edgeIdFactory = edgePublicIdFactory,
+            userIdFactory = userPublicIdFactory
         )
     }
 
     override val toggles: TogglesConfig = cfg.toggles
 
-    private fun hashids(url: URLConfig): Hashids {
+    private fun hashids(url: HashConfig): Hashids {
         return Hashids(url.salt, url.length)
     }
 }
