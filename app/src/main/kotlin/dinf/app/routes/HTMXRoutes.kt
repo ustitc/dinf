@@ -13,12 +13,15 @@ import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.stream.createHTML
 
+private val badPageParameterException = BadRequestException("Page can't be less than 1")
+private val badCountParameterException = BadRequestException("Count can't be less than 1")
+
 fun Route.htmxDiceSearch() {
     get<HTMXResource.Search> { resource ->
         val query = SearchQuery(
             text = resource.query ?: "",
-            page = resource.page.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1"),
-            count = resource.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
+            page = resource.page.toPIntOrNull() ?: throw badPageParameterException,
+            count = resource.count.toPIntOrNull() ?: throw badCountParameterException
         )
         val dices = deps.diceService().search(query)
         val nextPage = application.href(resource.nextPage())
@@ -34,8 +37,8 @@ fun Route.htmxDiceSearch() {
 fun Route.htmxDiceList() {
     get<HTMXResource.Dices> { resource ->
         val diceList = deps.diceService().find(
-            resource.page.toPIntOrNull() ?: throw BadRequestException("Page can't be less than 1"),
-            resource.count.toPIntOrNull() ?: throw BadRequestException("Count can't be less than 1")
+            resource.page.toPIntOrNull() ?: throw badPageParameterException,
+            resource.count.toPIntOrNull() ?: throw badCountParameterException
         )
         val nextPage = application.href(resource.nextPage())
         val factory = deps.diceFeedComponentFactory(call)
