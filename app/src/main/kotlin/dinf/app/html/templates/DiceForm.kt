@@ -1,5 +1,6 @@
 package dinf.app.html.templates
 
+import dinf.domain.Edge
 import dinf.types.NBString
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
@@ -10,7 +11,7 @@ import kotlinx.html.input
 class DiceForm(private val form: Form) : Template<FlowContent> {
 
     var name: String = ""
-    var edges: List<String> = emptyList()
+    var edges: List<Edge> = emptyList()
     var failed: Boolean = false
 
     val submit = Placeholder<INPUT>()
@@ -36,7 +37,7 @@ class DiceForm(private val form: Form) : Template<FlowContent> {
                     insert(EditableList()) {
                         name = "edges"
                         addButtonText = NBString("Add edge")
-                        items = edges
+                        items = edges.map { EditableList.Item(it.id.print(), it.value) }
                     }
                 }
             }

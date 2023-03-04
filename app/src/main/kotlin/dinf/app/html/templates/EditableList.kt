@@ -15,16 +15,19 @@ import kotlinx.html.textArea
 class EditableList : Template<FlowContent> {
 
     var addButtonText: NBString = NBString("Add row")
-    var items: List<String> = emptyList()
+    var items: List<Item> = emptyList()
     var name = "row"
+
+    data class Item(val id: String, val value: String)
 
     override fun FlowContent.apply() {
         ol {
             items.forEach {
                 li {
                     textArea {
+                        id = it.id
                         name = this@EditableList.name
-                        text(it)
+                        text(it.value)
                     }
                 }
             }

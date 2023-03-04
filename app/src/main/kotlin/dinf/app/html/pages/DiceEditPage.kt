@@ -32,7 +32,7 @@ class DiceEditPage(
 
             insert(DiceForm(Form(editURL))) {
                 name = dice.name.print()
-                edges = dice.edges.map { it.value }
+                edges = dice.edges
                 failed = resource.isFailed ?: false
                 submit {
                     value = "Save changes"

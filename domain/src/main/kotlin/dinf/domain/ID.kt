@@ -12,12 +12,8 @@ value class ID(val number: PLong) {
         return number.toLong()
     }
 
-    companion object {
-
-        fun first() = ID(PLong.fromLong(1L))
-
-        fun fromLong(long: Long) = ID(long.toPLong())
-
+    fun print(): String {
+        return toLong().toString()
     }
 
 }

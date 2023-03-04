@@ -14,9 +14,12 @@ import dinf.domain.Edge
 import dinf.domain.ID
 import dinf.domain.Name
 import dinf.types.PLong
+import dinf.types.toPLong
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import java.sql.Connection
 import java.sql.ResultSet
 
@@ -144,10 +147,10 @@ class SqliteDiceRepository : DiceRepository {
         return Dice(
             id = id,
             name = Name(result.getString("name")),
-            edges = result.getString("edges")
-                ?.split(EDGES_SEPARATOR)
-                ?.map { Edge(ID.first(), it, id) }
-                ?: emptyList(),
+            edges = Json.decodeFromString<Map<Long, String>>(result.getString("edges"))
+                .map {
+                    Edge(ID(it.key.toPLong()), it.value, id)
+                },
             ownerId = ID(result.getPLong("owner"))
         )
     }
@@ -167,10 +170,6 @@ class SqliteDiceRepository : DiceRepository {
                 }.toList()
             }
         }
-    }
-
-    companion object {
-        const val EDGES_SEPARATOR = ";"
     }
 
 }
