@@ -22,7 +22,7 @@ class HashidsPublicIDFactory(private val hashids: Hashids) : PublicIDFactory {
     }
 
     private fun Hashids.encodeToHashidsID(id: ID): HashidsID {
-        val hash = encode(id.number.toLong())
+        val hash = encode(id.toLong())
         return HashidsID(hash, id)
     }
 

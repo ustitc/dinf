@@ -22,8 +22,8 @@ class SqliteEdgeRepository : EdgeRepository {
                 """.trimIndent()
             ).also {
                 it.setString(1, edge.value)
-                it.setPLong(2, edge.diceId.number)
-                it.setLong(3, edge.id.toLong())
+                it.setPLong(2, edge.diceId.toPLong())
+                it.setPLong(3, edge.id.toPLong())
 
             }.use { it.execute() }
         }
@@ -35,7 +35,7 @@ class SqliteEdgeRepository : EdgeRepository {
                 prepareStatement("INSERT INTO edges (value, dice) VALUES (?, ?) RETURNING id, value, dice")
                     .also {
                         it.setString(1, edge.value)
-                        it.setPLong(2, edge.diceId.number)
+                        it.setPLong(2, edge.diceId.toPLong())
                     }.use {
                         it.executeQuery()
                             .first {
@@ -49,7 +49,7 @@ class SqliteEdgeRepository : EdgeRepository {
     override fun create(edge: Edge.New): Edge {
         return sql("INSERT INTO edges (value, dice) VALUES (?, ?) RETURNING id, value, dice") {
             setString(1, edge.value)
-            setPLong(2, edge.diceId.number)
+            setPLong(2, edge.diceId.toPLong())
             executeQuery().first {
                 toEdge()
             }
@@ -58,7 +58,7 @@ class SqliteEdgeRepository : EdgeRepository {
 
     override fun oneOrNull(id: ID): Edge? {
         return sql("SELECT id, value, dice FROM edges where id = ?") {
-            setPLong(1, id.number)
+            setPLong(1, id.toPLong())
             executeQuery().firstOrNull {
                 toEdge()
             }
@@ -68,7 +68,7 @@ class SqliteEdgeRepository : EdgeRepository {
     override fun deleteAllByDiceId(diceId: ID) {
         transaction {
             prepareStatement("DELETE FROM edges WHERE dice = ?")
-                .also { it.setPLong(1, diceId.number) }
+                .also { it.setPLong(1, diceId.toPLong()) }
                 .use { it.execute() }
         }
     }

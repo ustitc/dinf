@@ -61,7 +61,7 @@ class OAuthService(
 
     private fun addLogin(user: User, googleUser: GoogleUser) {
         sql("INSERT INTO login_oauth_google (user, google_id) VALUES (?, ?)") {
-            setPLong(1, user.id.number)
+            setPLong(1, user.id.toPLong())
             setString(2, googleUser.id)
             execute()
         }

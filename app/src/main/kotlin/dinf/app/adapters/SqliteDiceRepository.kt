@@ -63,7 +63,7 @@ class SqliteDiceRepository : DiceRepository {
             """
         ).use {
             it.setPLong(1, diceID)
-            it.setPLong(2, ownerID.number)
+            it.setPLong(2, ownerID.toPLong())
             it.execute()
         }
     }
@@ -107,7 +107,7 @@ class SqliteDiceRepository : DiceRepository {
                 WHERE id = ?
                 """.trimIndent()
             ).also { statement ->
-                statement.setPLong(1, id.number)
+                statement.setPLong(1, id.toPLong())
             }
             val dice = statement.executeQuery().firstOrNull {
                 fromResultSet(this)
@@ -127,7 +127,7 @@ class SqliteDiceRepository : DiceRepository {
                 """.trimIndent()
             ).also { statement ->
                 ids.forEachIndexed { i, d ->
-                    statement.setPLong(i + 1, d.number)
+                    statement.setPLong(i + 1, d.toPLong())
                 }
             }
             val list = statement.executeQuery().toSequence {
@@ -149,7 +149,7 @@ class SqliteDiceRepository : DiceRepository {
         """.trimIndent()
         ) {
             setString(1, dice.name.print())
-            setPLong(2, dice.id.number)
+            setPLong(2, dice.id.toPLong())
             execute()
         }
     }
@@ -157,7 +157,7 @@ class SqliteDiceRepository : DiceRepository {
     override fun remove(dice: Dice) {
         transaction {
             prepareStatement("DELETE FROM dices WHERE id = ?").also {
-                it.setPLong(1, dice.id.number)
+                it.setPLong(1, dice.id.toPLong())
             }.use { it.execute() }
         }
     }
