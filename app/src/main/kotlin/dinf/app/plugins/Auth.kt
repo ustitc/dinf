@@ -5,6 +5,7 @@ import dinf.app.auth.EmailPasswordValidation
 import dinf.app.auth.UserSession
 import dinf.app.config.AppConfig
 import dinf.app.deps
+import dinf.app.ktor.SqliteSessionStorage
 import dinf.app.routes.LoginResource
 import dinf.app.routes.OAuthResource
 import io.ktor.client.*
@@ -76,7 +77,7 @@ fun Application.configureAuth(config: AppConfig, httpClient: HttpClient) {
     }
 
     install(Sessions) {
-        cookie<UserSession>("dinf_session", SessionStorageMemory()) {
+        cookie<UserSession>("dinf_session", CacheStorage(SqliteSessionStorage(), 60_000)) {
             cookie.path = "/"
             cookie.maxAge = Duration.parse("7d")
         }
