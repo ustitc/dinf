@@ -50,7 +50,7 @@ fun Route.diceCreateRoutes() {
     post<DiceResource.New> {
         val session = getUserSessionOrRedirectToNotFound()
         val params = call.receiveParameters()
-        val dice = deps.dicePageService().createDice(session, params)
+        val dice = deps.diceViewService().createDice(session, params)
         val redirect = application.href(DiceResource.ByID(diceID = dice.id))
         call.respondRedirect(redirect)
     }
@@ -59,7 +59,7 @@ fun Route.diceCreateRoutes() {
 fun Route.dicePage() {
     get<DiceResource.ByID> { resource ->
         val session = call.sessions.get<UserSession>()
-        val dice = deps.dicePageService().findDice(resource.diceID, session)
+        val dice = deps.diceViewService().findDice(resource.diceID, session)
         when {
             dice == null -> throw NotFoundException()
             session != null && dice.belongsTo(session) -> call.respondPage(DiceEditPage(dice = dice))
@@ -71,7 +71,7 @@ fun Route.dicePage() {
 fun Route.diceEditRoutes() {
     post<DiceResource.Edit> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        deps.dicePageService().updateDice(resource.diceID, session, call.receiveParameters())
+        deps.diceViewService().updateDice(resource.diceID, session, call.receiveParameters())
         val redirect = application.href(DiceResource.ByID(diceID = resource.diceID))
         call.respondRedirect(redirect)
     }
@@ -80,7 +80,7 @@ fun Route.diceEditRoutes() {
 fun Route.diceDeleteRoutes() {
     post<DiceResource.Delete> { resource ->
         val session = getUserSessionOrRedirectToNotFound()
-        deps.dicePageService().deleteDice(resource.diceID, session)
+        deps.diceViewService().deleteDice(resource.diceID, session)
         call.respondPage(DiceDeletedPage())
     }
 }

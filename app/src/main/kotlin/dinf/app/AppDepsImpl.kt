@@ -15,7 +15,7 @@ import dinf.app.html.components.DiceCardComponentFactory
 import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
 import dinf.app.routes.DiceResource
-import dinf.app.services.DicePageService
+import dinf.app.services.DiceViewService
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
 import dinf.app.services.PublicIDFactory
@@ -75,8 +75,8 @@ class AppDepsImpl(
         )
     }
 
-    override fun dicePageService(): DicePageService {
-        return DicePageService(
+    override fun diceViewService(): DiceViewService {
+        return DiceViewService(
             diceService = diceService(),
             diceIdFactory = dicePublicIdFactory,
             edgeIdFactory = edgePublicIdFactory,

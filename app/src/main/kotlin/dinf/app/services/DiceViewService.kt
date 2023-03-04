@@ -13,7 +13,7 @@ import io.ktor.http.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class DicePageService(
+class DiceViewService(
     private val diceService: DiceService,
     private val diceIdFactory: PublicIDFactory,
     private val edgeIdFactory: PublicIDFactory,
