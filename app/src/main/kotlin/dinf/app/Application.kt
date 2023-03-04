@@ -1,5 +1,6 @@
 package dinf.app
 
+import dinf.app.adapters.SqliteDomainDeps
 import dinf.app.config.readConfiguration
 import dinf.app.db.configureDatabase
 import dinf.app.plugins.configureAuth
@@ -32,7 +33,7 @@ fun main() {
             }
         }
 
-        deps = AppDepsImpl(cfg, httpClient)
+        deps = AppDepsImpl(cfg, httpClient, SqliteDomainDeps())
 
         install(Resources)
         configureAuth(cfg, httpClient)

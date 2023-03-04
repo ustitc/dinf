@@ -2,8 +2,6 @@ package dinf.app
 
 import dinf.app.adapters.BCryptPasswordFactory
 import dinf.app.adapters.HashidsPublicIDFactory
-import dinf.app.adapters.SqliteDiceRepository
-import dinf.app.adapters.SqliteEdgeRepository
 import dinf.app.adapters.SqliteUserFactory
 import dinf.app.auth.EmailPasswordService
 import dinf.app.auth.OAuthService
@@ -15,18 +13,17 @@ import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
 import dinf.app.services.DiceViewService
 import dinf.app.services.PublicIDFactory
-import dinf.domain.DiceRepository
-import dinf.domain.DiceService
+import dinf.domain.DomainDeps
 import io.ktor.client.*
 import io.ktor.server.application.*
 import org.hashids.Hashids
 
 class AppDepsImpl(
     cfg: AppConfig,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val domainDeps: DomainDeps
 ) : AppDeps {
 
-    private val diceRepository: DiceRepository = SqliteDiceRepository()
     private val passwordFactory: PasswordFactory = BCryptPasswordFactory()
     private val dicePublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
         hashids = hashids(cfg.publicId.dice)
@@ -37,13 +34,6 @@ class AppDepsImpl(
     private val userPublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
         hashids = hashids(cfg.publicId.edge)
     )
-
-    override fun diceService(): DiceService {
-        return DiceService(
-            diceRepository = diceRepository,
-            edgeRepository = SqliteEdgeRepository()
-        )
-    }
 
     override fun emailPasswordService(): EmailPasswordService {
         return EmailPasswordService(
@@ -69,7 +59,7 @@ class AppDepsImpl(
 
     override fun diceViewService(): DiceViewService {
         return DiceViewService(
-            diceService = diceService(),
+            diceService = domainDeps.diceService(),
             diceIdFactory = dicePublicIdFactory,
             edgeIdFactory = edgePublicIdFactory,
             userIdFactory = userPublicIdFactory
