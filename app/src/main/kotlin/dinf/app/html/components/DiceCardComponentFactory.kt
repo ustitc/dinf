@@ -1,9 +1,8 @@
 package dinf.app.html.components
 
-import dinf.app.routes.DiceResource
-import dinf.domain.Dice
-import dinf.app.services.PublicIDFactory
 import dinf.app.html.templates.RollBlock
+import dinf.app.routes.DiceResource
+import dinf.app.services.DiceView
 import io.ktor.resources.*
 import io.ktor.resources.serialization.*
 import io.ktor.server.html.*
@@ -12,17 +11,16 @@ import kotlinx.html.a
 import kotlinx.html.div
 import kotlinx.html.h3
 
-class DiceCardComponentFactory(private val publicIDFactory: PublicIDFactory) {
+class DiceCardComponentFactory {
 
-    fun component(flowContent: FlowContent, dice: Dice) {
-        val hashID = publicIDFactory.fromID(dice.id)
-        val location = href(ResourcesFormat(), DiceResource.ByID(hashID))
-        val id = "result-${hashID.print()}"
+    fun component(flowContent: FlowContent, dice: DiceView) {
+        val location = href(ResourcesFormat(), DiceResource.ByID(dice.id))
+        val id = "result-${dice.id.print()}"
         val eventName = "roll"
 
         flowContent.div {
             h3 {
-                a(href = location) { +dice.name.print() }
+                a(href = location) { +dice.name }
             }
 
             insert(RollBlock(dice.edges.map { it.value })) {
@@ -32,5 +30,4 @@ class DiceCardComponentFactory(private val publicIDFactory: PublicIDFactory) {
             }
         }
     }
-
 }

@@ -41,7 +41,7 @@ class AppDepsImpl(
     private val userPublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
         hashids = hashids(cfg.publicId.edge)
     )
-    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory(dicePublicIdFactory)
+    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory()
 
     override fun diceService(): DiceService {
         return DiceService(

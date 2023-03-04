@@ -27,7 +27,7 @@ fun Route.mainPage() {
     val nextDicePageURL = application.href(HTMXResource.Dices(page = page + 1, count = count))
     get("/") {
         val diceFeed = deps.diceFeedComponentFactory(call)
-        val diceList = deps.diceService().find(Page(page), Count(count))
+        val diceList = deps.diceViewService().find(Page(page), Count(count))
         call.respondPage(
             MainPage(
                 searchURL = searchAPI,

@@ -4,7 +4,7 @@ import dev.ustits.htmx.HTMX_INDICATOR
 import dev.ustits.htmx.HtmxSwap
 import dev.ustits.htmx.htmx
 import dinf.app.html.templates.Feed
-import dinf.domain.Dice
+import dinf.app.services.DiceView
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 import kotlinx.html.InputType
@@ -23,7 +23,7 @@ class DiceFeedComponentFactory(
 
     private val loadBlockID = "pagination-block-load"
 
-    fun component(flowContent: FlowContent, diceList: List<Dice>, nextPageURL: String? = null) {
+    fun component(flowContent: FlowContent, diceList: List<DiceView>, nextPageURL: String? = null) {
         flowContent.insert(Feed()) {
             diceList.forEach { dice ->
                 item {

@@ -1,12 +1,15 @@
 package dinf.app.services
 
 import dinf.app.auth.UserSession
+import dinf.domain.Count
 import dinf.domain.Dice
 import dinf.domain.DiceCreateRequest
 import dinf.domain.DiceService
 import dinf.domain.DiceUpdateRequest
 import dinf.domain.ID
 import dinf.domain.Name
+import dinf.domain.Page
+import dinf.domain.SearchQuery
 import dinf.types.toNBStringOrNull
 import dinf.types.toPLong
 import io.ktor.http.*
@@ -21,6 +24,14 @@ class DiceViewService(
 ) {
 
     private val logger: Logger = LoggerFactory.getLogger(DiceService::class.java)
+
+    suspend fun find(page: Page, count: Count): List<DiceView> {
+        return diceService.find(page, count).map { it.toDiceView() }
+    }
+
+    fun search(query: SearchQuery): List<DiceView> {
+        return diceService.search(query).map { it.toDiceView() }
+    }
 
     fun findDice(publicDiceId: String, session: UserSession? = null): DiceView? {
         val id = diceIdFactory.fromStringOrNull(publicDiceId)

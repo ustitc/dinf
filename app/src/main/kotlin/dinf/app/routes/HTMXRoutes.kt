@@ -23,7 +23,7 @@ fun Route.htmxDiceSearch() {
             page = resource.page.toPIntOrNull() ?: throw badPageParameterException,
             count = resource.count.toPIntOrNull() ?: throw badCountParameterException
         )
-        val dices = deps.diceService().search(query)
+        val dices = deps.diceViewService().search(query)
         val nextPage = application.href(resource.nextPage())
         val factory = deps.diceFeedComponentFactory(call)
         call.respondHtmx {
@@ -36,7 +36,7 @@ fun Route.htmxDiceSearch() {
 
 fun Route.htmxDiceList() {
     get<HTMXResource.Dices> { resource ->
-        val diceList = deps.diceService().find(
+        val diceList = deps.diceViewService().find(
             resource.page.toPIntOrNull() ?: throw badPageParameterException,
             resource.count.toPIntOrNull() ?: throw badCountParameterException
         )
