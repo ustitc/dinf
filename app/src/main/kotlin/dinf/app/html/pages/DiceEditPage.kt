@@ -3,7 +3,7 @@ package dinf.app.html.pages
 import dev.ustits.hyperscript.hyperscript
 import dinf.app.html.components.picoInlineButton
 import dinf.app.html.templates.DiceFormTemplate
-import dinf.app.html.templates.DicePageTemplate
+import dinf.app.html.templates.DiceCardTemplate
 import dinf.app.html.templates.Form
 import dinf.app.html.templates.Layout
 import dinf.app.routes.DiceResource
@@ -29,32 +29,33 @@ class DiceEditPage(
         val deleteURL = href(ResourcesFormat(), DiceResource.Delete(diceID = dice.id.print()))
 
         content {
-            insert(DicePageTemplate(dice)) {
-                content {
+            insert(DiceCardTemplate(dice)) {
+                name {
+                    +dice.name
+                }
+            }
 
-                    picoInlineButton(classes = "secondary") {
-                        hyperscript = "on click toggle @hidden on #edit-form then toggle @hidden on me"
-                        +"Edit"
+            picoInlineButton(classes = "secondary") {
+                hyperscript = "on click toggle @hidden on #edit-form then toggle @hidden on me"
+                +"Edit"
+            }
+
+            div {
+                id = "edit-form"
+                hidden = true
+
+                insert(DiceFormTemplate(Form(editURL))) {
+                    name = dice.name
+                    edges = dice.edges
+                    failed = hasFailedForm
+                    submit {
+                        value = "Save changes"
                     }
+                }
 
-                    div {
-                        id = "edit-form"
-                        hidden = true
-
-                        insert(DiceFormTemplate(Form(editURL))) {
-                            name = dice.name
-                            edges = dice.edges
-                            failed = hasFailedForm
-                            submit {
-                                value = "Save changes"
-                            }
-                        }
-
-                        form(action = deleteURL, method = FormMethod.post) {
-                            input(type = InputType.submit, classes = "delete") {
-                                value = "Delete"
-                            }
-                        }
+                form(action = deleteURL, method = FormMethod.post) {
+                    input(type = InputType.submit, classes = "delete") {
+                        value = "Delete"
                     }
                 }
             }

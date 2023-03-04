@@ -9,19 +9,15 @@ import dinf.app.auth.EmailPasswordService
 import dinf.app.auth.OAuthService
 import dinf.app.auth.PasswordFactory
 import dinf.app.config.AppConfig
-import dinf.app.config.TogglesConfig
 import dinf.app.config.HashConfig
-import dinf.app.html.components.DiceCardComponentFactory
+import dinf.app.config.TogglesConfig
 import dinf.app.html.components.DiceFeedComponentFactory
 import dinf.app.plugins.isLoginedUser
-import dinf.app.routes.DiceResource
 import dinf.app.services.DiceViewService
+import dinf.app.services.PublicIDFactory
 import dinf.domain.DiceRepository
 import dinf.domain.DiceService
-import dinf.app.services.PublicIDFactory
 import io.ktor.client.*
-import io.ktor.resources.*
-import io.ktor.resources.serialization.*
 import io.ktor.server.application.*
 import org.hashids.Hashids
 
@@ -41,7 +37,6 @@ class AppDepsImpl(
     private val userPublicIdFactory: PublicIDFactory = HashidsPublicIDFactory(
         hashids = hashids(cfg.publicId.edge)
     )
-    private val diceCardComponentFactory: DiceCardComponentFactory = DiceCardComponentFactory()
 
     override fun diceService(): DiceService {
         return DiceService(
@@ -67,10 +62,7 @@ class AppDepsImpl(
     }
 
     override fun diceFeedComponentFactory(call: ApplicationCall): DiceFeedComponentFactory {
-        val newDiceURL = href(ResourcesFormat(), DiceResource.New())
         return DiceFeedComponentFactory(
-            newDiceURL = newDiceURL,
-            diceCardComponentFactory = diceCardComponentFactory,
             showAddButton = toggles.showUserButtons && call.isLoginedUser()
         )
     }
