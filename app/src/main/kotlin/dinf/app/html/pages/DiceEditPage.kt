@@ -1,5 +1,7 @@
 package dinf.app.html.pages
 
+import dev.ustits.hyperscript.hyperscript
+import dinf.app.html.components.picoInlineButton
 import dinf.app.html.templates.DiceFormTemplate
 import dinf.app.html.templates.DicePageTemplate
 import dinf.app.html.templates.Form
@@ -11,7 +13,10 @@ import io.ktor.resources.serialization.*
 import io.ktor.server.html.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
+import kotlinx.html.div
 import kotlinx.html.form
+import kotlinx.html.hidden
+import kotlinx.html.id
 import kotlinx.html.input
 
 class DiceEditPage(
@@ -26,18 +31,29 @@ class DiceEditPage(
         content {
             insert(DicePageTemplate(dice)) {
                 content {
-                    insert(DiceFormTemplate(Form(editURL))) {
-                        name = dice.name
-                        edges = dice.edges
-                        failed = hasFailedForm
-                        submit {
-                            value = "Save changes"
-                        }
+
+                    picoInlineButton(classes = "secondary") {
+                        hyperscript = "on click toggle @hidden on #edit-form then toggle @hidden on me"
+                        +"Edit"
                     }
 
-                    form(action = deleteURL, method = FormMethod.post) {
-                        input(type = InputType.submit, classes = "delete") {
-                            value = "Delete"
+                    div {
+                        id = "edit-form"
+                        hidden = true
+
+                        insert(DiceFormTemplate(Form(editURL))) {
+                            name = dice.name
+                            edges = dice.edges
+                            failed = hasFailedForm
+                            submit {
+                                value = "Save changes"
+                            }
+                        }
+
+                        form(action = deleteURL, method = FormMethod.post) {
+                            input(type = InputType.submit, classes = "delete") {
+                                value = "Delete"
+                            }
                         }
                     }
                 }
