@@ -59,7 +59,7 @@ fun Route.diceCreateRoutes() {
 fun Route.dicePage() {
     get<DiceResource.ByID> { resource ->
         val session = call.sessions.get<UserSession>()
-        val dice = deps.diceViewService().findDice(resource.diceID, session)
+        val dice = deps.diceViewService().findDice(resource.diceID)
         when {
             dice == null -> throw NotFoundException()
             session != null && dice.belongsTo(session) -> call.respondPage(DiceEditPage(dice = dice))
