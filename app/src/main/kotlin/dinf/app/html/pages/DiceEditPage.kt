@@ -1,9 +1,9 @@
 package dinf.app.html.pages
 
 import dinf.app.html.templates.DiceFormTemplate
+import dinf.app.html.templates.DicePageTemplate
 import dinf.app.html.templates.Form
 import dinf.app.html.templates.Layout
-import dinf.app.html.templates.RollBlock
 import dinf.app.routes.DiceResource
 import dinf.app.services.DiceView
 import io.ktor.resources.*
@@ -12,7 +12,6 @@ import io.ktor.server.html.*
 import kotlinx.html.FormMethod
 import kotlinx.html.InputType
 import kotlinx.html.form
-import kotlinx.html.h2
 import kotlinx.html.input
 
 class DiceEditPage(
@@ -25,26 +24,22 @@ class DiceEditPage(
         val deleteURL = href(ResourcesFormat(), DiceResource.Delete(diceID = dice.id.print()))
 
         content {
-            h2 {
-                +dice.name
-            }
+            insert(DicePageTemplate(dice)) {
+                content {
+                    insert(DiceFormTemplate(Form(editURL))) {
+                        name = dice.name
+                        edges = dice.edges
+                        failed = hasFailedForm
+                        submit {
+                            value = "Save changes"
+                        }
+                    }
 
-            insert(RollBlock(dice.edges.map { it.value })) {
-                withResultOnTop = false
-            }
-
-            insert(DiceFormTemplate(Form(editURL))) {
-                name = dice.name
-                edges = dice.edges
-                failed = hasFailedForm
-                submit {
-                    value = "Save changes"
-                }
-            }
-
-            form(action = deleteURL, method = FormMethod.post) {
-                input(type = InputType.submit, classes = "delete") {
-                    value = "Delete"
+                    form(action = deleteURL, method = FormMethod.post) {
+                        input(type = InputType.submit, classes = "delete") {
+                            value = "Delete"
+                        }
+                    }
                 }
             }
         }
