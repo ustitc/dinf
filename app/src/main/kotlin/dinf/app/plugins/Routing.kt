@@ -4,7 +4,7 @@ import dinf.app.auth.UserSession
 import dinf.app.config.AppConfig
 import dinf.app.html.pages.NotFoundPage
 import dinf.app.html.pages.Page
-import dinf.app.html.templates.Layout
+import dinf.app.html.templates.LayoutTemplate
 import dinf.app.routes.DiceResource
 import dinf.app.routes.LoginResource
 import dinf.app.routes.LogoutResource
@@ -42,7 +42,7 @@ fun ApplicationCall.isLoginedUser(): Boolean {
 suspend fun ApplicationCall.respondPage(page: Page) {
     val session = sessions.get<UserSession>()
     respondHtmlTemplate(
-        Layout(
+        LayoutTemplate(
             newDiceURL = application.href(DiceResource.New()),
             htmxConfiguration = cfg.htmx,
             loginURL = application.href(LoginResource()),

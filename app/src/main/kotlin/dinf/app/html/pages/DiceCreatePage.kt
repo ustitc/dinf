@@ -1,8 +1,8 @@
 package dinf.app.html.pages
 
 import dinf.app.html.templates.DiceFormTemplate
-import dinf.app.html.templates.Form
-import dinf.app.html.templates.Layout
+import dinf.app.html.templates.FormTemplate
+import dinf.app.html.templates.LayoutTemplate
 import dinf.app.routes.DiceResource
 import io.ktor.server.html.*
 
@@ -11,9 +11,9 @@ class DiceCreatePage(
     private val resource: DiceResource.New
 ) : Page {
 
-    override fun Layout.apply() {
+    override fun LayoutTemplate.apply() {
         content {
-            insert(DiceFormTemplate(Form(url))) {
+            insert(DiceFormTemplate(FormTemplate(url))) {
                 failed = resource.isFailed ?: false
             }
         }

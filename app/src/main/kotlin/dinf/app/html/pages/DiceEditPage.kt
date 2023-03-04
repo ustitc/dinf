@@ -4,8 +4,8 @@ import dev.ustits.hyperscript.hyperscript
 import dinf.app.html.components.picoInlineButton
 import dinf.app.html.templates.DiceFormTemplate
 import dinf.app.html.templates.DiceCardTemplate
-import dinf.app.html.templates.Form
-import dinf.app.html.templates.Layout
+import dinf.app.html.templates.FormTemplate
+import dinf.app.html.templates.LayoutTemplate
 import dinf.app.routes.DiceResource
 import dinf.app.services.DiceView
 import io.ktor.resources.*
@@ -24,7 +24,7 @@ class DiceEditPage(
     private val hasFailedForm: Boolean = false
 ) : Page {
 
-    override fun Layout.apply() {
+    override fun LayoutTemplate.apply() {
         val editURL = href(ResourcesFormat(), DiceResource.Edit(diceID = dice.id.print()))
         val deleteURL = href(ResourcesFormat(), DiceResource.Delete(diceID = dice.id.print()))
 
@@ -44,7 +44,7 @@ class DiceEditPage(
                 id = "edit-form"
                 hidden = true
 
-                insert(DiceFormTemplate(Form(editURL))) {
+                insert(DiceFormTemplate(FormTemplate(editURL))) {
                     name = dice.name
                     edges = dice.edges
                     failed = hasFailedForm

@@ -6,7 +6,7 @@ import kotlinx.html.li
 import kotlinx.html.nav
 import kotlinx.html.ul
 
-class Navbar : Template<FlowContent> {
+class NavbarTemplate : Template<FlowContent> {
 
     val start = PlaceholderList<FlowContent, FlowContent>()
     val end = PlaceholderList<FlowContent, FlowContent>()

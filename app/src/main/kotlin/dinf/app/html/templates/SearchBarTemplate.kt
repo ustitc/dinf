@@ -10,7 +10,7 @@ import kotlinx.html.div
 import kotlinx.html.id
 import kotlinx.html.input
 
-class SearchBar(private val searchApiURL: String) : Template<FlowContent> {
+class SearchBarTemplate(private val searchApiURL: String) : Template<FlowContent> {
 
     private val searchResultID = "search-results"
     private val loadBlockID = "load-block"

@@ -5,7 +5,7 @@ import kotlinx.html.FlowContent
 import kotlinx.html.label
 import kotlinx.html.small
 
-class FormField : Template<FlowContent> {
+class FormFieldTemplate : Template<FlowContent> {
 
     var name: String = ""
     var help: String = ""

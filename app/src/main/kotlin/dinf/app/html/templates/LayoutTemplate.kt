@@ -23,7 +23,7 @@ import kotlinx.html.small
 import kotlinx.html.style
 import kotlinx.html.title
 
-class Layout(
+class LayoutTemplate(
     private val newDiceURL: String,
     private val htmxConfiguration: HTMXConfiguration,
     val loginURL: String,
@@ -54,7 +54,7 @@ class Layout(
         }
         body {
             div("container-fluid") {
-                insert(Navbar()) {
+                insert(NavbarTemplate()) {
                     start {
                         a(href = "/") {
                             img(src = "/assets/dinf.png", alt = "logo") {

@@ -1,6 +1,6 @@
 package dinf.app.html.pages
 
-import dinf.app.html.templates.Layout
+import dinf.app.html.templates.LayoutTemplate
 import dinf.app.plugins.FORM_LOGIN_EMAIL_FIELD
 import dinf.app.plugins.FORM_LOGIN_PASSWORD_FIELD
 import dinf.app.routes.RegisterResource
@@ -16,7 +16,7 @@ import kotlinx.html.submitInput
 
 class RegistrationPage(private val resource: RegisterResource) : Page {
 
-    override fun Layout.apply() {
+    override fun LayoutTemplate.apply() {
         content {
             h2 {
                 +"Registration"

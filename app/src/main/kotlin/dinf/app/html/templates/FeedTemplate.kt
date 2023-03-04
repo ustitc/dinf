@@ -3,7 +3,7 @@ package dinf.app.html.templates
 import io.ktor.server.html.*
 import kotlinx.html.FlowContent
 
-class Feed : Template<FlowContent> {
+class FeedTemplate : Template<FlowContent> {
 
     val item = PlaceholderList<FlowContent, FlowContent>()
     val pagination = Placeholder<FlowContent>()

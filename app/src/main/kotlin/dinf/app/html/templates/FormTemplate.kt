@@ -8,9 +8,9 @@ import kotlinx.html.InputType
 import kotlinx.html.form
 import kotlinx.html.input
 
-class Form(private val url: String) : Template<FlowContent> {
+class FormTemplate(private val url: String) : Template<FlowContent> {
 
-    val field = PlaceholderList<FlowContent, FormField>()
+    val field = PlaceholderList<FlowContent, FormFieldTemplate>()
     val submit = Placeholder<INPUT>()
 
     override fun FlowContent.apply() {
@@ -19,7 +19,7 @@ class Form(private val url: String) : Template<FlowContent> {
 
             if (!field.isEmpty()) {
                 each(field) {
-                    insert(FormField()) {
+                    insert(FormFieldTemplate()) {
                         insert(it)
                     }
                 }

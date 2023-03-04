@@ -8,7 +8,7 @@ import kotlinx.html.INPUT
 import kotlinx.html.InputType
 import kotlinx.html.input
 
-class DiceFormTemplate(private val form: Form) : Template<FlowContent> {
+class DiceFormTemplate(private val form: FormTemplate) : Template<FlowContent> {
 
     var name: String = ""
     var edges: List<EdgeView> = emptyList()
